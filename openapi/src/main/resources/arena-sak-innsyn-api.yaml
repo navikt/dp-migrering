@@ -1,0 +1,266 @@
+openapi: 3.0.3
+info:
+  title: Arena sak innsyn API
+  description: API for innsyn i saker i Arena. Dette er et internt API som brukes av Arena innsynsklienten.
+  version: 1.0.0
+  contact:
+    name: '#team-dagpenger'
+servers:
+  - url: https://dp-arena.intern.dev.nav.no
+    description: dev
+  - url: https://dp-arena.intern.nav.no
+    description: prod
+paths:
+  /sak/{sakid}/detaljert:
+    get:
+      summary: Hent detaljert informasjon om en sak
+      parameters:
+        - name: sakid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArenaSakDetaljer'
+components:
+  schemas:
+    ArenaSakDetaljer:
+      # data class ArenaSakDetaljert(
+      #    val sakId: String,
+      #    val opprettetAar: Int,
+      #    val lopenr: Int,
+      #    val person: ArenaSakPerson,
+      #    val statuskode: String,
+      #    val statusnavn: String,
+      #    val registrertDato: LocalDateTime,
+      #    val avsluttetDato: LocalDateTime?,
+      #    val vedtak: List<ArenaVedtakMedDetaljer>,
+      #    val telleverkForPerson: TelleverkForPerson?,
+      #    val kvoteHistorikk: Set<KvotebrukHendelse>,
+      #    val maksdato: LocalDate?,
+      #    val sisteUtbetalingDato: LocalDate?,
+      #
+      #    )
+      type: object
+      properties:
+        sakid:
+          type: string
+        opprettetAar:
+          type: string
+        lopenr:
+          type: integer
+        person:
+          $ref: '#/components/schemas/ArenaSakPerson'
+        statuskode:
+          type: string
+        statusnavn:
+          type: string
+        registrertDato:
+          type: string
+          format: date-time
+        avsluttetDato:
+          type: string
+          format: date-time
+        vedtak:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArenaVedtakMedDetaljer'
+        telleverkForPerson:
+          $ref: '#/components/schemas/TelleverkForPerson'
+        kvoteHistorikk:
+          type: array
+          items:
+            $ref: '#/components/schemas/KvotebrukHendelse'
+        maksdato:
+          type: string
+          format: date
+        sisteUtbetalingDato:
+          type: string
+          format: date
+      required:
+        - sakid
+        - opprettetAar
+        - lopenr
+        - person
+        - statuskode
+        - statusnavn
+        - registrertDato
+
+    ArenaSakPerson:
+      type: object
+      properties:
+        personId:
+          type: integer
+        fodselsnummer:
+          type: string
+        fornavn:
+          type: string
+        etternavn:
+          type: string
+
+    ArenaVedtakMedDetaljer:
+      type: object
+      properties:
+        vedtakId:
+          type: integer
+        lopenrvedtak:
+          type: integer
+        statusKode:
+          type: string
+        statusNavn:
+          type: string
+        vedtaktypeKode:
+          type: string
+        vedtaktypeNavn:
+          type: string
+        aktivitetsfaseKode:
+          type: string
+        aktivitetsfaseNavn:
+          type: string
+        fraOgMed:
+          type: string
+          format: date
+        tilDato:
+          type: string
+          format: date
+        rettighetkode:
+          type: string
+        rettighetnavn:
+          type: string
+        utfallkode:
+          type: string
+        begrunnelse:
+          type: string
+        saksbehandler:
+          type: string
+        beslutter:
+          type: string
+        relatertVedtak:
+          type: integer
+        fakta:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArenaVedtakfakta'
+        vilkårsvurderinger:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArenaVilkarsvurdering'
+
+    TelleverkForPerson:
+      type: object
+      properties:
+        ordineerAAPKvote:
+          type: integer
+        utvidetAAPKvote:
+          type: integer
+      required:
+        - ordineerAAPKvote
+
+    # data class KvotebrukHendelse(
+    #    val id: Int,
+    #    val kvoteTypeKode: String,
+    #    val endringsGrunnlag: String,
+    #    val antallBevegelse: Int,
+    #    val posteringTypeKode: String,
+    #    val datoHendelse: LocalDate,
+    #    val resterende: Int,
+    #    val modUser: String?,
+    #    val begrunnelse: String?,
+    #)
+    KvotebrukHendelse:
+      type: object
+      properties:
+        id:
+          type: integer
+        kvoteTypeKode:
+          type: string
+        endringsGrunnlag:
+          type: string
+        antallBevegelse:
+          type: integer
+        posteringTypeKode:
+          type: string
+        datoHendelse:
+          type: string
+          format: date
+        resterende:
+          type: integer
+        modUser:
+          type: string
+        begrunnelse:
+          type: string
+      required:
+        - id
+        - kvoteTypeKode
+        - endringsGrunnlag
+        - antallBevegelse
+        - posteringTypeKode
+        - datoHendelse
+        - resterende
+
+    ArenaVedtakfakta:
+      type: object
+      properties:
+        kode:
+          type: string
+        navn:
+          type: string
+        verdi:
+          type: string
+        registrertDato:
+          type: string
+          format: date
+      required:
+        - kode
+        - navn
+        - registrertDato
+
+    ArenaVilkarsvurdering:
+      type: object
+      properties:
+        vilkårsvurderingId:
+          type: integer
+        vilkårkode:
+          type: string
+        begrunnelse:
+          type: string
+        vurdertAv:
+          type: string
+        vilkårnavn:
+          type: string
+        erObligatorisk:
+          type: boolean
+        hjelpetekstUrl:
+          type: string
+        lovtekstUrl:
+          type: string
+        rundskrivUrl:
+          type: string
+        statuskode:
+          type: string
+        statusnavn:
+          type: string
+      required:
+        - vilkårsvurderingId
+        - vilkårkode
+        - vilkårnavn
+        - erObligatorisk
+        - statuskode
+        - statusnavn
+
+  securitySchemes:
+    azureAd:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Bruker [AzureAD](https://docs.nais.io/security/auth/azure-ad) til autentisering. 
+        Token må ha `audience` satt til `[cluster].teamdagpenger.dp-behandling`.
+        
+        For å teste APIet kan du lage et gyldig OBO-token ved å bruke wonderwalled:
+        - [dev-gcp](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp.teamdagpenger.dp-migreing)

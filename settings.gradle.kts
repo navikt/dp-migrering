@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "dp-migrering"
 
 include("mediator")
+include("openapi")
