@@ -16,3 +16,5 @@ rootProject.name = "dp-migrering"
 
 include("mediator")
 include("openapi")
+
+include("konfigurasjon")
