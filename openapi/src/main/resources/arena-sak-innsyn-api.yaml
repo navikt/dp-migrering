@@ -225,6 +225,7 @@ components:
       properties:
         vilkårsvurderingId:
           type: integer
+          format: int64
         vilkårkode:
           type: string
         begrunnelse:

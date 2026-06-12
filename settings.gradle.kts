@@ -18,3 +18,4 @@ include("mediator")
 include("openapi")
 
 include("konfigurasjon")
+include("arena-innsyn")

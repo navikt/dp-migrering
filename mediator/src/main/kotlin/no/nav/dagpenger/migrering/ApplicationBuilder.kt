@@ -2,17 +2,12 @@ package no.nav.dagpenger.migrering
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.plugins.callid.CallId
 import io.ktor.server.plugins.callid.callIdMdc
 import io.ktor.server.plugins.calllogging.CallLogging
-import io.ktor.server.response.respond
-import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 
@@ -45,19 +40,11 @@ internal class ApplicationBuilder(
                     level = Level.INFO
                     callIdMdc(HttpHeaders.XCorrelationId)
                 }
-                arenaInnsynApi()
+                // arenaInnsynApi()
             },
         )
 
     fun start() {
         server.start(wait = true)
-    }
-}
-
-internal fun Application.arenaInnsynApi() {
-    routing {
-        get("/") {
-            call.respond(HttpStatusCode.OK)
-        }
     }
 }
