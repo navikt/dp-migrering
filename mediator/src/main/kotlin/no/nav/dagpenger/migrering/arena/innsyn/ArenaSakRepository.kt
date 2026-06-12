@@ -1,37 +1,21 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import kotliquery.queryOf
-import no.nav.dagpenger.migrering.db.DatabaseSession
 import java.sql.ResultSet
+import javax.sql.DataSource
 
 class ArenaSakRepository(
-    private val dbSession: DatabaseSession,
+    override val dataSource: Lazy<DataSource>,
 ) : ArenaSakRepositoryInterface {
     override fun hentSak(sakId: SakId): ArenaSak? =
-        select(
+        selectSingle(
             selectSakMedSaksId,
             mapOf("sakId" to sakId.id),
         )
 
     override fun hentSak(saksnummer: Saksnummer): ArenaSak? =
-        select(selectSakMedSaksnummer, mapOf("lopenummer" to saksnummer.lopenummer, "aar" to saksnummer.aar))
+        selectSingle(selectSakMedSaksnummer, mapOf("lopenummer" to saksnummer.lopenummer, "aar" to saksnummer.aar))
 
-    private fun select(
-        sql: String,
-        params: Map<String, Any>,
-    ): ArenaSak? =
-        dbSession.session { session ->
-            session.run(
-                queryOf(
-                    sql,
-                    params,
-                ).map {
-                    map(it.underlying)
-                }.asSingle,
-            )
-        }
-
-    override fun map(row: ResultSet): ArenaSak =
+    override fun mapResultat(row: ResultSet): ArenaSak =
         ArenaSak(
             sakId = row.getInt("sak_id").toString(),
             opprettetAar = row.getInt("aar"),

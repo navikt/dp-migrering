@@ -14,7 +14,7 @@ class ArenaSakRepositorySpec :
 
         val arenaSakRepository =
             ArenaSakRepository(
-                dbSession = h2DataSourceBuilder.dbsession,
+                dataSource = h2DataSourceBuilder.dataSource,
             )
 
         "kan hente en Arena sak på sakId" {

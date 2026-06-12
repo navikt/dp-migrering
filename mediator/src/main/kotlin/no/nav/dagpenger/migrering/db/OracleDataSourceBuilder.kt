@@ -7,7 +7,6 @@ import io.micrometer.core.instrument.Clock
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
-import org.flywaydb.core.Flyway
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -51,28 +50,7 @@ internal class OracleDataSourceBuilder {
         }
     }
 
-    val dbsession = DatabaseSession(lazy { HikariDataSource(hikariConfig) })
-
-    internal fun runMigration() {
-        val config =
-            HikariConfig().apply {
-                baseConfig.copyStateTo(this)
-                poolName = "flyway"
-                // ideelt skulle vi bare behøvd én connection,
-                // men flyway har noen leaks som gjør at den ikke klarer seg med bare én
-                maximumPoolSize = 2
-            }
-        // oppretter egen datasource sånn at vi iallfall lukker den ordentlig,
-        // og får returnert connections tilbake til postgres
-        HikariDataSource(config).use {
-            Flyway
-                .configure()
-                .connectRetries(10)
-                .dataSource(it)
-                .load()
-                .migrate()
-        }
-    }
+    val dataSource = lazy { HikariDataSource(hikariConfig) }
 }
 
 private fun String.stripCredentials() = this.replace(Regex("://.*:.*@"), "://")

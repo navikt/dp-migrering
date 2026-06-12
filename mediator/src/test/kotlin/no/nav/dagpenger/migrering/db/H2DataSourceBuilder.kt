@@ -37,7 +37,7 @@ internal class H2DataSourceBuilder {
         }
     }
 
-    val dbsession = DatabaseSession(lazy { HikariDataSource(hikariConfig) })
+    val dataSource = lazy { HikariDataSource(hikariConfig) }
 
     internal fun runMigration() {
         val config =
