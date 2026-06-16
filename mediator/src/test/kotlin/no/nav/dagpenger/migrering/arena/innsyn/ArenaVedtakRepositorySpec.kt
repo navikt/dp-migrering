@@ -4,14 +4,14 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
 
-class VedtakRepositorySpec :
+class ArenaVedtakRepositorySpec :
     StringSpec({
 
         val h2DataSourceBuilder = H2DataSourceBuilder()
         h2DataSourceBuilder.runMigration()
 
         val vedtakRepository =
-            VedtakRepository(
+            ArenaVedtakRepository(
                 dataSource = h2DataSourceBuilder.dataSource,
             )
 

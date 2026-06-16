@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.db.getIntOrNull
 import java.sql.ResultSet
 import javax.sql.DataSource
 
-class VedtakRepository(
+class ArenaVedtakRepository(
     override val dataSource: Lazy<DataSource>,
 ) : ArenaVedtakRepositoryInterface {
     override fun hentVedtakForSak(sakId: SakId): List<ArenaVedtak> =
