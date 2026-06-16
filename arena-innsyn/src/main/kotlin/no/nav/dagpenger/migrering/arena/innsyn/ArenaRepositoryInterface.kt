@@ -9,7 +9,7 @@ import javax.sql.DataSource
 interface ArenaRepositoryInterface<T> {
     val dataSource: Lazy<DataSource>
 
-    fun <R> session(block: (Session) -> R): R = sessionOf(dataSource.value).use(block)
+    private fun <R> session(block: (Session) -> R): R = sessionOf(dataSource.value).use(block)
 
     fun mapResultat(row: ResultSet): T
 
@@ -26,13 +26,28 @@ interface ArenaRepositoryInterface<T> {
         sql: String,
         params: Map<String, Any>,
     ): List<T> =
-        session {
-            it.run(
+        session { session ->
+            session.run(
                 queryOf(
                     sql,
                     params,
-                ).map {
-                    mapResultat(it.underlying)
+                ).map { row ->
+                    mapResultat(row.underlying)
+                }.asList,
+            )
+        }
+
+    fun select(
+        sql: String,
+        vararg params: Any?,
+    ): List<T> =
+        session { session ->
+            session.run(
+                queryOf(
+                    sql,
+                    params,
+                ).map { row ->
+                    mapResultat(row.underlying)
                 }.asList,
             )
         }

@@ -4,6 +4,7 @@ import no.nav.dagpenger.migrering.arena.api.models.ArenaVedtakfaktaDTO
 import java.time.LocalDate
 
 data class ArenaVedtakfakta(
+    val vedtakId: Int,
     val kode: String,
     val navn: String,
     val verdi: String?,
