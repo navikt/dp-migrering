@@ -4,6 +4,7 @@ import no.nav.dagpenger.migrering.arena.api.models.ArenaVilkarsvurderingDTO
 
 data class ArenaVilkårsvurdering(
     val vilkårsvurderingId: Long,
+    val vedtakId: Int,
     val vilkårkode: String,
     val begrunnelse: String?,
     val vurdertAv: String?,
