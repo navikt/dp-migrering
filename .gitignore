@@ -150,3 +150,5 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/gradle,kotlin,intellij+all,macos
 **/bin
 dokumentasjon/DOKUMENTASJON.md
+
+.env
