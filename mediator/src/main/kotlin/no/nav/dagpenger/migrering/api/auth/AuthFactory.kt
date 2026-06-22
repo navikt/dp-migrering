@@ -50,10 +50,10 @@ class AuthFactory(
 
     fun JWTAuthenticationProvider.Config.azureAd() {
         val saksbehandlerGruppe = properties[Configuration.Grupper.saksbehandler]
-        val apper: List<String> = properties[Configuration.Maskintilgang.navn]
+        // val apper: List<String> = properties[Configuration.Maskintilgang.navn]
         realm = Configuration.APP_NAME
         verifiserTokenFormatOgSignatur()
-        autoriser(saksbehandlerGruppe, apper)
+        autoriser(saksbehandlerGruppe, emptyList())
     }
 
 //    fun JWTAuthenticationProvider.Config.adminTilgang() {

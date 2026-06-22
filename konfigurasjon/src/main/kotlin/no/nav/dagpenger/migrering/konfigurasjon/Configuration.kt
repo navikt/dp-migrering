@@ -5,7 +5,6 @@ import com.natpryce.konfig.ConfigurationProperties
 import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.PropertyGroup
 import com.natpryce.konfig.getValue
-import com.natpryce.konfig.listType
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 
@@ -29,9 +28,9 @@ object Configuration {
         // val admin by listType(stringType, Regex(","))
     }
 
-    object Maskintilgang : PropertyGroup() {
-        val navn by listType(stringType, Regex(","))
-    }
+//    object Maskintilgang : PropertyGroup() {
+//        val navn by listType(stringType, Regex(","))
+//    }
 
     val properties =
         ConfigurationProperties.systemProperties() overriding EnvironmentVariables() overriding defaultProperties
