@@ -1,6 +1,7 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.ktor.server.plugins.NotFoundException
+import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDetaljerDTO
 
 class ArenaInnsynResponseService(
     private val sakRepository: ArenaSakRepositoryInterface,
@@ -8,19 +9,19 @@ class ArenaInnsynResponseService(
     private val vedtakfaktaRepository: ArenaVedtakFaktaRepositoryInterface,
     private val vilkårsvurderingRepository: ArenaVilkårsvurderingRepositoryInterface,
 ) {
-    fun hentSak(sakId: SakId): ArenaSakMedVedtak {
+    fun hentSak(sakId: SakId): ArenaSakDetaljerDTO {
         val sak = sakRepository.hentSak(sakId) ?: throw NotFoundException("Fant ingen sak for sakId: ${sakId.id}")
 
         return sakMedVedtak(sak)
     }
 
-    fun hentSak(saksnummer: Saksnummer): ArenaSakMedVedtak {
+    fun hentSak(saksnummer: Saksnummer): ArenaSakDetaljerDTO {
         val sak = sakRepository.hentSak(saksnummer) ?: throw NotFoundException("Fant ingen sak for saksnummer: ${saksnummer.formatert()}")
 
         return sakMedVedtak(sak)
     }
 
-    private fun sakMedVedtak(sak: ArenaSak): ArenaSakMedVedtak {
+    private fun sakMedVedtak(sak: ArenaSak): ArenaSakDetaljerDTO {
         val vedtak = vedtakRepository.hentVedtakForSak(SakId(sak.sakId.toInt()))
         val vedtakIder = vedtak.map { it.vedtakId }
 
@@ -35,6 +36,11 @@ class ArenaInnsynResponseService(
                 )
             }
 
-        return sak.tilArenaSakMedVedtak(vedtakMedFaktaOgVilkår)
+        return sak.tilArenaSakMedVedtak(vedtakMedFaktaOgVilkår).tilKontrakt(
+            telleverkForPerson = null,
+            kvoteHistorikk = emptySet(),
+            sisteUtbetalingDato = null,
+            maksdato = null,
+        )
     }
 }

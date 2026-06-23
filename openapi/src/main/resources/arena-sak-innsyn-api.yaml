@@ -13,7 +13,7 @@ servers:
 paths:
   /sak/{sakid}/detaljert:
     get:
-      summary: Hent detaljert informasjon om en sak
+      summary: Hent detaljert informasjon om en sak på sakId
       parameters:
         - name: sakid
           in: path
@@ -27,28 +27,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArenaSakDetaljer'
+        '404':
+          description: Sak ikke funnet
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
+        default:
+          description: Feil ved henting av sak
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
+  /sak/{aar}/{lopenummer}/detaljert:
+    get:
+      summary: Hent detaljert informasjon om en sak på saksnummer
+      parameters:
+        - name: aar
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: lopenummer
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArenaSakDetaljer'
+        '404':
+          description: Sak ikke funnet
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
+        default:
+          description: Feil ved henting av sak
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
 components:
   schemas:
     ArenaSakDetaljer:
-      # data class ArenaSakDetaljert(
-      #    val sakId: String,
-      #    val opprettetAar: Int,
-      #    val lopenr: Int,
-      #    val person: ArenaSakPerson,
-      #    val statuskode: String,
-      #    val statusnavn: String,
-      #    val registrertDato: LocalDateTime,
-      #    val avsluttetDato: LocalDateTime?,
-      #    val vedtak: List<ArenaVedtakMedDetaljer>,
-      #    val telleverkForPerson: TelleverkForPerson?,
-      #    val kvoteHistorikk: Set<KvotebrukHendelse>,
-      #    val maksdato: LocalDate?,
-      #    val sisteUtbetalingDato: LocalDate?,
-      #
-      #    )
       type: object
       properties:
-        sakid:
+        sakId:
           type: string
         opprettetAar:
           type: string

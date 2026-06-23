@@ -21,7 +21,7 @@ data class ArenaSakMedVedtak(
         sisteUtbetalingDato: LocalDate?,
         maksdato: LocalDate?,
     ) = ArenaSakDetaljerDTO(
-        sakid = sakId,
+        sakId = sakId,
         opprettetAar = opprettetAar,
         lopenr = lopenr,
         person = person.tilKontrakt(),
