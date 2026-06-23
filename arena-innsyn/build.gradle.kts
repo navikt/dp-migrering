@@ -4,7 +4,8 @@ plugins {
 }
 dependencies {
     implementation(project(path = ":openapi"))
-    api(libs.kotlinquery)
+    implementation("io.ktor:ktor-server-status-pages:${libs.versions.ktor.get()}")
+    implementation(libs.kotlinquery)
 
     testImplementation(libs.bundles.kotest.assertions)
 }

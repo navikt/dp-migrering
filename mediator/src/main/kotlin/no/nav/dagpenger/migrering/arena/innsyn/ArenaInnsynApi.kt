@@ -3,6 +3,7 @@ package no.nav.dagpenger.migrering.arena.innsyn
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.auth.authenticate
+import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
@@ -10,8 +11,21 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.authenticationConfig
+import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
+import javax.sql.DataSource
 
-internal fun Application.arenaInnsynApi(authFactory: AuthFactory) {
+internal fun Application.arenaInnsynApi(
+    authFactory: AuthFactory,
+    dataSource: Lazy<DataSource> = OracleDataSourceBuilder().dataSource,
+) {
+    val arenaInnsynResponseService =
+        ArenaInnsynResponseService(
+            sakRepository = ArenaSakRepository(dataSource),
+            vedtakRepository = ArenaVedtakRepository(dataSource),
+            vedtakfaktaRepository = ArenaVedtakFaktaRepository(dataSource),
+            vilkårsvurderingRepository = ArenaVilkårsvurderingRepository(dataSource),
+        )
+
     authenticationConfig(authFactory)
 
     routing {
@@ -22,8 +36,11 @@ internal fun Application.arenaInnsynApi(authFactory: AuthFactory) {
 
             authenticate("azureAd") {
                 get("/sak/{sakId}/detaljert") {
-                    val sakId = call.parameters["sakId"] ?: throw IllegalArgumentException("SakId mangler i path")
-                    call.respond(HttpStatusCode.OK)
+                    val sakIdParam = call.parameters["sakId"] ?: throw BadRequestException("SakId mangler")
+                    val sakId =
+                        SakId.fromString(sakIdParam) ?: throw BadRequestException("SakId må være et gyldig heltall")
+                    val sak = arenaInnsynResponseService.hentSak(sakId)
+                    call.respond(status = HttpStatusCode.OK, message = sak)
                 }
             }
         }

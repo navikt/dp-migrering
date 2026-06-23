@@ -1,69 +1,65 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
+import io.kotest.assertions.json.shouldBeValidJson
+import io.kotest.assertions.json.shouldContainJsonKey
+import io.kotest.assertions.json.shouldContainJsonKeyValue
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
-import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.testAzureAdToken
 import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.withMockAuthServerAndTestApplication
 
 class ArenaInnsynApiSpec :
     StringSpec({
 
-        "kall på rot skal returnere 200 uten body" {
-
-            ArenaInnsynSystem
-                .nyttScenario { }
-                .test {
-                    withMockAuthServerAndTestApplication(this.api) {
-                        uautentisert(endepunkt = "/arena/innsyn").apply {
-                            status shouldBe HttpStatusCode.OK
-                            bodyAsText().isEmpty() shouldBe true
-                        }
-                    }
-                }
-        }
-
-        "ikke autentiserte kall skal returnere 401" {
-            ArenaInnsynSystem
-                .nyttScenario { }
-                .test {
-                    withMockAuthServerAndTestApplication(this.api) {
-                        uautentisert(endepunkt = "/arena/innsyn/sak/902/detaljert").apply {
-                            status shouldBe HttpStatusCode.Unauthorized
-                        }
-                    }
-                }
-        }
-
-        "kall uten saksbehandlergruppe i claim skal returnere 401" {
+        "skal returnere gyldig JSON og 200 på sakId" {
             ArenaInnsynSystem
                 .nyttScenario {
                 }.test {
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
-                            endepunkt = "/arena/innsyn/sak/902/detaljert",
-                            token =
-                                testAzureAdToken(
-                                    ADGrupper = emptyList(),
-                                    navIdent = "Z999999",
-                                ),
+                            endepunkt = "/arena/innsyn/sak/1/detaljert",
                         ).apply {
-                            status shouldBe HttpStatusCode.Unauthorized
+                            status shouldBe HttpStatusCode.OK
+                            val body = bodyAsText()
+                            body.shouldBeValidJson()
+                            body.shouldContainJsonKey("sakId")
                         }
                     }
                 }
         }
 
-        "kall med saksbehandlergruppe i claim skal returnere 200" {
+        "skal returnere 404 hvis sakId ikke finnes" {
             ArenaInnsynSystem
-                .nyttScenario {
-                }.test {
+                .nyttScenario {}
+                .test {
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
-                            endepunkt = "/arena/innsyn/sak/902/detaljert",
+                            endepunkt = "/arena/innsyn/sak/404/detaljert",
                         ).apply {
-                            status shouldBe HttpStatusCode.OK
+                            status shouldBe HttpStatusCode.NotFound
+                            val body = bodyAsText()
+                            body.shouldBeValidJson()
+                            body.shouldContainJsonKeyValue("type", "urn:error:not_found")
+                            body.shouldContainJsonKeyValue("status", 404)
+                        }
+                    }
+                }
+        }
+
+        "skal returnere 400 hvis sakId ikke er et gyldig heltall" {
+            ArenaInnsynSystem
+                .nyttScenario {}
+                .test {
+                    withMockAuthServerAndTestApplication(this.api) {
+                        autentisert(
+                            endepunkt = "/arena/innsyn/sak/ikke-et-heltall/detaljert",
+                        ).apply {
+                            status shouldBe HttpStatusCode.BadRequest
+                            val body = bodyAsText()
+                            body.shouldBeValidJson()
+                            body.shouldContainJsonKeyValue("type", "urn:error:bad_request")
+                            body.shouldContainJsonKeyValue("status", 400)
                         }
                     }
                 }

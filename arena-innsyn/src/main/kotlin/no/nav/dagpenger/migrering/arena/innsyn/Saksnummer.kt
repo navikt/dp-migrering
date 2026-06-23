@@ -14,4 +14,6 @@ data class Saksnummer(
             return Saksnummer(lopenummer = lopenr.toInt(), aar = aar.toInt())
         }
     }
+
+    fun formatert(): String = "$aar-$lopenummer"
 }

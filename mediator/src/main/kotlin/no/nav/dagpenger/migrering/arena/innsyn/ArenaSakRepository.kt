@@ -1,3 +1,5 @@
+@file:Suppress("SqlResolve")
+
 package no.nav.dagpenger.migrering.arena.innsyn
 
 import java.sql.ResultSet
@@ -18,7 +20,7 @@ class ArenaSakRepository(
     override fun mapResultat(row: ResultSet): ArenaSak =
         ArenaSak(
             sakId = row.getInt("sak_id").toString(),
-            opprettetAar = row.getInt("aar"),
+            opprettetAar = row.getInt("aar").toString(),
             lopenr = row.getInt("lopenrsak"),
             statuskode = row.getString("sakstatuskode"),
             statusnavn = row.getString("sakstatuskode"), // fallback to code if name not available
@@ -44,8 +46,8 @@ class ArenaSakRepository(
             WHERE SAK_ID = :sakId AND TABELLNAVNALIAS='PERS'
         """.trimIndent()
 
-    // language=oracle
     internal val selectSakMedSaksnummer =
+        // language=oracle
         """
         SELECT sak.sak_id, sak.aar, sak.sakstatuskode, sakstatus.sakstatusnavn, sak.lopenrsak, person.person_id, 
             person.fornavn, person.etternavn, person.fodselsnr, sak.reg_dato, sak.dato_avsluttet

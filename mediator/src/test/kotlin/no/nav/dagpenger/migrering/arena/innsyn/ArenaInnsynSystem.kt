@@ -16,6 +16,7 @@ import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.AZUREAD_ISSUER_ID
 import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.CLIENT_ID
 import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.mockOAuth2Server
 import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.testAzureAdToken
+import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
 
 class ArenaInnsynSystem(
@@ -41,7 +42,13 @@ class ArenaInnsynSystem(
             ),
         )
 
-    val api: Application.() -> Unit = { arenaInnsynApi(authFactory) }
+    private val h2DataSourceBuilder = H2DataSourceBuilder()
+
+    init {
+        h2DataSourceBuilder.runMigration()
+    }
+
+    val api: Application.() -> Unit = { arenaInnsynApi(authFactory, h2DataSourceBuilder.dataSource) }
 
     class ScenarioOptions(
         var personId: PersonId? = null,

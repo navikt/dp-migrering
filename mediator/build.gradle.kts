@@ -41,6 +41,8 @@ dependencies {
     implementation("io.ktor:ktor-serialization-jackson3:${libs.versions.ktor.get()}")
 
     testImplementation("io.kotest:kotest-assertions-core-jvm:${libs.versions.kotest.get()}")
+    testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
+
     testImplementation("com.h2database:h2:2.2.224")
 
     // testImplementation(libs.rapids.and.rivers.test)
