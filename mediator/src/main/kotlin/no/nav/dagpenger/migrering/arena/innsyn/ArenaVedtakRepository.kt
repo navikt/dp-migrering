@@ -1,3 +1,5 @@
+@file:Suppress("SqlResolve")
+
 package no.nav.dagpenger.migrering.arena.innsyn
 
 import no.nav.dagpenger.migrering.db.getIntOrNull
