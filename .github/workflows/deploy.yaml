@@ -29,18 +29,18 @@ jobs:
           dependency-graph: generate-and-submit
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
       - run: ./gradlew --configuration-cache build
-#      - name: docker-build-push
-#        uses: nais/docker-build-push@v0
-#        id: docker-build-push
-#        with:
-#          team: teamdagpenger
-#          tag: ${{ github.sha }}
-#          dockerfile: mediator/Dockerfile # optional, default Dockerfile
-#          docker_context: mediator # optional, default .
-#          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-#          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-#    outputs:
-#      image: ${{ steps.docker-build-push.outputs.image }}
+      - name: docker-build-push
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: teamdagpenger
+          tag: ${{ github.sha }}
+          dockerfile: mediator/Dockerfile # optional, default Dockerfile
+          docker_context: mediator # optional, default .
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
 
 #  deploy-dev:
 #    name: Deploy to dev
