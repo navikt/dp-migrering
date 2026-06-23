@@ -51,8 +51,6 @@ class ArenaInnsynSystem(
     val api: Application.() -> Unit = { arenaInnsynApi(authFactory, h2DataSourceBuilder.dataSource) }
 
     class ScenarioOptions(
-        var personId: PersonId? = null,
-        var saksnummer: Saksnummer? = null,
         var saksbehandlerGruppe: String = "dagpenger-saksbehandler",
     ) {
         inline fun test(crossinline block: ArenaInnsynSystem.() -> Unit) {

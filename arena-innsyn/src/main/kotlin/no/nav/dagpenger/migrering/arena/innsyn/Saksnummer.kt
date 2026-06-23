@@ -5,14 +5,15 @@ data class Saksnummer(
     val aar: Int,
 ) {
     companion object {
-        fun fromString(id: String): Saksnummer? {
-            if (!id.contains('-')) {
-                return null
+        fun from(
+            aar: String,
+            lopenummer: String,
+        ): Saksnummer? =
+            try {
+                Saksnummer(lopenummer = lopenummer.toInt(), aar = aar.toInt())
+            } catch (_: NumberFormatException) {
+                null
             }
-
-            val (aar, lopenr) = id.split('-')
-            return Saksnummer(lopenummer = lopenr.toInt(), aar = aar.toInt())
-        }
     }
 
     fun formatert(): String = "$aar-$lopenummer"

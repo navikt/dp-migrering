@@ -8,4 +8,5 @@ dependencies {
     implementation(libs.kotlinquery)
 
     testImplementation(libs.bundles.kotest.assertions)
+    testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
 }

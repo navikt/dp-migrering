@@ -42,6 +42,18 @@ internal fun Application.arenaInnsynApi(
                     val sak = arenaInnsynResponseService.hentSak(sakId)
                     call.respond(status = HttpStatusCode.OK, message = sak)
                 }
+
+                get("/sak/{aar}/{lopenummer}/detaljert") {
+                    val aarParam = call.parameters["aar"] ?: throw BadRequestException("År mangler")
+                    val lopenummerParam = call.parameters["lopenummer"] ?: throw BadRequestException("Løpenummer mangler")
+                    val saksnummer =
+                        Saksnummer.from(
+                            aar = aarParam,
+                            lopenummer = lopenummerParam,
+                        ) ?: throw BadRequestException("Aar og lopenummer mangler eller er ikke gyldige heltall")
+                    val sak = arenaInnsynResponseService.hentSak(saksnummer)
+                    call.respond(status = HttpStatusCode.OK, message = sak)
+                }
             }
         }
     }
