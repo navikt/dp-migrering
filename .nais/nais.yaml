@@ -46,11 +46,11 @@ spec:
       value: "{{azure.grupper.saksbehandler}}"
   envFrom:
     - secret: dp-migrering
-  { { #if ingresses}}
+  {{#if ingresses}}
     ingresses:
-      { { #each ingresses as |url|}}
-          - {{url } }
-        {{/each } }
+      {{#each ingresses as |url|}}
+         - {{url}}
+        {{/each}}
   {{/if}}
   azure:
     application:
