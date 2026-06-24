@@ -56,7 +56,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-fss
-          RESOURCE: .nais/nais.yaml,.nais/alerts.yaml
+          RESOURCE: .nais/nais.yaml
           VAR: image=${{ needs.build.outputs.image }}
           VARS: .nais/vars-dev.yaml
           PRINT_PAYLOAD: true
