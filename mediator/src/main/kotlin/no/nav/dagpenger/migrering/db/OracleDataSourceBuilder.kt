@@ -20,7 +20,7 @@ internal class OracleDataSourceBuilder {
 
     private val baseConfig =
         HikariConfig().apply {
-            jdbcUrl = getOrThrow(DB_URL_KEY).ensurePrefix("jdbc:postgresql://").stripCredentials()
+            jdbcUrl = getOrThrow(DB_URL_KEY).ensurePrefix("jdbc:oracle:thin:@").stripCredentials()
             username = getOrThrow(DB_USERNAME_KEY)
             password = getOrThrow(DB_PASSWORD_KEY)
 

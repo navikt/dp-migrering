@@ -13,24 +13,12 @@ object Configuration {
 
     private val defaultProperties =
         ConfigurationMap(
-            mapOf(
-//                "RAPID_APP_NAME" to "dp-behandling",
-//                "KAFKA_CONSUMER_GROUP_ID" to "dp-behandling-v2",
-//                "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
-//                "KAFKA_EXTRA_TOPIC" to "teamdagpenger.journalforing.v1",
-//                "KAFKA_RESET_POLICY" to "LATEST",
-            ),
+            mapOf(),
         )
 
     object Grupper : PropertyGroup() {
         val saksbehandler by stringType
-        // val beslutter by stringType
-        // val admin by listType(stringType, Regex(","))
     }
-
-//    object Maskintilgang : PropertyGroup() {
-//        val navn by listType(stringType, Regex(","))
-//    }
 
     val properties =
         ConfigurationProperties.systemProperties() overriding EnvironmentVariables() overriding defaultProperties

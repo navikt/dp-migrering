@@ -1,0 +1,85 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: dp-arena-gw
+  namespace: teamdagpenger
+  labels:
+    team: teamdagpenger
+spec:
+  image: "{{ image }}"
+  port: 8080
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 99%
+  startup:
+    path: /isalive
+    initialDelay: 10
+    failureThreshold: 6
+    periodSeconds: 5
+    timeout: 5
+  liveness:
+    path: /isalive
+    failureThreshold: 6
+    periodSeconds: 10
+  readiness:
+    path: /isready
+    failureThreshold: 3
+    periodSeconds: 10
+  prometheus:
+    enabled: true
+    path: /metrics
+  replicas:
+    min: 2
+    max: 2
+  resources:
+    limits:
+      memory: 1024Mi
+    requests:
+      cpu: 50m
+      memory: 256Mi
+  env:
+    - name: JDK_JAVA_OPTIONS
+      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=75.0 -XX:ActiveProcessorCount=4
+    - name: GRUPPER_SAKSBEHANDLER
+      value: "{{azure.grupper.saksbehandler}}"
+  envFrom:
+    - secret: dp-migrering
+  { { #if ingresses}}
+    ingresses:
+      { { #each ingresses as |url|}}
+          - {{url } }
+        {{/each } }
+  {{/if}}
+  azure:
+    application:
+      enabled: true
+      tenant: "{{azure.tenant}}"
+      claims:
+        groups:
+          - id: "{{azure.grupper.saksbehandler}}"
+  observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+
+  accessPolicy:
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
+    inbound:
+      rules:
+        { { #if wonderwalled}}
+            - application: wonderwalled-idporten
+                namespace: nais
+                  - application: wonderwalled-azure
+                    namespace: nais
+                  - application: azure-token-generator
+                    namespace: nais
+                {{/if } }
