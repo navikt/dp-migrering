@@ -6,10 +6,10 @@ info:
   contact:
     name: '#team-dagpenger'
 servers:
-  - url: https://dp-arena.intern.dev.nav.no
+  - url: https://dp-arena-gw.intern.dev.nav.no
     description: dev
-  - url: https://dp-arena.intern.nav.no
-    description: prod
+#  - url: https://dp-arena.intern.nav.no
+#    description: prod
 paths:
   /sak/{sakid}/detaljert:
     get:
