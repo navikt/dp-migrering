@@ -76,10 +76,9 @@ spec:
     inbound:
       rules:
         {{#if wonderwalled}}
-        - application: wonderwalled-idporten
-          namespace: nais
-        - application: wonderwalled-azure
-          namespace: nais
+#        - application: wonderwalled-azure
+#          namespace: nais
         - application: azure-token-generator
           namespace: nais
+          cluster: dev-fss
         {{/if}}
