@@ -47,10 +47,10 @@ spec:
   envFrom:
     - secret: dp-migrering
   {{#if ingresses}}
-    ingresses:
-      {{#each ingresses as |url|}}
-      - {{url}}
-      {{/each}}
+  ingresses:
+    {{#each ingresses as |url|}}
+    - {{url}}
+    {{/each}}
   {{/if}}
   azure:
     application:
