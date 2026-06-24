@@ -11,7 +11,7 @@ servers:
 #  - url: https://dp-arena.intern.nav.no
 #    description: prod
 paths:
-  /sak/{sakid}/detaljert:
+  /arena/innsyn/sak/{sakid}/detaljert:
     get:
       summary: Hent detaljert informasjon om en sak på sakId
       parameters:
@@ -39,7 +39,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/HttpProblem'
-  /sak/{aar}/{lopenummer}/detaljert:
+  /arena/innsyn/sak/{aar}/{lopenummer}/detaljert:
     get:
       summary: Hent detaljert informasjon om en sak på saksnummer
       parameters:
