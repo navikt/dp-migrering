@@ -49,8 +49,8 @@ spec:
   {{#if ingresses}}
     ingresses:
       {{#each ingresses as |url|}}
-         - {{url}}
-        {{/each}}
+      - {{url}}
+      {{/each}}
   {{/if}}
   azure:
     application:
@@ -75,11 +75,11 @@ spec:
           namespace: nais-system
     inbound:
       rules:
-        { { #if wonderwalled}}
-            - application: wonderwalled-idporten
-                namespace: nais
-                  - application: wonderwalled-azure
-                    namespace: nais
-                  - application: azure-token-generator
-                    namespace: nais
-                {{/if } }
+        {{#if wonderwalled}}
+        - application: wonderwalled-idporten
+          namespace: nais
+        - application: wonderwalled-azure
+          namespace: nais
+        - application: azure-token-generator
+          namespace: nais
+        {{/if}}
