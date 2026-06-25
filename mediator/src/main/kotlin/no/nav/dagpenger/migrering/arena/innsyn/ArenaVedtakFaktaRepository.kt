@@ -8,11 +8,14 @@ import javax.sql.DataSource
 class ArenaVedtakFaktaRepository(
     override val dataSource: Lazy<DataSource>,
 ) : ArenaVedtakFaktaRepositoryInterface {
-    override fun hentFaktaForVedtak(vedtakIder: List<Int>): List<ArenaVedtakfakta> =
-        select(
+    override fun hentFaktaForVedtak(vedtakIder: List<Int>): List<ArenaVedtakfakta> {
+        if (vedtakIder.isEmpty()) return emptyList()
+
+        return select(
             sql = selectVedtakfaktaForVedtakIder(params = vedtakIder.joinToString(",") { "?" }),
-            params = vedtakIder.toTypedArray(),
+            params = vedtakIder,
         )
+    }
 
     override fun mapResultat(row: ResultSet): ArenaVedtakfakta =
         ArenaVedtakfakta(

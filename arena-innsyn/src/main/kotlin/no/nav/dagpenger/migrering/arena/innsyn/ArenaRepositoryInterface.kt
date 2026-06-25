@@ -51,4 +51,18 @@ interface ArenaRepositoryInterface<T> {
                 }.asList,
             )
         }
+
+    fun select(
+        sql: String,
+        params: List<Any?>,
+    ): List<T> =
+        session { session ->
+            session.run(
+                // Use the spread operator '*' here to unpack the list safely into queryOf
+                queryOf(sql, *params.toTypedArray())
+                    .map { row ->
+                        mapResultat(row.underlying)
+                    }.asList,
+            )
+        }
 }
