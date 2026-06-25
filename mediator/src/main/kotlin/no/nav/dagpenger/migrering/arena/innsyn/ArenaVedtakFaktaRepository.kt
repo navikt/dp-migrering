@@ -23,7 +23,7 @@ class ArenaVedtakFaktaRepository(
             kode = row.getString("vedtakfaktakode"),
             navn = row.getString("skjermbildetekst"),
             verdi = row.getString("vedtakverdi"),
-            registrertDato = row.getDate("reg_dato").toLocalDate(),
+            registrertDato = row.getTimestamp("reg_dato").toLocalDateTime(),
         )
 
     private fun selectVedtakfaktaForVedtakIder(params: String) =
