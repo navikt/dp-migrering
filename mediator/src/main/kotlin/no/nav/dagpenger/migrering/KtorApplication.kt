@@ -2,6 +2,7 @@ package no.nav.dagpenger.migrering
 
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.jackson3.JacksonConverter
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStarting
@@ -18,6 +19,8 @@ import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.applicationEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.metrics.micrometer.MicrometerMetrics
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.application
@@ -35,6 +38,7 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
+import no.nav.dagpenger.migrering.api.statusPagesConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.concurrent.atomic.AtomicBoolean
@@ -89,6 +93,12 @@ fun ktorApplication(
                 monitor.subscribe(ApplicationStopping) { it.log.info("Application stopping …") }
                 monitor.subscribe(ApplicationStopped) { it.log.info("Application stopped …") }
 
+                install(ContentNegotiation) {
+                    register(ContentType.Application.Json, JacksonConverter(objectMapper))
+                }
+                install(StatusPages) {
+                    statusPagesConfig()
+                }
                 applicationModule(meterRegistry)
                 this.apply { configuration() }
                 naisRoutings(naisEndpoints, meterRegistry, preStopHook, aliveCheck, readyCheck)
