@@ -23,7 +23,7 @@ class ArenaSakRepository(
             opprettetAar = row.getInt("aar").toString(),
             lopenr = row.getInt("lopenrsak"),
             statuskode = row.getString("sakstatuskode"),
-            statusnavn = row.getString("sakstatuskode"), // fallback to code if name not available
+            statusnavn = row.getString("sakstatusnavn"),
             registrertDato = row.getTimestamp("reg_dato").toLocalDateTime(),
             avsluttetDato = row.getTimestamp("dato_avsluttet")?.toLocalDateTime(),
             person =
