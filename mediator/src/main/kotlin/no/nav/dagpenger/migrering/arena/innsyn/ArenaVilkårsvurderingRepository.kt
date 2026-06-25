@@ -11,7 +11,7 @@ class ArenaVilkårsvurderingRepository(
     override fun hentForVedtak(vedtaksIder: List<Int>): List<ArenaVilkårsvurdering> =
         select(
             sql = selectVilkårsvurderingerForVedtakIder(params = vedtaksIder.joinToString(",") { "?" }),
-            params = vedtaksIder.toTypedArray(),
+            params = vedtaksIder,
         )
 
     override fun mapResultat(row: ResultSet): ArenaVilkårsvurdering =
