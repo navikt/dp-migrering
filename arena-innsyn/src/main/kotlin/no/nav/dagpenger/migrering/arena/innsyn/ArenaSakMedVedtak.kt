@@ -19,7 +19,6 @@ data class ArenaSakMedVedtak(
         telleverkForPerson: TelleverkForPerson?,
         kvoteHistorikk: Set<KvotebrukHendelse>,
         sisteUtbetalingDato: LocalDate?,
-        maksdato: LocalDate?,
     ) = ArenaSakDetaljerDTO(
         sakId = sakId,
         opprettetAar = opprettetAar,
@@ -32,7 +31,6 @@ data class ArenaSakMedVedtak(
         vedtak = vedtak.map { it.tilKontrakt() },
         telleverkForPerson = telleverkForPerson?.tilKontrakt(),
         kvoteHistorikk = kvoteHistorikk.map { it.tilKontrakt() },
-        maksdato = maksdato,
         sisteUtbetalingDato = sisteUtbetalingDato,
     )
 }

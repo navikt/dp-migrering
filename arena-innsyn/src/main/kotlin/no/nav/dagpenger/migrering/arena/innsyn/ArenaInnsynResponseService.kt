@@ -8,6 +8,8 @@ class ArenaInnsynResponseService(
     private val vedtakRepository: ArenaVedtakRepositoryInterface,
     private val vedtakfaktaRepository: ArenaVedtakFaktaRepositoryInterface,
     private val vilkårsvurderingRepository: ArenaVilkårsvurderingRepositoryInterface,
+    private val kvoteBrukRepository: ArenaKvoteBrukRepositoryInterface,
+    private val telleverkRepository: ArenaTelleverkRepositoryInterface,
 ) {
     fun hentSak(sakId: SakId): ArenaSakDetaljerDTO {
         val sak = sakRepository.hentSak(sakId) ?: throw NotFoundException("Fant ingen sak for sakId: ${sakId.id}")
@@ -16,7 +18,9 @@ class ArenaInnsynResponseService(
     }
 
     fun hentSak(saksnummer: Saksnummer): ArenaSakDetaljerDTO {
-        val sak = sakRepository.hentSak(saksnummer) ?: throw NotFoundException("Fant ingen sak for saksnummer: ${saksnummer.formatert()}")
+        val sak =
+            sakRepository.hentSak(saksnummer)
+                ?: throw NotFoundException("Fant ingen sak for saksnummer: ${saksnummer.formatert()}")
 
         return sakMedVedtak(sak)
     }
@@ -36,11 +40,12 @@ class ArenaInnsynResponseService(
                 )
             }
 
+        val personId = PersonId(id = sak.person.personId)
+
         return sak.tilArenaSakMedVedtak(vedtakMedFaktaOgVilkår).tilKontrakt(
-            telleverkForPerson = null,
-            kvoteHistorikk = emptySet(),
+            telleverkForPerson = telleverkRepository.hentTelleverkForPerson(personId),
+            kvoteHistorikk = kvoteBrukRepository.hentKvoteBrukHendelserForPerson(personId),
             sisteUtbetalingDato = null,
-            maksdato = null,
         )
     }
 }

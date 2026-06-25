@@ -55,7 +55,7 @@ class ArenaKvoteBrukRepository(
             , BEGRUNNELSE
         FROM KVOTEBRUK kv
         WHERE person_id = :personId
-          AND kv.kvotetypekode IN ('AAP', 'MAAPU')
+          AND kv.kvotetypekode IN ('DPTEL', 'MAXFT', 'MAXPT')
         ORDER BY kv.dato_hendelse DESC, KVOTEBRUK_ID DESC
         """.trimIndent()
 }

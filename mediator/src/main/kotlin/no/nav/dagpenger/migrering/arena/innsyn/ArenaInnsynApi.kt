@@ -24,6 +24,8 @@ internal fun Application.arenaInnsynApi(
             vedtakRepository = ArenaVedtakRepository(dataSource),
             vedtakfaktaRepository = ArenaVedtakFaktaRepository(dataSource),
             vilkårsvurderingRepository = ArenaVilkårsvurderingRepository(dataSource),
+            kvoteBrukRepository = ArenaKvoteBrukRepository(dataSource),
+            telleverkRepository = ArenaTelleverkRepository(dataSource),
         )
 
     authenticationConfig(authFactory)
@@ -45,7 +47,8 @@ internal fun Application.arenaInnsynApi(
 
                 get("/sak/{aar}/{lopenummer}/detaljert") {
                     val aarParam = call.parameters["aar"] ?: throw BadRequestException("År mangler")
-                    val lopenummerParam = call.parameters["lopenummer"] ?: throw BadRequestException("Løpenummer mangler")
+                    val lopenummerParam =
+                        call.parameters["lopenummer"] ?: throw BadRequestException("Løpenummer mangler")
                     val saksnummer =
                         Saksnummer.from(
                             aar = aarParam,
