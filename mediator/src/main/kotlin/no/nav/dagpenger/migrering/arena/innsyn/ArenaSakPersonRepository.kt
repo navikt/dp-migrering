@@ -34,6 +34,6 @@ class ArenaSakPersonRepository(
                  JOIN sak sak ON sak.objekt_id = pers.person_id
                  JOIN sakstatus ON sak.sakstatuskode = sakstatus.sakstatuskode
         WHERE pers.fodselsnr = :fodselsnr
-          AND sak.tabellnavnalias = 'PERS';
+          AND sak.tabellnavnalias = 'PERS'
         """.trimIndent()
 }
