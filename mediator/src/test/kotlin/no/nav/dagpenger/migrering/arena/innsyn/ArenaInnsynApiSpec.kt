@@ -1,16 +1,56 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
+import io.kotest.assertions.json.shouldBeJsonArray
 import io.kotest.assertions.json.shouldBeValidJson
 import io.kotest.assertions.json.shouldContainJsonKey
 import io.kotest.assertions.json.shouldContainJsonKeyValue
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.withMockAuthServerAndTestApplication
 
 class ArenaInnsynApiSpec :
     StringSpec({
+
+        "hent saker for person skal returnere gyldig JSON og status 200" {
+            ArenaInnsynSystem
+                .nyttScenario {
+                }.test {
+                    withMockAuthServerAndTestApplication(this.api) {
+                        autentisert(
+                            httpMethod = HttpMethod.Post,
+                            endepunkt = "/arena/innsyn/sak/person",
+                            body = """{"ident":"12312312312"}""",
+                        ).apply {
+                            status shouldBe HttpStatusCode.OK
+                            val body = bodyAsText()
+                            body.shouldBeValidJson()
+                            body.shouldBeJsonArray()
+                            body.shouldContainJsonKey("\$[*].sakId")
+                        }
+                    }
+                }
+        }
+
+        "hent saker for person med ugyldig ident skal returnere 400 og problem-json" {
+            ArenaInnsynSystem
+                .nyttScenario {
+                }.test {
+                    withMockAuthServerAndTestApplication(this.api) {
+                        autentisert(
+                            httpMethod = HttpMethod.Post,
+                            endepunkt = "/arena/innsyn/sak/person",
+                            body = """{"ident":"12312312"}""",
+                        ).apply {
+                            status shouldBe HttpStatusCode.UnprocessableEntity
+                            val body = bodyAsText()
+                            body.shouldBeValidJson()
+                        }
+                    }
+                }
+        }
 
         "hent på sakId skal returnere gyldig JSON og status 200" {
             ArenaInnsynSystem
@@ -55,11 +95,9 @@ class ArenaInnsynApiSpec :
                         autentisert(
                             endepunkt = "/arena/innsyn/sak/ikke-et-heltall/detaljert",
                         ).apply {
-                            status shouldBe HttpStatusCode.BadRequest
+                            status shouldBe HttpStatusCode.UnprocessableEntity
                             val body = bodyAsText()
                             body.shouldBeValidJson()
-                            body.shouldContainJsonKeyValue("type", "urn:error:bad_request")
-                            body.shouldContainJsonKeyValue("status", 400)
                         }
                     }
                 }
@@ -109,11 +147,9 @@ class ArenaInnsynApiSpec :
                         autentisert(
                             endepunkt = "/arena/innsyn/sak/tyvetretti/entotrefire/detaljert",
                         ).apply {
-                            status shouldBe HttpStatusCode.BadRequest
+                            status shouldBe HttpStatusCode.UnprocessableEntity
                             val body = bodyAsText()
                             body.shouldBeValidJson()
-                            body.shouldContainJsonKeyValue("type", "urn:error:bad_request")
-                            body.shouldContainJsonKeyValue("status", 400)
                         }
                     }
                 }

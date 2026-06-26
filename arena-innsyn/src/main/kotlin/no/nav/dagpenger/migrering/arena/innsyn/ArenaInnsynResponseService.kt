@@ -1,6 +1,7 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.ktor.server.plugins.NotFoundException
+import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDTO
 import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDetaljerDTO
 
 class ArenaInnsynResponseService(
@@ -10,7 +11,10 @@ class ArenaInnsynResponseService(
     private val vilkårsvurderingRepository: ArenaVilkårsvurderingRepositoryInterface,
     private val kvoteBrukRepository: ArenaKvoteBrukRepositoryInterface,
     private val telleverkRepository: ArenaTelleverkRepositoryInterface,
+    private val sakPersonRepository: ArenaSakPersonRepositoryInterface,
 ) {
+    fun hentArenaSakerForPerson(ident: String): List<ArenaSakDTO> = sakPersonRepository.hentSakerForPerson(ident).map { it.tilKontrakt() }
+
     fun hentSak(sakId: SakId): ArenaSakDetaljerDTO {
         val sak = sakRepository.hentSak(sakId) ?: throw NotFoundException("Fant ingen sak for sakId: ${sakId.id}")
 
@@ -42,10 +46,12 @@ class ArenaInnsynResponseService(
 
         val personId = PersonId(id = sak.person.personId)
 
-        return sak.tilArenaSakMedVedtak(vedtakMedFaktaOgVilkår).tilKontrakt(
-            telleverkForPerson = telleverkRepository.hentTelleverkForPerson(personId),
-            kvoteHistorikk = kvoteBrukRepository.hentKvoteBrukHendelserForPerson(personId),
-            sisteUtbetalingDato = null,
-        )
+        return sak
+            .tilArenaSakMedVedtak(vedtakMedFaktaOgVilkår)
+            .tilKontrakt(
+                telleverkForPerson = telleverkRepository.hentTelleverkForPerson(personId),
+                kvoteHistorikk = kvoteBrukRepository.hentKvoteBrukHendelserForPerson(personId),
+                sisteUtbetalingDato = null,
+            )
     }
 }

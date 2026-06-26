@@ -17,23 +17,7 @@ class ArenaSakRepository(
     override fun hentSak(saksnummer: Saksnummer): ArenaSak? =
         selectSingle(selectSakMedSaksnummer, mapOf("lopenummer" to saksnummer.lopenummer, "aar" to saksnummer.aar))
 
-    override fun mapResultat(row: ResultSet): ArenaSak =
-        ArenaSak(
-            sakId = row.getInt("sak_id").toString(),
-            opprettetAar = row.getInt("aar").toString(),
-            lopenr = row.getInt("lopenrsak"),
-            statuskode = row.getString("sakstatuskode"),
-            statusnavn = row.getString("sakstatusnavn"),
-            registrertDato = row.getTimestamp("reg_dato").toLocalDateTime(),
-            avsluttetDato = row.getTimestamp("dato_avsluttet")?.toLocalDateTime(),
-            person =
-                ArenaSakPerson(
-                    personId = row.getInt("person_id"),
-                    fodselsnummer = row.getString("fodselsnr"),
-                    fornavn = row.getString("fornavn"),
-                    etternavn = row.getString("etternavn"),
-                ),
-        )
+    override fun mapResultat(row: ResultSet): ArenaSak = ArenaSak.fraResultSet(row)
 
     // language=oracle
     internal val selectSakMedSaksId =

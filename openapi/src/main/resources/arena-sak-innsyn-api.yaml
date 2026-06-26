@@ -11,6 +11,34 @@ servers:
 #  - url: https://dp-arena.intern.nav.no
 #    description: prod
 paths:
+  /arena/innsyn/sak/person:
+    post:
+      summary: Hent alle saker for en person
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentForesporsel'
+      tags:
+        - Arena innsyn
+      security:
+        - azureAd: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArenaSak'
+        default:
+          description: Feil ved henting av saker
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
   /arena/innsyn/sak/{sakid}/detaljert:
     get:
       summary: Hent detaljert informasjon om en sak på sakId
@@ -82,6 +110,27 @@ paths:
                 $ref: '#/components/schemas/HttpProblem'
 components:
   schemas:
+    ArenaSak:
+      type: object
+      properties:
+        sakId:
+          type: string
+        opprettetAar:
+          type: string
+        lopenr:
+          type: integer
+        person:
+          $ref: '#/components/schemas/ArenaSakPerson'
+        statuskode:
+          type: string
+        statusnavn:
+          type: string
+        registrertDato:
+          type: string
+          format: date-time
+        avsluttetDato:
+          type: string
+          format: date-time
     ArenaSakDetaljer:
       type: object
       properties:
@@ -289,6 +338,18 @@ components:
         - erObligatorisk
         - statuskode
         - statusnavn
+        -
+    Personident:
+      type: string
+      pattern: '^[0-9]{11}$'
+
+    IdentForesporsel:
+      type: object
+      required:
+        - ident
+      properties:
+        ident:
+          $ref: '#/components/schemas/Personident'
 
     HttpProblem:
       type: object
