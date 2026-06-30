@@ -145,6 +145,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ArenaSak'
+      required:
+        - person
+        - saker
     ArenaSak:
       type: object
       properties:
@@ -218,6 +221,11 @@ components:
           type: string
         etternavn:
           type: string
+      required:
+        - personId
+        - fodselsnummer
+        - fornavn
+        - etternavn
 
     ArenaVedtakMedDetaljer:
       type: object
@@ -417,7 +425,7 @@ components:
       bearerFormat: JWT
       description: |
         Bruker [AzureAD](https://docs.nais.io/security/auth/azure-ad) til autentisering. 
-        Token må ha `audience` satt til `[cluster].teamdagpenger.dp-arena-gw`.
+        Token må ha audience` satt til `[cluster].teamdagpenger.dp-arena-gw`.
         
         For å teste APIet kan du lage et gyldig OBO-token ved å bruke wonderwalled:
         - [dev-fss](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-fss.teamdagpenger.dp-arena-gw)
