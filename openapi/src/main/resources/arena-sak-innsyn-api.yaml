@@ -58,7 +58,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ArenaSak'
+                  $ref: '#/components/schemas/ArenaSakerForPerson'
         default:
           description: Feil ved henting av saker
           content:
@@ -420,4 +420,4 @@ components:
         Token må ha `audience` satt til `[cluster].teamdagpenger.dp-arena-gw`.
         
         For å teste APIet kan du lage et gyldig OBO-token ved å bruke wonderwalled:
-        - [dev-gcp](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp.teamdagpenger.dp-migreing)
+        - [dev-fss](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-fss.teamdagpenger.dp-arena-gw)
