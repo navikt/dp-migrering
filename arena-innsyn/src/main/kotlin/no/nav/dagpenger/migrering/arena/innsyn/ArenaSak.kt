@@ -52,7 +52,6 @@ data class ArenaSak(
             sakId = sakId,
             opprettetAar = opprettetAar,
             lopenr = lopenr,
-            person = person.tilKontrakt(),
             registrertDato = registrertDato,
             avsluttetDato = avsluttetDato,
             statuskode = statuskode,

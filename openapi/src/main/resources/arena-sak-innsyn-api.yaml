@@ -37,15 +37,15 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/HttpProblem'
-  /arena/innsyn/sak/person:
-    post:
+  /arena/innsyn/sak/person/{personId}:
+    get:
       summary: Hent alle saker for en person
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/IdentForesporsel'
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: integer
       tags:
         - Arena innsyn
       security:
@@ -136,6 +136,15 @@ paths:
                 $ref: '#/components/schemas/HttpProblem'
 components:
   schemas:
+    ArenaSakerForPerson:
+      type: object
+      properties:
+        person:
+          $ref: '#/components/schemas/ArenaSakPerson'
+        saker:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArenaSak'
     ArenaSak:
       type: object
       properties:
@@ -145,8 +154,6 @@ components:
           type: string
         lopenr:
           type: integer
-        person:
-          $ref: '#/components/schemas/ArenaSakPerson'
         statuskode:
           type: string
         statusnavn:

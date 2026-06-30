@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import io.kotest.assertions.json.shouldBeJsonArray
 import io.kotest.assertions.json.shouldBeValidJson
 import io.kotest.assertions.json.shouldContainJsonKey
 import io.kotest.assertions.json.shouldContainJsonKeyValue
@@ -38,15 +37,14 @@ class ArenaInnsynApiSpec :
                 }.test {
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
-                            httpMethod = HttpMethod.Post,
-                            endepunkt = "/arena/innsyn/sak/person",
-                            body = """{"ident":"12312312312"}""",
+                            httpMethod = HttpMethod.Get,
+                            endepunkt = "/arena/innsyn/sak/person/4873545",
                         ).apply {
                             status shouldBe HttpStatusCode.OK
                             val body = bodyAsText()
                             body.shouldBeValidJson()
-                            body.shouldBeJsonArray()
-                            body.shouldContainJsonKey("\$[*].sakId")
+                            body.shouldContainJsonKey("person")
+                            body.shouldContainJsonKey("saker")
                         }
                     }
                 }
@@ -58,11 +56,10 @@ class ArenaInnsynApiSpec :
                 }.test {
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
-                            httpMethod = HttpMethod.Post,
-                            endepunkt = "/arena/innsyn/sak/person",
-                            body = """{"ident":"12312312"}""",
+                            httpMethod = HttpMethod.Get,
+                            endepunkt = "/arena/innsyn/sak/person/12432",
                         ).apply {
-                            status shouldBe HttpStatusCode.UnprocessableEntity
+                            status shouldBe HttpStatusCode.NotFound
                             val body = bodyAsText()
                             body.shouldBeValidJson()
                         }

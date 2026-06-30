@@ -53,19 +53,19 @@ internal fun Application.arenaInnsynApi(
 
                     call.respond(status = HttpStatusCode.OK, PersonIdDTO(id = personId))
                 }
-                post("/sak/person") {
-                    val identForespørsel = call.receive<IdentForesporselDTO>()
-                    val ident = identForespørsel.ident.tilPersonIdentfikator()
+                get("/sak/person/{personId}") {
+                    val personId = call.parameters["personId"]?.toInt() ?: throw BadRequestException("PersonId mangler")
 
                     val sakerForPerson =
-                        arenaInnsynResponseService.hentArenaSakerForPerson(ident.identifikator())
+                        arenaInnsynResponseService.hentArenaSakerForPerson(personId)
 
                     call.respond(status = HttpStatusCode.OK, message = sakerForPerson)
                 }
                 get("/sak/{sakId}/detaljert") {
                     val sakIdParam = call.parameters["sakId"] ?: throw BadRequestException("SakId mangler")
                     val sakId =
-                        SakId.fromString(sakIdParam) ?: throw UnprocessableContentException("SakId må være et gyldig heltall")
+                        SakId.fromString(sakIdParam)
+                            ?: throw UnprocessableContentException("SakId må være et gyldig heltall")
                     val sak = arenaInnsynResponseService.hentSak(sakId)
                     call.respond(status = HttpStatusCode.OK, message = sak)
                 }
@@ -78,7 +78,8 @@ internal fun Application.arenaInnsynApi(
                         Saksnummer.from(
                             aar = aarParam,
                             lopenummer = lopenummerParam,
-                        ) ?: throw UnprocessableContentException("Aar og lopenummer mangler eller er ikke gyldige heltall")
+                        )
+                            ?: throw UnprocessableContentException("Aar og lopenummer mangler eller er ikke gyldige heltall")
                     val sak = arenaInnsynResponseService.hentSak(saksnummer)
                     call.respond(status = HttpStatusCode.OK, message = sak)
                 }

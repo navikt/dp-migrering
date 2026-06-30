@@ -13,7 +13,7 @@ class ArenaSakPersonRepositorySpec :
         val arenaSakPersonRepository = ArenaSakPersonRepository(h2DataSourceBuilder.dataSource)
 
         "kan hente saker for en person" {
-            val sakerForPerson = arenaSakPersonRepository.hentSakerForPerson("12312312312")
+            val sakerForPerson = arenaSakPersonRepository.hentSakerForPerson(4873545)
 
             sakerForPerson.size shouldBe 1
         }

@@ -8,10 +8,10 @@ import javax.sql.DataSource
 class ArenaSakPersonRepository(
     override val dataSource: Lazy<DataSource>,
 ) : ArenaSakPersonRepositoryInterface {
-    override fun hentSakerForPerson(fodselsnummer: String): List<ArenaSak> =
+    override fun hentSakerForPerson(personId: Int): List<ArenaSak> =
         select(
             selectSakPåFødselsnummer,
-            mapOf("fodselsnr" to fodselsnummer),
+            mapOf("personId" to personId),
         )
 
     override fun mapResultat(row: ResultSet): ArenaSak = ArenaSak.fraResultSet(row)
@@ -33,7 +33,7 @@ class ArenaSakPersonRepository(
         FROM person pers
                  JOIN sak sak ON sak.objekt_id = pers.person_id
                  JOIN sakstatus ON sak.sakstatuskode = sakstatus.sakstatuskode
-        WHERE pers.fodselsnr = :fodselsnr
+        WHERE pers.person_id = :personId
           AND sak.tabellnavnalias = 'PERS'
         """.trimIndent()
 }

@@ -1,8 +1,8 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.ktor.server.plugins.NotFoundException
-import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDTO
 import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDetaljerDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaSakerForPersonDTO
 
 class ArenaInnsynResponseService(
     private val sakRepository: ArenaSakRepositoryInterface,
@@ -17,7 +17,14 @@ class ArenaInnsynResponseService(
     fun hentPersonId(fodselsnr: String): Int =
         personRepository.personId(fodselsnr) ?: throw NotFoundException("Fant ikke person $fodselsnr")
 
-    fun hentArenaSakerForPerson(ident: String): List<ArenaSakDTO> = sakPersonRepository.hentSakerForPerson(ident).map { it.tilKontrakt() }
+    fun hentArenaSakerForPerson(personId: Int): ArenaSakerForPersonDTO {
+        val person = personRepository.finnPerson(personId) ?: throw NotFoundException("Fant ikke person $personId")
+        val sakerForPerson = sakPersonRepository.hentSakerForPerson(personId)
+        return ArenaSakerForPersonDTO(
+            person = person.tilKontrakt(),
+            saker = sakerForPerson.map { it.tilKontrakt() },
+        )
+    }
 
     fun hentSak(sakId: SakId): ArenaSakDetaljerDTO {
         val sak = sakRepository.hentSak(sakId) ?: throw NotFoundException("Fant ingen sak for sakId: ${sakId.id}")

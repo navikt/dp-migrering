@@ -77,9 +77,8 @@ class ArenaInnsynApiAuthSpec :
                 }.test {
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
-                            httpMethod = HttpMethod.Post,
-                            endepunkt = "/arena/innsyn/sak/person",
-                            body = """{"ident":"11223344556"}""",
+                            httpMethod = HttpMethod.Get,
+                            endepunkt = "/arena/innsyn/sak/person/123",
                             token =
                                 testAzureAdToken(
                                     ADGrupper = emptyList(),
@@ -99,8 +98,8 @@ class ArenaInnsynApiAuthSpec :
                 .test {
                     withMockAuthServerAndTestApplication(this.api) {
                         uautentisert(
-                            httpMethod = HttpMethod.Post,
-                            endepunkt = "/arena/innsyn/sak/person",
+                            httpMethod = HttpMethod.Get,
+                            endepunkt = "/arena/innsyn/sak/person/123",
                         ).apply {
                             status shouldBe HttpStatusCode.Unauthorized
                             bodyAsText().shouldBeValidJson()
