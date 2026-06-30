@@ -16,6 +16,7 @@ import no.nav.dagpenger.migrering.api.UnprocessableContentException
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.authenticationConfig
 import no.nav.dagpenger.migrering.arena.api.models.IdentForesporselDTO
+import no.nav.dagpenger.migrering.arena.api.models.PersonIdDTO
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import javax.sql.DataSource
 
@@ -32,6 +33,7 @@ internal fun Application.arenaInnsynApi(
             kvoteBrukRepository = ArenaKvoteBrukRepository(dataSource),
             telleverkRepository = ArenaTelleverkRepository(dataSource),
             sakPersonRepository = ArenaSakPersonRepository(dataSource),
+            personRepository = ArenaPersonRepository(dataSource),
         )
 
     authenticationConfig(authFactory)
@@ -43,6 +45,14 @@ internal fun Application.arenaInnsynApi(
             get { call.respond(HttpStatusCode.OK) }
 
             authenticate("azureAd") {
+                post("/person") {
+                    val identForespørsel = call.receive<IdentForesporselDTO>()
+                    val ident = identForespørsel.ident.tilPersonIdentfikator()
+
+                    val personId = arenaInnsynResponseService.hentPersonId(ident.identifikator())
+
+                    call.respond(status = HttpStatusCode.OK, PersonIdDTO(id = personId))
+                }
                 post("/sak/person") {
                     val identForespørsel = call.receive<IdentForesporselDTO>()
                     val ident = identForespørsel.ident.tilPersonIdentfikator()

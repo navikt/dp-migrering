@@ -12,7 +12,11 @@ class ArenaInnsynResponseService(
     private val kvoteBrukRepository: ArenaKvoteBrukRepositoryInterface,
     private val telleverkRepository: ArenaTelleverkRepositoryInterface,
     private val sakPersonRepository: ArenaSakPersonRepositoryInterface,
+    private val personRepository: ArenaPersonRepositoryInterface,
 ) {
+    fun hentPersonId(fodselsnr: String): Int =
+        personRepository.personId(fodselsnr) ?: throw NotFoundException("Fant ikke person $fodselsnr")
+
     fun hentArenaSakerForPerson(ident: String): List<ArenaSakDTO> = sakPersonRepository.hentSakerForPerson(ident).map { it.tilKontrakt() }
 
     fun hentSak(sakId: SakId): ArenaSakDetaljerDTO {

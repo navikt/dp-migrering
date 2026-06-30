@@ -14,6 +14,24 @@ import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.withMockAuthServe
 class ArenaInnsynApiSpec :
     StringSpec({
 
+        "hent person id for person skal returnere gyldig JSON og status 200" {
+            ArenaInnsynSystem
+                .nyttScenario { }
+                .test {
+                    withMockAuthServerAndTestApplication(this.api) {
+                        autentisert(
+                            httpMethod = HttpMethod.Post,
+                            endepunkt = "/arena/innsyn/person",
+                            body = """{"ident":"12312312312"}""",
+                        ).apply {
+                            status shouldBe HttpStatusCode.OK
+                            val body = bodyAsText()
+                            body.shouldBeValidJson()
+                            body.shouldContainJsonKey("id")
+                        }
+                    }
+                }
+        }
         "hent saker for person skal returnere gyldig JSON og status 200" {
             ArenaInnsynSystem
                 .nyttScenario {

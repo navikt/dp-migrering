@@ -11,6 +11,32 @@ servers:
 #  - url: https://dp-arena.intern.nav.no
 #    description: prod
 paths:
+  /arena/innsyn/person:
+    post:
+      summary: Hent personId for en person
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentForesporsel'
+      tags:
+        - Arena innsyn
+      security:
+        - azureAd: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonId'
+        default:
+          description: Feil ved henting av personId
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
   /arena/innsyn/sak/person:
     post:
       summary: Hent alle saker for en person
@@ -246,17 +272,6 @@ components:
       required:
         - dagpengePeriodeTeller
 
-    # data class KvotebrukHendelse(
-    #    val id: Int,
-    #    val kvoteTypeKode: String,
-    #    val endringsGrunnlag: String,
-    #    val antallBevegelse: Int,
-    #    val posteringTypeKode: String,
-    #    val datoHendelse: LocalDate,
-    #    val resterende: Int,
-    #    val modUser: String?,
-    #    val begrunnelse: String?,
-    #)
     KvotebrukHendelse:
       type: object
       properties:
@@ -339,9 +354,20 @@ components:
         - statuskode
         - statusnavn
         -
-    Personident:
+    PersonIdent:
+      description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
       type: string
       pattern: '^[0-9]{11}$'
+
+    PersonId:
+      description:
+        Unik identifikator for en person i Arena.
+      type: object
+      properties:
+        id:
+          type: integer
+      required:
+        - id
 
     IdentForesporsel:
       type: object
@@ -349,7 +375,7 @@ components:
         - ident
       properties:
         ident:
-          $ref: '#/components/schemas/Personident'
+          $ref: '#/components/schemas/PersonIdent'
 
     HttpProblem:
       type: object

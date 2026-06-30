@@ -108,4 +108,42 @@ class ArenaInnsynApiAuthSpec :
                     }
                 }
         }
+
+        "hente person id for person uten saksbehandlergruppe i claim skal returnere 401" {
+            ArenaInnsynSystem
+                .nyttScenario {
+                }.test {
+                    withMockAuthServerAndTestApplication(this.api) {
+                        autentisert(
+                            httpMethod = HttpMethod.Post,
+                            endepunkt = "/arena/innsyn/person",
+                            body = """{"ident":"11223344556"}""",
+                            token =
+                                testAzureAdToken(
+                                    ADGrupper = emptyList(),
+                                    navIdent = "Z999999",
+                                ),
+                        ).apply {
+                            status shouldBe HttpStatusCode.Unauthorized
+                            bodyAsText().shouldBeValidJson()
+                        }
+                    }
+                }
+        }
+
+        "uautorisert hent person id for person kall skal returnere 401" {
+            ArenaInnsynSystem
+                .nyttScenario { }
+                .test {
+                    withMockAuthServerAndTestApplication(this.api) {
+                        uautentisert(
+                            httpMethod = HttpMethod.Post,
+                            endepunkt = "/arena/innsyn/person",
+                        ).apply {
+                            status shouldBe HttpStatusCode.Unauthorized
+                            bodyAsText().shouldBeValidJson()
+                        }
+                    }
+                }
+        }
     })
