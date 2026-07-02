@@ -85,6 +85,7 @@ paths:
             application/json:
               schema:
                 type: array
+                default: []
                 items:
                   $ref: "#/components/schemas/ArenaSakResponse"
         default:
@@ -211,12 +212,14 @@ components:
           format: date-time
         vedtak:
           type: array
+          default: []
           items:
             $ref: "#/components/schemas/ArenaVedtakMedDetaljerResponse"
         telleverkForPerson:
           $ref: "#/components/schemas/TelleverkForPersonResponse"
         kvoteHistorikk:
           type: array
+          default: []
           items:
             $ref: "#/components/schemas/KvotebrukHendelseResponse"
         sisteUtbetalingDato:
@@ -289,12 +292,17 @@ components:
           type: integer
         fakta:
           type: array
+          default: []
+          minItems: 0
           items:
             $ref: "#/components/schemas/ArenaVedtakfaktaResponse"
         vilkårsvurderinger:
           type: array
+          default: []
           items:
             $ref: "#/components/schemas/ArenaVilkarsvurderingResponse"
+      required:
+        - lopenrvedtak
 
     TelleverkForPersonResponse:
       type: object

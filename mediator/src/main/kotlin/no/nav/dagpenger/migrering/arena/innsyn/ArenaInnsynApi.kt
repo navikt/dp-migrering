@@ -40,7 +40,8 @@ internal fun Application.arenaInnsynApi(
 
     routing {
         route("/arena/innsyn") {
-            swaggerUI(path = "openapi", swaggerFile = "arena-sak-innsyn-api.yaml")
+            swaggerUI(path = "openapi", swaggerFile = "arena-sak-innsyn-api.yaml", {
+            })
 
             get { call.respond(HttpStatusCode.OK) }
 

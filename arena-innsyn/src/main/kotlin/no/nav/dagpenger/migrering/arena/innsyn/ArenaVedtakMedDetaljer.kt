@@ -44,5 +44,6 @@ data class ArenaVedtakMedDetaljer(
             beslutter = beslutter,
             relatertVedtak = relatertVedtak,
             fakta = fakta.map { it.tilKontrakt() },
+            vilkårsvurderinger = vilkårsvurderinger.map { it.tilKontrakt() },
         )
 }
