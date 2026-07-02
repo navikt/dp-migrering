@@ -15,8 +15,8 @@ import no.nav.dagpenger.migrering.Ident.Companion.tilPersonIdentfikator
 import no.nav.dagpenger.migrering.api.UnprocessableContentException
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.authenticationConfig
-import no.nav.dagpenger.migrering.arena.api.models.IdentForesporselDTO
-import no.nav.dagpenger.migrering.arena.api.models.PersonIdDTO
+import no.nav.dagpenger.migrering.arena.api.models.IdentForesporsel
+import no.nav.dagpenger.migrering.arena.api.models.PersonIdResponse
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import javax.sql.DataSource
 
@@ -46,28 +46,44 @@ internal fun Application.arenaInnsynApi(
 
             authenticate("azureAd") {
                 post("/person") {
-                    val identForespørsel = call.receive<IdentForesporselDTO>()
+                    val identForespørsel = call.receive<IdentForesporsel>()
                     val ident = identForespørsel.ident.tilPersonIdentfikator()
 
-                    val personId = arenaInnsynResponseService.hentPersonId(ident.identifikator())
+                    call.respond(
+                        status = HttpStatusCode.OK,
+                        message =
+                            PersonIdResponse(
+                                id = arenaInnsynResponseService.hentPersonId(ident.identifikator()),
+                            ),
+                    )
+                }
 
-                    call.respond(status = HttpStatusCode.OK, PersonIdDTO(id = personId))
+                get("/person/{personId}") {
+                    val personId = call.parameters["personId"]?.toInt() ?: throw BadRequestException("PersonId mangler")
+
+                    call.respond(
+                        status = HttpStatusCode.OK,
+                        message = arenaInnsynResponseService.hentPerson(personId),
+                    )
                 }
                 get("/sak/person/{personId}") {
                     val personId = call.parameters["personId"]?.toInt() ?: throw BadRequestException("PersonId mangler")
 
-                    val sakerForPerson =
-                        arenaInnsynResponseService.hentArenaSakerForPerson(personId)
-
-                    call.respond(status = HttpStatusCode.OK, message = sakerForPerson)
+                    call.respond(
+                        status = HttpStatusCode.OK,
+                        message = arenaInnsynResponseService.hentArenaSakerForPerson(personId = personId),
+                    )
                 }
                 get("/sak/{sakId}/detaljert") {
                     val sakIdParam = call.parameters["sakId"] ?: throw BadRequestException("SakId mangler")
                     val sakId =
                         SakId.fromString(sakIdParam)
                             ?: throw UnprocessableContentException("SakId må være et gyldig heltall")
-                    val sak = arenaInnsynResponseService.hentSak(sakId)
-                    call.respond(status = HttpStatusCode.OK, message = sak)
+
+                    call.respond(
+                        status = HttpStatusCode.OK,
+                        message = arenaInnsynResponseService.hentSak(sakId),
+                    )
                 }
 
                 get("/sak/{aar}/{lopenummer}/detaljert") {
@@ -80,8 +96,8 @@ internal fun Application.arenaInnsynApi(
                             lopenummer = lopenummerParam,
                         )
                             ?: throw UnprocessableContentException("Aar og lopenummer mangler eller er ikke gyldige heltall")
-                    val sak = arenaInnsynResponseService.hentSak(saksnummer)
-                    call.respond(status = HttpStatusCode.OK, message = sak)
+
+                    call.respond(status = HttpStatusCode.OK, message = arenaInnsynResponseService.hentSak(saksnummer))
                 }
             }
         }

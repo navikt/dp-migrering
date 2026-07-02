@@ -13,7 +13,7 @@ import io.ktor.server.plugins.statuspages.StatusPagesConfig
 import io.ktor.server.request.uri
 import io.ktor.server.response.header
 import io.ktor.server.response.respond
-import no.nav.dagpenger.migrering.arena.api.models.HttpProblemDTO
+import no.nav.dagpenger.migrering.arena.api.models.HttpProblem
 import java.net.URI
 
 fun StatusPagesConfig.statusPagesConfig() {
@@ -22,7 +22,7 @@ fun StatusPagesConfig.statusPagesConfig() {
         call.response.header("Content-Type", ContentType.Application.ProblemJson.toString())
         call.respond(
             cause.httpStatus,
-            HttpProblemDTO(
+            HttpProblem(
                 type = cause.type,
                 title = cause.title,
                 status = cause.httpStatus.value,
@@ -44,7 +44,7 @@ fun StatusPagesConfig.statusPagesConfig() {
         call.response.header("Content-Type", ContentType.Application.ProblemJson.toString())
         call.respond(
             HttpStatusCode.BadRequest,
-            HttpProblemDTO(
+            HttpProblem(
                 title = "Ugyldig forespørsel",
                 status = HttpStatusCode.BadRequest.value,
                 type = URI("urn:error:bad_request"),
@@ -57,7 +57,7 @@ fun StatusPagesConfig.statusPagesConfig() {
         call.response.header("Content-Type", ContentType.Application.ProblemJson.toString())
         call.respond(
             HttpStatusCode.NotFound,
-            HttpProblemDTO(
+            HttpProblem(
                 status = HttpStatusCode.NotFound.value,
                 title = "Ressurs ikke funnet",
                 type = URI("urn:error:not_found"),
@@ -74,7 +74,7 @@ fun StatusPagesConfig.statusPagesConfig() {
         call.response.header("Content-Type", ContentType.Application.ProblemJson.toString())
         call.respond(
             HttpStatusCode.InternalServerError,
-            HttpProblemDTO(
+            HttpProblem(
                 status = HttpStatusCode.InternalServerError.value,
                 title = "Uventet feil",
                 type = URI("urn:error:internal_error"),
@@ -90,7 +90,7 @@ fun StatusPagesConfig.statusPagesConfig() {
                 call.response.header("Content-Type", ContentType.Application.ProblemJson.toString())
                 call.respond(
                     statusCode,
-                    HttpProblemDTO(
+                    HttpProblem(
                         status = statusCode.value,
                         title = statusCode.description,
                         type = statusCode.toURI(call),

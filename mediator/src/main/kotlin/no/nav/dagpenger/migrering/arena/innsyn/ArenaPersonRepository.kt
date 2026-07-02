@@ -2,6 +2,8 @@
 
 package no.nav.dagpenger.migrering.arena.innsyn
 
+import no.nav.dagpenger.migrering.arena.innsyn.person.ArenaPerson
+import no.nav.dagpenger.migrering.arena.innsyn.person.ArenaPersonRepositoryInterface
 import java.sql.ResultSet
 import javax.sql.DataSource
 

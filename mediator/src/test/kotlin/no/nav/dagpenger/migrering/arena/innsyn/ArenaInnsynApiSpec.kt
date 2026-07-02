@@ -1,5 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
+import io.kotest.assertions.json.shouldBeJsonArray
 import io.kotest.assertions.json.shouldBeValidJson
 import io.kotest.assertions.json.shouldContainJsonKey
 import io.kotest.assertions.json.shouldContainJsonKeyValue
@@ -43,8 +44,7 @@ class ArenaInnsynApiSpec :
                             status shouldBe HttpStatusCode.OK
                             val body = bodyAsText()
                             body.shouldBeValidJson()
-                            body.shouldContainJsonKey("person")
-                            body.shouldContainJsonKey("saker")
+                            body.shouldBeJsonArray()
                         }
                     }
                 }

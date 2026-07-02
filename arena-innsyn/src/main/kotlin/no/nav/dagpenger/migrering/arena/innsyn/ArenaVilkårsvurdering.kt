@@ -1,6 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import no.nav.dagpenger.migrering.arena.api.models.ArenaVilkarsvurderingDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaVilkarsvurderingResponse
 
 data class ArenaVilkårsvurdering(
     val vilkårsvurderingId: Long,
@@ -16,8 +16,8 @@ data class ArenaVilkårsvurdering(
     val statuskode: String,
     val statusnavn: String,
 ) {
-    fun tilKontrakt(): ArenaVilkarsvurderingDTO =
-        ArenaVilkarsvurderingDTO(
+    fun tilKontrakt(): ArenaVilkarsvurderingResponse =
+        ArenaVilkarsvurderingResponse(
             vilkårsvurderingId = vilkårsvurderingId,
             vilkårkode = vilkårkode,
             begrunnelse = begrunnelse,

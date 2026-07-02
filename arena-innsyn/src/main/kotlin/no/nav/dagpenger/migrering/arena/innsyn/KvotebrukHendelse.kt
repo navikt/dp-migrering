@@ -1,6 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import no.nav.dagpenger.migrering.arena.api.models.KvotebrukHendelseDTO
+import no.nav.dagpenger.migrering.arena.api.models.KvotebrukHendelseResponse
 import java.time.LocalDate
 
 data class KvotebrukHendelse(
@@ -14,8 +14,8 @@ data class KvotebrukHendelse(
     val modUser: String?,
     val begrunnelse: String?,
 ) {
-    fun tilKontrakt(): KvotebrukHendelseDTO =
-        KvotebrukHendelseDTO(
+    fun tilKontrakt(): KvotebrukHendelseResponse =
+        KvotebrukHendelseResponse(
             id = id,
             kvoteTypeKode = kvoteTypeKode,
             endringsGrunnlag = endringsGrunnlag,

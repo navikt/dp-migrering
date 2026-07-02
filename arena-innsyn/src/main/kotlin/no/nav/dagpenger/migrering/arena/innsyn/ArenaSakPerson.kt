@@ -1,6 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import no.nav.dagpenger.migrering.arena.api.models.ArenaSakPersonDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaPersonResponse
 
 data class ArenaSakPerson(
     val personId: Int,
@@ -8,8 +8,8 @@ data class ArenaSakPerson(
     val fornavn: String,
     val etternavn: String,
 ) {
-    fun tilKontrakt(): ArenaSakPersonDTO =
-        ArenaSakPersonDTO(
+    fun tilKontrakt(): ArenaPersonResponse =
+        ArenaPersonResponse(
             personId = personId,
             fodselsnummer = fodselsnummer,
             fornavn = fornavn,

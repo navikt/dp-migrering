@@ -1,6 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaSakResponse
 import java.sql.ResultSet
 import java.time.LocalDateTime
 
@@ -48,7 +48,7 @@ data class ArenaSak(
         )
 
     fun tilKontrakt() =
-        ArenaSakDTO(
+        ArenaSakResponse(
             sakId = sakId,
             opprettetAar = opprettetAar,
             lopenr = lopenr,

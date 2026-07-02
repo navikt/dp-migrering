@@ -1,6 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDetaljerDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaSakDetaljerResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -19,7 +19,7 @@ data class ArenaSakMedVedtak(
         telleverkForPerson: TelleverkForPerson?,
         kvoteHistorikk: Set<KvotebrukHendelse>,
         sisteUtbetalingDato: LocalDate?,
-    ) = ArenaSakDetaljerDTO(
+    ) = ArenaSakDetaljerResponse(
         sakId = sakId,
         opprettetAar = opprettetAar,
         lopenr = lopenr,

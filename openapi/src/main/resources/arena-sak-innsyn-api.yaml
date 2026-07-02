@@ -4,7 +4,7 @@ info:
   description: API for innsyn i saker i Arena. Dette er et internt API som brukes av Arena innsynsklienten.
   version: 1.0.0
   contact:
-    name: '#team-dagpenger'
+    name: "#team-dagpenger"
 servers:
   - url: https://dp-arena-gw.intern.dev.nav.no
     description: dev
@@ -19,24 +19,52 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IdentForesporsel'
+              $ref: "#/components/schemas/IdentForesporsel"
       tags:
         - Arena innsyn
       security:
         - azureAd: [ ]
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonId'
+                $ref: "#/components/schemas/PersonIdResponse"
         default:
           description: Feil ved henting av personId
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/HttpProblem'
+                $ref: "#/components/schemas/HttpProblem"
+
+  /arena/innsyn/person/{personId}:
+    get:
+      summary: Hent personinformasjon for en person
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: integer
+      tags:
+        - Arena innsyn
+      security:
+        - azureAd: [ ]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArenaPersonResponse"
+        default:
+          description: Feil ved henting av personinformasjon
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+
   /arena/innsyn/sak/person/{personId}:
     get:
       summary: Hent alle saker for en person
@@ -51,18 +79,21 @@ paths:
       security:
         - azureAd: [ ]
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArenaSakerForPerson'
+                type: array
+                items:
+                  $ref: "#/components/schemas/ArenaSakResponse"
         default:
           description: Feil ved henting av saker
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/HttpProblem'
+                $ref: "#/components/schemas/HttpProblem"
+
   /arena/innsyn/sak/{sakid}/detaljert:
     get:
       summary: Hent detaljert informasjon om en sak på sakId
@@ -77,24 +108,25 @@ paths:
       security:
         - azureAd: [ ]
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArenaSakDetaljer'
-        '404':
+                $ref: "#/components/schemas/ArenaSakDetaljerResponse"
+        "404":
           description: Sak ikke funnet
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/HttpProblem'
+                $ref: "#/components/schemas/HttpProblem"
         default:
           description: Feil ved henting av sak
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/HttpProblem'
+                $ref: "#/components/schemas/HttpProblem"
+
   /arena/innsyn/sak/{aar}/{lopenummer}/detaljert:
     get:
       summary: Hent detaljert informasjon om en sak på saksnummer
@@ -114,39 +146,29 @@ paths:
       security:
         - azureAd: [ ]
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArenaSakDetaljer'
-        '404':
+                $ref: "#/components/schemas/ArenaSakDetaljerResponse"
+        "404":
           description: Sak ikke funnet
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/HttpProblem'
+                $ref: "#/components/schemas/HttpProblem"
         default:
           description: Feil ved henting av sak
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/HttpProblem'
+                $ref: "#/components/schemas/HttpProblem"
+
 components:
   schemas:
-    ArenaSakerForPerson:
-      type: object
-      properties:
-        person:
-          $ref: '#/components/schemas/ArenaSakPerson'
-        saker:
-          type: array
-          items:
-            $ref: '#/components/schemas/ArenaSak'
-      required:
-        - person
-        - saker
-    ArenaSak:
+
+    ArenaSakResponse:
       type: object
       properties:
         sakId:
@@ -165,7 +187,8 @@ components:
         avsluttetDato:
           type: string
           format: date-time
-    ArenaSakDetaljer:
+
+    ArenaSakDetaljerResponse:
       type: object
       properties:
         sakId:
@@ -175,7 +198,7 @@ components:
         lopenr:
           type: integer
         person:
-          $ref: '#/components/schemas/ArenaSakPerson'
+          $ref: "#/components/schemas/ArenaPersonResponse"
         statuskode:
           type: string
         statusnavn:
@@ -189,13 +212,13 @@ components:
         vedtak:
           type: array
           items:
-            $ref: '#/components/schemas/ArenaVedtakMedDetaljer'
+            $ref: "#/components/schemas/ArenaVedtakMedDetaljerResponse"
         telleverkForPerson:
-          $ref: '#/components/schemas/TelleverkForPerson'
+          $ref: "#/components/schemas/TelleverkForPersonResponse"
         kvoteHistorikk:
           type: array
           items:
-            $ref: '#/components/schemas/KvotebrukHendelse'
+            $ref: "#/components/schemas/KvotebrukHendelseResponse"
         sisteUtbetalingDato:
           type: string
           format: date
@@ -208,7 +231,7 @@ components:
         - statusnavn
         - registrertDato
 
-    ArenaSakPerson:
+    ArenaPersonResponse:
       type: object
       properties:
         personId:
@@ -225,7 +248,7 @@ components:
         - fornavn
         - etternavn
 
-    ArenaVedtakMedDetaljer:
+    ArenaVedtakMedDetaljerResponse:
       type: object
       properties:
         vedtakId:
@@ -267,13 +290,13 @@ components:
         fakta:
           type: array
           items:
-            $ref: '#/components/schemas/ArenaVedtakfakta'
+            $ref: "#/components/schemas/ArenaVedtakfaktaResponse"
         vilkårsvurderinger:
           type: array
           items:
-            $ref: '#/components/schemas/ArenaVilkarsvurdering'
+            $ref: "#/components/schemas/ArenaVilkarsvurderingResponse"
 
-    TelleverkForPerson:
+    TelleverkForPersonResponse:
       type: object
       properties:
         dagpengePeriodeTeller:
@@ -285,7 +308,7 @@ components:
       required:
         - dagpengePeriodeTeller
 
-    KvotebrukHendelse:
+    KvotebrukHendelseResponse:
       type: object
       properties:
         id:
@@ -316,7 +339,7 @@ components:
         - datoHendelse
         - resterende
 
-    ArenaVedtakfakta:
+    ArenaVedtakfaktaResponse:
       type: object
       properties:
         kode:
@@ -333,7 +356,7 @@ components:
         - navn
         - registrertDato
 
-    ArenaVilkarsvurdering:
+    ArenaVilkarsvurderingResponse:
       type: object
       properties:
         vilkårsvurderingId:
@@ -366,13 +389,8 @@ components:
         - erObligatorisk
         - statuskode
         - statusnavn
-        -
-    PersonIdent:
-      description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
-      type: string
-      pattern: '^[0-9]{11}$'
 
-    PersonId:
+    PersonIdResponse:
       description:
         Unik identifikator for en person i Arena.
       type: object
@@ -388,7 +406,9 @@ components:
         - ident
       properties:
         ident:
-          $ref: '#/components/schemas/PersonIdent'
+          description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
+          type: string
+          pattern: "^[0-9]{11}$"
 
     HttpProblem:
       type: object
@@ -423,7 +443,7 @@ components:
       bearerFormat: JWT
       description: |
         Bruker [AzureAD](https://docs.nais.io/security/auth/azure-ad) til autentisering. 
-        Token må ha audience` satt til `[cluster].teamdagpenger.dp-arena-gw`.
+        Token må ha `audience` satt til `[cluster].teamdagpenger.dp-arena-gw`.
         
         For å teste APIet kan du lage et gyldig OBO-token ved å bruke wonderwalled:
         - [dev-fss](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-fss.teamdagpenger.dp-arena-gw)

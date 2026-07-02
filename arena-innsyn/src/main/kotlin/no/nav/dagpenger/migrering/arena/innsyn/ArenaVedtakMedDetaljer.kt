@@ -1,6 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import no.nav.dagpenger.migrering.arena.api.models.ArenaVedtakMedDetaljerDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaVedtakMedDetaljerResponse
 import java.time.LocalDate
 
 data class ArenaVedtakMedDetaljer(
@@ -25,7 +25,7 @@ data class ArenaVedtakMedDetaljer(
     val vilkårsvurderinger: List<ArenaVilkårsvurdering> = emptyList(),
 ) {
     fun tilKontrakt() =
-        ArenaVedtakMedDetaljerDTO(
+        ArenaVedtakMedDetaljerResponse(
             vedtakId = vedtakId,
             lopenrvedtak = lopenrvedtak,
             statusKode = statusKode,

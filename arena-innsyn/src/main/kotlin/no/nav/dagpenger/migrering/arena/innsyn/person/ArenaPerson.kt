@@ -1,6 +1,6 @@
-package no.nav.dagpenger.migrering.arena.innsyn
+package no.nav.dagpenger.migrering.arena.innsyn.person
 
-import no.nav.dagpenger.migrering.arena.api.models.ArenaSakPersonDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaPersonResponse
 import java.time.LocalDate
 
 data class ArenaPerson(
@@ -10,8 +10,8 @@ data class ArenaPerson(
     val etternavn: String,
     val fornavn: String,
 ) {
-    fun tilKontrakt(): ArenaSakPersonDTO =
-        ArenaSakPersonDTO(
+    fun tilKontrakt(): ArenaPersonResponse =
+        ArenaPersonResponse(
             personId = personId,
             fodselsnummer = fodselsnummer,
             fornavn = fornavn,

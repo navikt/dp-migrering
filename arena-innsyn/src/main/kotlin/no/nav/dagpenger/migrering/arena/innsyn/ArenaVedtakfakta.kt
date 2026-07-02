@@ -1,6 +1,6 @@
 package no.nav.dagpenger.migrering.arena.innsyn
 
-import no.nav.dagpenger.migrering.arena.api.models.ArenaVedtakfaktaDTO
+import no.nav.dagpenger.migrering.arena.api.models.ArenaVedtakfaktaResponse
 import java.time.LocalDateTime
 
 data class ArenaVedtakfakta(
@@ -11,7 +11,7 @@ data class ArenaVedtakfakta(
     val registrertDato: LocalDateTime,
 ) {
     fun tilKontrakt() =
-        ArenaVedtakfaktaDTO(
+        ArenaVedtakfaktaResponse(
             kode = kode,
             navn = navn,
             verdi = verdi,
