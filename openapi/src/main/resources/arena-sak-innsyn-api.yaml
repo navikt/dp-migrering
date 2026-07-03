@@ -6,7 +6,7 @@ info:
   contact:
     name: "#team-dagpenger"
 servers:
-  - url: https://dp-arena-gw.intern.dev.nav.no
+  - url: https://dp-arena-gw.dev-fss-pub.nais.io
     description: dev
 #  - url: https://dp-arena.intern.nav.no
 #    description: prod
