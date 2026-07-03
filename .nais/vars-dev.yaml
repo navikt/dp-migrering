@@ -1,5 +1,5 @@
 ingresses:
-  - https://dp-arena-gw.intern.dev.nav.no
+  - https://dp-arena-gw.dev-fss-pub.nais.io
 
 azure:
   tenant: trygdeetaten.no
