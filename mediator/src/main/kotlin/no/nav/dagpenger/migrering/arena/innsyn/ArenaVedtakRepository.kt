@@ -49,6 +49,6 @@ class ArenaVedtakRepository(
           LEFT JOIN aktivitetfase a ON a.aktfasekode = v.aktfasekode
           LEFT JOIN rettighettype rt ON rt.rettighetkode = v.rettighetkode
          WHERE sak_id = :sakId
-           AND (fra_dato <= til_dato OR til_dato IS NULL)
+           -- AND (fra_dato <= til_dato OR til_dato IS NULL)
         """.trimIndent()
 }
