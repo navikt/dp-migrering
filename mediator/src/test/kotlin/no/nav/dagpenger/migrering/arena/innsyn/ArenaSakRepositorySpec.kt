@@ -19,10 +19,10 @@ class ArenaSakRepositorySpec :
 
         "kan hente en Arena sak på sakId" {
 
-            val sak = arenaSakRepository.hentSak(SakId(902))
+            val sak = arenaSakRepository.hentSak(SakId(2321609))
 
             sak shouldNot beNull()
-            sak?.sakId shouldBe "902"
+            sak?.sakId shouldBe "15603478"
         }
 
         "kan hente en Arena sak på saksnummer " {
@@ -30,8 +30,8 @@ class ArenaSakRepositorySpec :
             val sak =
                 arenaSakRepository.hentSak(
                     Saksnummer(
-                        lopenummer = 1,
-                        aar = 2020,
+                        lopenummer = 374364,
+                        aar = 2025,
                     ),
                 )
 

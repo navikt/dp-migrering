@@ -18,7 +18,7 @@ class ArenaVedtakFaktaRepositorySpec :
 
             // TODO: Legge til bedre testdata
 
-            val faktaForVedtak = vedtakFaktaRepository.hentFaktaForVedtak(listOf(37067849))
+            val faktaForVedtak = vedtakFaktaRepository.hentFaktaForVedtak(listOf(46859881))
 
             faktaForVedtak.size shouldBe 1
         }

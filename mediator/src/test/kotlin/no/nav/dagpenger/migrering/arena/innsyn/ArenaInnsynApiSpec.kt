@@ -22,7 +22,7 @@ class ArenaInnsynApiSpec :
                         autentisert(
                             httpMethod = HttpMethod.Post,
                             endepunkt = "/arena/innsyn/person",
-                            body = """{"ident":"12312312312"}""",
+                            body = """{"ident":"09208333333"}""",
                         ).apply {
                             status shouldBe HttpStatusCode.OK
                             val body = bodyAsText()
@@ -39,7 +39,7 @@ class ArenaInnsynApiSpec :
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
                             httpMethod = HttpMethod.Get,
-                            endepunkt = "/arena/innsyn/sak/person/4873545",
+                            endepunkt = "/arena/innsyn/sak/person/2321609",
                         ).apply {
                             status shouldBe HttpStatusCode.OK
                             val body = bodyAsText()
@@ -73,7 +73,7 @@ class ArenaInnsynApiSpec :
                 }.test {
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
-                            endepunkt = "/arena/innsyn/sak/1/detaljert",
+                            endepunkt = "/arena/innsyn/sak/15603478/detaljert",
                         ).apply {
                             status shouldBe HttpStatusCode.OK
                             val body = bodyAsText()
@@ -125,7 +125,7 @@ class ArenaInnsynApiSpec :
                 .test {
                     withMockAuthServerAndTestApplication(this.api) {
                         autentisert(
-                            endepunkt = "/arena/innsyn/sak/2021/1/detaljert",
+                            endepunkt = "/arena/innsyn/sak/2025/374364/detaljert",
                         ).apply {
                             status shouldBe HttpStatusCode.OK
                             val body = bodyAsText()

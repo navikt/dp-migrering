@@ -15,7 +15,7 @@ class ArenaPosteringRepositorySpec :
         "kan hente siste utbetalingsdato for person" {
 
             // TODO: Mangler testdata
-            val sisteUtbetalingDato = arenaPosteringRepository.sisteUtbetalingDato(PersonId(id = 103))
+            val sisteUtbetalingDato = arenaPosteringRepository.sisteUtbetalingDato(PersonId(id = 2321609))
 
             sisteUtbetalingDato shouldBe null
         }
