@@ -3,6 +3,7 @@ package no.nav.dagpenger.migrering.arena.innsyn
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import java.time.LocalDate
 
 class ArenaPosteringRepositorySpec :
     StringSpec({
@@ -14,9 +15,8 @@ class ArenaPosteringRepositorySpec :
 
         "kan hente siste utbetalingsdato for person" {
 
-            // TODO: Mangler testdata
             val sisteUtbetalingDato = arenaPosteringRepository.sisteUtbetalingDato(PersonId(id = 2321609))
 
-            sisteUtbetalingDato shouldBe null
+            sisteUtbetalingDato shouldBe LocalDate.of(2026, 8, 9)
         }
     })

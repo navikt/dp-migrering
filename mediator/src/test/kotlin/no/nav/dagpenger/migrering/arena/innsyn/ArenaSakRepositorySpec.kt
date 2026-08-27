@@ -19,7 +19,7 @@ class ArenaSakRepositorySpec :
 
         "kan hente en Arena sak på sakId" {
 
-            val sak = arenaSakRepository.hentSak(SakId(2321609))
+            val sak = arenaSakRepository.hentSak(SakId(15603478))
 
             sak shouldNot beNull()
             sak?.sakId shouldBe "15603478"

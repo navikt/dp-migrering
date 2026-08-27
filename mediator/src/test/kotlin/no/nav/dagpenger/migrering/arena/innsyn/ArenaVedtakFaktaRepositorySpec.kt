@@ -20,6 +20,6 @@ class ArenaVedtakFaktaRepositorySpec :
 
             val faktaForVedtak = vedtakFaktaRepository.hentFaktaForVedtak(listOf(46859881))
 
-            faktaForVedtak.size shouldBe 1
+            faktaForVedtak.size shouldBe 79
         }
     })

@@ -18,6 +18,6 @@ class ArenaVedtakRepositorySpec :
         "kan hente vedtak for en sak" {
             val hentVedtakForSak = vedtakRepository.hentVedtakForSak(SakId(15603478))
 
-            hentVedtakForSak.size shouldBe 2
+            hentVedtakForSak.size shouldBe 4
         }
     })

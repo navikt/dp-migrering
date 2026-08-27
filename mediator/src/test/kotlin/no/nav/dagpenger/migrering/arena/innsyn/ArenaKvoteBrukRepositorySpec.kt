@@ -20,6 +20,6 @@ class ArenaKvoteBrukRepositorySpec :
             val kvoteBrukHendelserForPerson =
                 kvoteBrukRepository.hentKvoteBrukHendelserForPerson(PersonId(id = 2321609))
 
-            kvoteBrukHendelserForPerson.size shouldBe 2
+            kvoteBrukHendelserForPerson.size shouldBe 40
         }
     })

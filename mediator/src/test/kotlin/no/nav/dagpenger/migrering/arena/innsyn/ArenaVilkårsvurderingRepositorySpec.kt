@@ -18,6 +18,6 @@ class ArenaVilkårsvurderingRepositorySpec :
 
             val vilkårsvurderinger = vilkårsvurderingRepository.hentForVedtak(listOf(46859881))
 
-            vilkårsvurderinger.size shouldBe 2
+            vilkårsvurderinger.size shouldBe 16
         }
     })
