@@ -44,7 +44,7 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
 
-    testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("com.h2database:h2:2.4.240")
 
     // testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.mockk)
@@ -55,7 +55,7 @@ dependencies {
     testImplementation("com.approvaltests:approvaltests:22.4.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.4.0")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
-    testImplementation("com.h2database:h2:2.3.232") // nyeste versjon offisielt støttet av flyway 12.0.3
+    testImplementation("com.h2database:h2:2.4.240") // nyeste versjon offisielt støttet av flyway 12.0.3
 }
 
 application {
