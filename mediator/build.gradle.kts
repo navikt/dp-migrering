@@ -29,7 +29,7 @@ dependencies {
     implementation("io.prometheus:prometheus-metrics-core:1.3.1")
     implementation("io.micrometer:micrometer-registry-prometheus:1.16.2")
     implementation("org.slf4j:slf4j-api:2.0.18")
-    implementation("ch.qos.logback:logback-classic:1.5.6")
+    implementation("ch.qos.logback:logback-classic:1.6.3")
 
     implementation(libs.bundles.ktor.client)
     implementation(libs.bundles.ktor.server)
