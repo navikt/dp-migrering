@@ -53,7 +53,7 @@ dependencies {
     testImplementation("io.ktor:ktor-client-content-negotiation:${libs.versions.ktor.get()}")
 //    testImplementation("io.ktor:ktor-serialization-jackson3:${libs.versions.ktor.get()}")
     testImplementation("com.approvaltests:approvaltests:22.4.0")
-    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.0")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.5.0")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("com.h2database:h2:2.4.240") // nyeste versjon offisielt støttet av flyway 12.0.3
 }
