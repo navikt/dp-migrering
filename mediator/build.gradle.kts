@@ -16,7 +16,7 @@ dependencies {
     // implementation(libs.bundles.postgres)
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
     implementation("com.oracle.database.jdbc:ojdbc11:23.26.3.0.0")
     implementation(libs.hikari)
     implementation(libs.kotlinquery)
