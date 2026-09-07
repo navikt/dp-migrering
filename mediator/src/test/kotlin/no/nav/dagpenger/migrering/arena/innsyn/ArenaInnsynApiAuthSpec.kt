@@ -57,7 +57,7 @@ class ArenaInnsynApiAuthSpec :
                 }
         }
 
-/*        "kall med saksbehandlergruppe i claim skal returnere 200" {
+        "kall med saksbehandlergruppe i claim skal returnere 200" {
             ArenaInnsynSystem
                 .nyttScenario {
                 }.test {
@@ -69,7 +69,7 @@ class ArenaInnsynApiAuthSpec :
                         }
                     }
                 }
-        } */
+        }
 
         "hente saker for person uten saksbehandlergruppe i claim skal returnere 401" {
             ArenaInnsynSystem
