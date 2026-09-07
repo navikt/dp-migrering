@@ -13,10 +13,10 @@ class ArenaTelleverkRepositorySpec :
         val arenaTelleverkRepository = ArenaTelleverkRepository(h2DataSourceBuilder.dataSource)
 
         "kan hente telleverk for person" {
-            val telleverkForPerson = arenaTelleverkRepository.hentTelleverkForPerson(PersonId(id = 4873545))
+            val telleverkForPerson = arenaTelleverkRepository.hentTelleverkForPerson(PersonId(id = 2321609))
 
-            telleverkForPerson.dagpengePeriodeTeller shouldBe 5280
-            telleverkForPerson.maxPeriodePermittertTellerFisk shouldBe 460
-            telleverkForPerson.maxPeriodePermittertTeller shouldBe 0
+            telleverkForPerson.dagpengePeriodeTeller shouldBe 1600
+            telleverkForPerson.maxPeriodePermittertTellerFisk shouldBe 0
+            telleverkForPerson.maxPeriodePermittertTeller shouldBe 2760
         }
     })

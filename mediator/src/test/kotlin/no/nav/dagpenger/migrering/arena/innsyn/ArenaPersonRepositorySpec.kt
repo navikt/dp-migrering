@@ -13,8 +13,8 @@ class ArenaPersonRepositorySpec :
         val personRepository = ArenaPersonRepository(h2DataSourceBuilder.dataSource)
 
         "kan slå opp person id på fødselsnummer" {
-            val personId = personRepository.personId("12312312312")
+            val personId = personRepository.personId("09208333333")
 
-            personId shouldBe 4873545
+            personId shouldBe 2321609
         }
     })
