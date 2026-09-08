@@ -1,9 +1,9 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
+import kotliquery.Row
 import kotliquery.Session
 import kotliquery.queryOf
 import kotliquery.sessionOf
-import java.sql.ResultSet
 import java.util.UUID
 import javax.sql.DataSource
 
@@ -13,16 +13,14 @@ interface OpplysningHandler<T> {
 
     private fun <R> session(block: (Session) -> R): R = sessionOf(dataSource.value).use(block)
 
-    fun select(
+    fun <T> select(
         sql: String,
-        params: Map<String, Any>,
-    ): List<ResultSet> =
+        params: Map<String, Any> = emptyMap(),
+        extractor: (Row) -> T,
+    ): List<T> =
         session { session ->
             session.run(
-                queryOf(
-                    sql,
-                    params,
-                ).map { row -> row.underlying }.asList,
+                queryOf(sql, params).map(extractor).asList,
             )
         }
 

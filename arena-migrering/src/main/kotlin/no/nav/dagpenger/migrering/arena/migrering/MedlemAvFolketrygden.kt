@@ -18,32 +18,40 @@ class MedlemAvFolketrygden(
             select(
                 // language=oracle
                 """
-                SELECT vilkaarstatuskode 
+                SELECT vilkaarstatuskode, vedtak_id, mod_dato 
                 FROM vilkaarvurdering 
                 WHERE vedtak_id = :vedtakId 
                 AND vilkaarkode = 'MEDLFOLKT'
                 """.trimIndent(),
                 mapOf("vedtakId" to vedtakId),
-            )
+            ) { row ->
+                mapOf(
+                    "vilkaarstatuskode" to row.stringOrNull("vilkaarstatuskode"),
+                    "vedtak_id" to row.int("vedtak_id"),
+                    "mod_dato" to row.localDate("mod_dato"),
+                )
+            }
         if (rows.size == 1) {
             return Opplysning(
                 navn = "Bruker er medlem av folketrygden",
-                verdi = verdi(rows.first().getString("vilkaarstatuskode")),
-                gyldigFraOgMed = LocalDate.now(),
+                verdi = verdi(rows.first()["vilkaarstatuskode"] as String?),
+                gyldigFraOgMed = rows.first()["mod_dato"] as LocalDate,
                 uuid = opplysnigsId,
             )
         }
         throw IllegalArgumentException("Folketrygden er ikke gyldig")
     }
 
-    private fun verdi(verdi: String): Boolean? =
+    private fun verdi(verdi: String?): Boolean? =
         when (verdi) {
             "J" -> {
                 true
             }
+
             "N" -> {
                 false
             }
+
             else -> {
                 null
             }
