@@ -13,22 +13,18 @@ interface OpplysningHandler<T> {
 
     private fun <R> session(block: (Session) -> R): R = sessionOf(dataSource.value).use(block)
 
-    fun mapResultat(row: ResultSet): Opplysning<T>
-
     fun select(
         sql: String,
         params: Map<String, Any>,
-    ): Opplysning<T> =
+    ): List<ResultSet> =
         session { session ->
             session.run(
                 queryOf(
                     sql,
                     params,
-                ).map { row ->
-                    mapResultat(row.underlying)
-                }.asSingle,
-            )!!
+                ).map { row -> row.underlying }.asList,
+            )
         }
 
-    fun håndter(): Opplysning<T>
+    fun håndter(vedtakId: Int): Opplysning<T>
 }
