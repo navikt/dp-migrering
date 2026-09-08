@@ -10,6 +10,7 @@ dependencies {
     implementation(project(path = ":konfigurasjon"))
     implementation(project(path = ":openapi"))
     implementation(project(path = ":arena-innsyn"))
+    implementation(project(path = ":arena-migrering"))
 
     implementation(libs.bundles.jackson)
 
