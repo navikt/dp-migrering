@@ -1,21 +1,23 @@
+@file:Suppress("SqlResolve")
+
 package no.nav.dagpenger.migrering.arena.migrering
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.LocalDate
 import java.util.UUID
-import javax.sql.DataSource
 
 class MedlemAvFolketrygden(
-    override val opplysnigsId: UUID = UUID.fromString("0194881f-9443-72b4-8b30-5f6cdb24d54c"),
-    override val dataSource: Lazy<DataSource>,
-) : OpplysningHandler<Boolean> {
+    override val arenaRepository: ArenaRepository,
+) : OpplysningProdusent<Boolean> {
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
 
-    override fun håndter(vedtakId: Int): Opplysning<Boolean> {
+    override val opplysningsId: UUID = UUID.fromString("0194881f-9443-72b4-8b30-5f6cdb24d54c")
+
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val rows =
-            select(
+            arenaRepository.select(
                 // language=oracle
                 """
                 SELECT vilkaarstatuskode, vedtak_id, mod_dato 
@@ -23,7 +25,7 @@ class MedlemAvFolketrygden(
                 WHERE vedtak_id = :vedtakId 
                 AND vilkaarkode = 'MEDLFOLKT'
                 """.trimIndent(),
-                mapOf("vedtakId" to vedtakId),
+                mapOf("vedtakId" to kontekst.vedtakId),
             ) { row ->
                 mapOf(
                     "vilkaarstatuskode" to row.stringOrNull("vilkaarstatuskode"),
@@ -36,7 +38,7 @@ class MedlemAvFolketrygden(
                 navn = "Bruker er medlem av folketrygden",
                 verdi = verdi(rows.first()["vilkaarstatuskode"] as String?),
                 gyldigFraOgMed = rows.first()["mod_dato"] as LocalDate,
-                uuid = opplysnigsId,
+                uuid = opplysningsId,
             )
         }
         throw IllegalArgumentException("Folketrygden er ikke gyldig")

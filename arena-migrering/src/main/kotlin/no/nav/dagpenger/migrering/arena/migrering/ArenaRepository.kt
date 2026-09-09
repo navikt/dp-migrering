@@ -4,13 +4,11 @@ import kotliquery.Row
 import kotliquery.Session
 import kotliquery.queryOf
 import kotliquery.sessionOf
-import java.util.UUID
 import javax.sql.DataSource
 
-interface OpplysningHandler<T> {
-    val opplysnigsId: UUID
-    val dataSource: Lazy<DataSource>
-
+class ArenaRepository(
+    val dataSource: Lazy<DataSource>,
+) {
     private fun <R> session(block: (Session) -> R): R = sessionOf(dataSource.value).use(block)
 
     fun <T> select(
@@ -23,6 +21,4 @@ interface OpplysningHandler<T> {
                 queryOf(sql, params).map(extractor).asList,
             )
         }
-
-    fun håndter(vedtakId: Int): Opplysning<T>
 }
