@@ -4,8 +4,7 @@ import java.time.LocalDate
 
 data class ArenaSakMigrering(
     val vilkaarsVurderinger: List<ArenaVilkaarMigrering>,
-    val vedtakfakta: List<ArenaVedtakfaktaMigrering>
-
+    val vedtakfakta: List<ArenaVedtakfaktaMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,

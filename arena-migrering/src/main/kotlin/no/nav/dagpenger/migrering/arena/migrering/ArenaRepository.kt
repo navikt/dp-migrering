@@ -24,20 +24,30 @@ class ArenaRepository(
             )
         }
 
-    fun hentVedtakfakta(
-        vedtakId: Int,
-    ): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> =
+    fun hentVedtakfakta(sakId: Int): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> =
         select(
             // language=oracle
             """
             SELECT vedtakfaktakode
                  , vedtakverdi
-                 , mod_dato 
-            FROM   vedtakfakta 
-            WHERE  vedtak_id = :vedtakId 
+                 , mod_dato
+            FROM   vedtakfakta
+            WHERE  (vedtak_id, vedtakfaktakode) IN (
+                     SELECT FIRST_VALUE( vefa.vedtak_id ) OVER ( PARTITION BY vefa.vedtakfaktakode ORDER BY vedt.fra_dato DESC ) vedtak_id
+                          , vefa.vedtakfaktakode
+                     FROM   vedtak vedt
+                     JOIN   vedtakfakta vefa ON vefa.vedtak_id = vedt.vedtak_id
+                     WHERE  vedt.sak_id = :sakId
+                     AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                     AND    vedt.utfallkode = 'JA'
+                     AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
+                     AND    vedt.vedtaktypekode IN ('O','E','G','S')
+                     AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
+                     AND    vefa.vedtakverdi IS NOT NULL
+                   )
             AND    vedtakverdi IS NOT NULL
             """.trimIndent(),
-            mapOf("vedtakId" to vedtakId),
+            mapOf("sakId" to sakId),
         ) { row ->
             ArenaSakMigrering.ArenaVedtakfaktaMigrering(
                 kode = row.string("vedtakfaktakode"),
@@ -46,83 +56,42 @@ class ArenaRepository(
             )
         }
 
-    fun hentVilkaarvurdering(
-        vedtakId: Int,
-    ): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
-        val select = select(
-            // language=oracle
-            """
-            WITH alle_vedtak AS (
-                SELECT vedtak_id,
-                       vedtak_id_relatert,
-                       LEVEL AS nivaa
-                FROM   VEDTAK
-                START WITH vedtak_id = :vedtakId
-                CONNECT BY NOCYCLE PRIOR vedtak_id_relatert = vedtak_id
-            ),
-            alle_vilkaarvurderinger AS (
-                SELECT vv.*,
-                       av.nivaa,
-                       ROW_NUMBER() OVER (
-                           PARTITION BY vv.vilkaarkode
-                           ORDER BY av.nivaa
-                       ) AS rad_nummer
-                FROM   VILKAARVURDERING vv
-                JOIN   alle_vedtak av
-                       ON av.vedtak_id = vv.vedtak_id
-                WHERE  vv.vilkaarstatuskode != 'V'
-            )
-            SELECT vilkaarkode,
-                   vilkaarstatuskode,
-                   mod_dato,
-                   nivaa
-            FROM   alle_vilkaarvurderinger
-            WHERE  rad_nummer = 1
-            """.trimIndent(),
-            mapOf("vedtakId" to vedtakId),
-        ) { row ->
-            ArenaSakMigrering.ArenaVilkaarMigrering(
-                kode = row.string("vilkaarstatuskode"),
-                verdi = row.string("vilkaarkode"),
-                gyldigFra = row.localDate("mod_dato"),
-            )
-        }
+    fun hentVilkaarvurdering(sakId: Int): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT vilkaarkode
+                     , vilkaarstatuskode
+                     , mod_dato
+                FROM   vilkaarvurdering
+                WHERE  vilkaarvurdering_id IN (
+                         SELECT FIRST_VALUE( vilk.vilkaarvurdering_id ) OVER ( PARTITION BY vilk.vilkaarkode ORDER BY vedt.fra_dato DESC ) vilkaarvurdering_id
+                         FROM   vedtak vedt
+                         JOIN   vilkaarvurdering vilk ON vilk.vedtak_id = vedt.vedtak_id
+                         WHERE  vedt.sak_id = :sakId
+                         AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                         AND    vedt.utfallkode = 'JA'
+                         AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
+                         AND    vedt.vedtaktypekode IN ('O','E','G','S')
+                         AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
+                         AND    vilk.vilkaarstatuskode IN ('J', 'N')
+                       )
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaVilkaarMigrering(
+                    kode = row.string("vilkaarkode"),
+                    verdi = row.string("vilkaarstatuskode"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
         return select
     }
 
-    fun hentSakVilkaarvurdering(
-        sakId: Int,
-    ): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
-        val select = select(
-            // language=oracle
-            """
-            SELECT vilkaarkode
-                 , vilkaarstatuskode
-                 , mod_dato
-            FROM   vilkaarvurdering
-            WHERE  vilkaarvurdering_id IN (
-                     SELECT FIRST_VALUE( vilk.vilkaarvurdering_id ) OVER ( PARTITION BY vilk.vilkaarkode ORDER BY vedt.fra_dato DESC ) vilkaarvurdering_id
-                     FROM   vedtak vedt
-                     JOIN   vilkaarvurdering vilk ON vilk.vedtak_id = vedt.vedtak_id
-                     WHERE  vedt.sak_id = :sakId
-                     AND    vedt.rettighetkode IN ('DAGO','PERM','LONN','FISK')
-                     AND    vedt.utfallkode = 'JA'
-                     AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
-                     AND    vedt.vedtaktypekode IN ('O','E','G','S')
-                     AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
-                     AND    vilk.vilkaarstatuskode IN ('J', 'N')
-                   )
-            """.trimIndent(),
-            mapOf("sakId" to sakId),
-        ) { row ->
-            ArenaSakMigrering.ArenaVilkaarMigrering(
-                kode = row.string("vilkaarstatuskode"),
-                verdi = row.string("vilkaarkode"),
-                gyldigFra = row.localDate("mod_dato"),
-            )
-        }
-        return select
-    }
+    fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
+        ArenaSakMigrering(
+            vilkaarsVurderinger = hentVilkaarvurdering(sakId),
+            vedtakfakta = hentVedtakfakta(sakId),
+        )
 }
-
-

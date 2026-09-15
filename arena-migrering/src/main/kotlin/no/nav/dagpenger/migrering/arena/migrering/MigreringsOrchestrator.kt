@@ -8,21 +8,21 @@ import java.util.UUID
 
 class MigreringsOrchestrator(
     private val produsenter: List<OpplysningProdusent<*>>,
+    private val repository: ArenaRepository,
 ) {
     suspend fun initierMigrering(
-        vedtakId: Int,
         sakId: Int,
         initiertAv: String,
     ): List<Opplysning<*>> =
         coroutineScope {
+            val sakTilMigrering = repository.hentSakTilMigrering(sakId)
             val deferredOpplysninger =
                 produsenter.map { produsent ->
                     async {
                         try {
                             produsent.produser(
                                 MigreringsKontekst(
-                                    vedtakId = vedtakId,
-                                    sakId = sakId,
+                                    sakTilMigrering = sakTilMigrering,
                                     migreringsId = UUID.randomUUID(),
                                     initiertAv = initiertAv,
                                     opprettetTidspunkt = LocalDateTime.now(),
