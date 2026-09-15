@@ -1,7 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.util.UUID
+import java.util.*
 
 class MedlemAvFolketrygden(
     override val arenaRepository: ArenaRepository,
@@ -14,15 +14,9 @@ class MedlemAvFolketrygden(
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val rows = arenaRepository.hentVilkaarvurdering(kontekst.vedtakId)
-        if (rows.size == 1) {
-            return Opplysning(
-                navn = "Bruker er medlem av folketrygden",
-                verdi = verdi(rows.first().vilkaarstatuskode),
-                gyldigFraOgMed = rows.first().modDato,
-                uuid = opplysningsId,
-            )
-        }
-        throw IllegalArgumentException("Folketrygden er ikke gyldig")
+        // ********************************
+        // Gjør noe
+        // ********************************
     }
 
     private fun verdi(verdi: String?): Boolean? =

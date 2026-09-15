@@ -14,15 +14,9 @@ class Dagpengegrunnlag(
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
         val rows = arenaRepository.hentVedtakfakta(kontekst.vedtakId)
-        if (rows.size == 1) {
-            return Opplysning(
-                navn = "Dagpengegrunnlag",
-                verdi = verdi(rows.first().vedtakverdi),
-                gyldigFraOgMed = rows.first().modDato,
-                uuid = opplysningsId,
-            )
-        }
-        throw IllegalArgumentException("Dagpengegrunnlag er ikke gyldig")
+        // ********************************
+        // Gjør noe
+        // ********************************
     }
 
     private fun verdi(verdi: String?): Int? = verdi?.toInt()

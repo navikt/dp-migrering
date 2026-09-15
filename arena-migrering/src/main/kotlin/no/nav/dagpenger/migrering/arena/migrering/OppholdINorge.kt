@@ -14,15 +14,9 @@ class OppholdINorge(
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val rows = arenaRepository.hentVilkaarvurdering(kontekst.vedtakId)
-        if (rows.size == 1) {
-            return Opplysning(
-                navn = "Kravet til opphold i Norge er oppfylt",
-                verdi = verdi(rows.first().vilkaarstatuskode),
-                gyldigFraOgMed = rows.first().modDato,
-                uuid = opplysningsId,
-            )
-        }
-        throw IllegalArgumentException("Kravet til opphold i Norge er ikke gyldig")
+        // ********************************
+        // Gjør noe
+        // ********************************
     }
 
     private fun verdi(verdi: String?): Boolean? =
