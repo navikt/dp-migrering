@@ -53,24 +53,24 @@ class ArenaRepository(
             // language=oracle
             """
             WITH alle_vedtak AS (
-                SELECT VEDTAK_ID,
-                       VEDTAK_ID_RELATERT,
+                SELECT vedtak_id,
+                       vedtak_id_relatert,
                        LEVEL AS nivaa
                 FROM   VEDTAK
-                START WITH VEDTAK_ID = :vedtakId
-                CONNECT BY NOCYCLE PRIOR VEDTAK_ID_RELATERT = VEDTAK_ID
+                START WITH vedtak_id = :vedtakId
+                CONNECT BY NOCYCLE PRIOR vedtak_id_relatert = vedtak_id
             ),
             alle_vilkaarvurderinger AS (
                 SELECT vv.*,
                        av.nivaa,
                        ROW_NUMBER() OVER (
-                           PARTITION BY vv.VILKAARKODE
+                           PARTITION BY vv.vilkaarkode
                            ORDER BY av.nivaa
                        ) AS rad_nummer
                 FROM   VILKAARVURDERING vv
                 JOIN   alle_vedtak av
-                       ON av.VEDTAK_ID = vv.VEDTAK_ID
-                WHERE  vv.VILKAARSTATUSKODE != 'V'
+                       ON av.vedtak_id = vv.vedtak_id
+                WHERE  vv.vilkaarstatuskode != 'V'
             )
             SELECT vilkaarkode,
                    vilkaarstatuskode,
@@ -78,7 +78,6 @@ class ArenaRepository(
                    nivaa
             FROM   alle_vilkaarvurderinger
             WHERE  rad_nummer = 1
-            ORDER  BY VILKAARKODE
             """.trimIndent(),
             mapOf("vedtakId" to vedtakId),
         ) { row ->
