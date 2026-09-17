@@ -3,7 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.UUID
 
-class SisteAvsluttendeKalenderMaaned : OpplysningProdusent<String> {
+class SisteAvsluttendeKalenderManed : OpplysningProdusent<String> {
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }

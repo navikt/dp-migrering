@@ -10,7 +10,7 @@ import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilHeltidDeltid
 import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilMobilitet
 import no.nav.dagpenger.migrering.arena.migrering.OppholdINorge
 import no.nav.dagpenger.migrering.arena.migrering.Samordnet
-import no.nav.dagpenger.migrering.arena.migrering.SisteAvsluttendeKalenderMaaned
+import no.nav.dagpenger.migrering.arena.migrering.SisteAvsluttendeKalenderManed
 import no.nav.dagpenger.migrering.arena.migrering.UkessatsEtterSamordning
 import no.nav.dagpenger.migrering.arena.migrering.UkessatsForSamordning
 import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
@@ -28,7 +28,7 @@ class MigreringServiceSpec :
                     MedlemAvFolketrygden(),
                     OppholdINorge(),
                     Dagpengegrunnlag(),
-                    SisteAvsluttendeKalenderMaaned(),
+                    SisteAvsluttendeKalenderManed(),
                     OppfyllerKravetTilHeltidDeltid(),
                     OppfyllerKravetTilMobilitet(),
                     UkessatsEtterSamordning(),
