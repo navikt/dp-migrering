@@ -97,7 +97,9 @@ fun StatusPagesConfig.statusPagesConfig() {
                 status = HttpStatusCode.InternalServerError.value,
                 title = "Uventet feil",
                 type = URI("urn:error:internal_error"),
-                detail = "Uventet feil: ${cause.message}",
+                // Ikke ekko cause.message til klient — kan lekke interne detaljer (SQL-feil, klassenavn m.m.).
+                // Full detalj er allerede logget over; se applikasjonsloggen for feilsøking.
+                detail = "En uventet feil oppstod. Se applikasjonslogg for detaljer.",
                 instance = URI(call.request.uri),
             ),
         )
