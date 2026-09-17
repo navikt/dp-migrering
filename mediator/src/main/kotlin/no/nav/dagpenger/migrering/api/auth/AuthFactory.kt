@@ -38,10 +38,12 @@ class AuthFactory(
 
     fun JWTAuthenticationProvider.Config.azureAd() {
         val saksbehandlerGruppe = properties[Configuration.Grupper.saksbehandler]
-        // val apper: List<String> = properties[Configuration.Maskintilgang.navn]
+        // Maskintilgang (M2M / idtyp=app) er bevisst ikke støttet ennå: apperMedTilgang er tom liste,
+        // så alle maskintokens avvises (fail-closed). Ikke fyll denne listen uten en gjennomgått
+        // og reviewet allow-list konfigurert via egen property group.
         realm = Configuration.APP_NAME
         verifiserTokenFormatOgSignatur()
-        autoriser(saksbehandlerGruppe, emptyList())
+        autoriser(saksbehandlerGruppe, apperMedTilgang = emptyList())
     }
 
     private fun JWTAuthenticationProvider.Config.verifiserTokenFormatOgSignatur() {

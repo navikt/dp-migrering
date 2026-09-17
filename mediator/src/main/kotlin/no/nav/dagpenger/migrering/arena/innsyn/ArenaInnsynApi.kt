@@ -2,16 +2,20 @@ package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.plugins.NotFoundException
 import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.request.receive
+import io.ktor.server.request.uri
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import no.dagpenger.stpeter.plugin.StPeterPlugin
+import no.dagpenger.stpeter.plugin.TilgangAvvistException
 import no.nav.dagpenger.migrering.Ident.Companion.tilPersonIdentfikator
 import no.nav.dagpenger.migrering.api.UnprocessableContentException
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
@@ -20,7 +24,36 @@ import no.nav.dagpenger.migrering.api.token
 import no.nav.dagpenger.migrering.arena.api.models.IdentForesporsel
 import no.nav.dagpenger.migrering.arena.api.models.PersonIdResponse
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
+import java.net.URI
 import javax.sql.DataSource
+
+/**
+ * Slår sammen "ressurs finnes ikke" og "ingen tilgang til ressurs" til samme respons.
+ *
+ * Uten dette kan en autentisert saksbehandler skille mellom en person/sak som ikke finnes (404)
+ * og en som finnes men de mangler tilgang til (403 fra stPeter), og dermed kartlegge hvilke
+ * personId/sakId som faktisk finnes i Arena — se threat model T1 (informasjonslekkasje/enumerering).
+ * Vi kaller derfor DB-oppslaget før tilgangssjekken (fødselsnummeret trengs for å spørre stPeter),
+ * men skjuler NotFoundException bak samme TilgangAvvistException-form som en reell avvisning gir.
+ */
+
+private inline fun <T> ApplicationCall.hentEllerAvvisVedIkkeFunnet(hent: () -> T): T =
+    try {
+        hent()
+    } catch (_: NotFoundException) {
+        throw TilgangAvvistException(
+            title = "Ingen tilgang",
+            status = HttpStatusCode.Forbidden,
+            type = URI("urn:error:forbidden"),
+            detail = "Ingen tilgang til ressursen",
+            instance = URI(request.uri),
+        )
+    }
+
+/**
+ * TODO: Oppslagslogg (audit) for innsyn i Arena-data — se threat model T8 (repudiation).
+ * Skal den være her eller i dp-stpeter?
+ */
 
 internal fun Application.arenaInnsynApi(
     authFactory: AuthFactory,
@@ -54,12 +87,10 @@ internal fun Application.arenaInnsynApi(
                     val ident = identForespørsel.ident.tilPersonIdentfikator()
 
                     stPeter.vedTilgangTilPerson(ident.identifikator(), call.token()) {
+                        val personId = arenaInnsynResponseService.hentPersonId(ident.identifikator())
                         call.respond(
                             status = HttpStatusCode.OK,
-                            message =
-                                PersonIdResponse(
-                                    id = arenaInnsynResponseService.hentPersonId(ident.identifikator()),
-                                ),
+                            message = PersonIdResponse(id = personId),
                         )
                     }
                 }
@@ -67,7 +98,8 @@ internal fun Application.arenaInnsynApi(
                 get("/person/{personId}") {
                     val personId = call.parameters["personId"]?.toInt() ?: throw BadRequestException("PersonId mangler")
 
-                    val arenaPerson = arenaInnsynResponseService.hentPerson(personId)
+                    val arenaPerson =
+                        call.hentEllerAvvisVedIkkeFunnet { arenaInnsynResponseService.hentPerson(personId) }
 
                     stPeter.vedTilgangTilPerson(arenaPerson.fodselsnummer, call.token()) {
                         call.respond(
@@ -79,7 +111,9 @@ internal fun Application.arenaInnsynApi(
                 get("/sak/person/{personId}") {
                     val personId = call.parameters["personId"]?.toInt() ?: throw BadRequestException("PersonId mangler")
                     val arenaSakerForPerson =
-                        arenaInnsynResponseService.hentArenaSakerForPerson(personId = personId)
+                        call.hentEllerAvvisVedIkkeFunnet {
+                            arenaInnsynResponseService.hentArenaSakerForPerson(personId = personId)
+                        }
 
                     stPeter.vedTilgangTilPerson(arenaSakerForPerson.ident, call.token()) {
                         call.respond(
@@ -95,7 +129,7 @@ internal fun Application.arenaInnsynApi(
                         SakId.fromString(sakIdParam)
                             ?: throw UnprocessableContentException("SakId må være et gyldig heltall")
 
-                    val sak = arenaInnsynResponseService.hentSak(sakId)
+                    val sak = call.hentEllerAvvisVedIkkeFunnet { arenaInnsynResponseService.hentSak(sakId) }
 
                     stPeter.vedTilgangTilPerson(sak.person.fodselsnummer, call.token()) {
                         call.respond(
@@ -116,7 +150,7 @@ internal fun Application.arenaInnsynApi(
                         )
                             ?: throw UnprocessableContentException("Aar og lopenummer mangler eller er ikke gyldige heltall")
 
-                    val sak = arenaInnsynResponseService.hentSak(saksnummer)
+                    val sak = call.hentEllerAvvisVedIkkeFunnet { arenaInnsynResponseService.hentSak(saksnummer) }
 
                     stPeter.vedTilgangTilPerson(sak.person.fodselsnummer, call.token()) {
                         call.respond(

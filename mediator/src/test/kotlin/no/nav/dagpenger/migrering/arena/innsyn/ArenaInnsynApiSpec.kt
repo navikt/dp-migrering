@@ -88,14 +88,14 @@ class ArenaInnsynApiSpec :
             }
         }
 
-        "hent saker for person med ugyldig ident skal returnere 400 og problem-json" {
+        "hent saker for person med ugyldig ident skal returnere 403 og problem-json" {
 
             withMockAuthServerAndTestApplication {
                 autentisert(
                     httpMethod = HttpMethod.Get,
                     endepunkt = "/arena/innsyn/sak/person/12432",
                 ).apply {
-                    status shouldBe HttpStatusCode.NotFound
+                    status shouldBe HttpStatusCode.Forbidden
                     val body = bodyAsText()
                     body.shouldBeValidJson()
                 }
@@ -135,18 +135,18 @@ class ArenaInnsynApiSpec :
             }
         }
 
-        "hent på sakId skal returnere 404 hvis ikke sakId finnes" {
+        "hent på sakId skal returnere 403 hvis ikke sakId finnes" {
 
             withMockAuthServerAndTestApplication {
                 whenAllowAccessToPerson {
                     autentisert(
                         endepunkt = "/arena/innsyn/sak/404/detaljert",
                     ).apply {
-                        status shouldBe HttpStatusCode.NotFound
+                        status shouldBe HttpStatusCode.Forbidden
                         val body = bodyAsText()
                         body.shouldBeValidJson()
-                        body.shouldContainJsonKeyValue("type", "urn:error:not_found")
-                        body.shouldContainJsonKeyValue("status", 404)
+                        body.shouldContainJsonKeyValue("type", "urn:error:forbidden")
+                        body.shouldContainJsonKeyValue("status", 403)
                     }
                 }
             }
@@ -198,16 +198,16 @@ class ArenaInnsynApiSpec :
             }
         }
 
-        "hent på saksnummer skal returnere 404 hvis saksnummer ikke finnes" {
+        "hent på saksnummer skal returnere 403 hvis saksnummer ikke finnes" {
 
             withMockAuthServerAndTestApplication {
                 autentisert(
                     endepunkt = "/arena/innsyn/sak/2030/1234/detaljert",
                 ).apply {
-                    status shouldBe HttpStatusCode.NotFound
+                    status shouldBe HttpStatusCode.Forbidden
                     val body = bodyAsText()
-                    body.shouldContainJsonKeyValue("type", "urn:error:not_found")
-                    body.shouldContainJsonKeyValue("status", 404)
+                    body.shouldContainJsonKeyValue("type", "urn:error:forbidden")
+                    body.shouldContainJsonKeyValue("status", 403)
                 }
             }
         }
