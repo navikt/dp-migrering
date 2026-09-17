@@ -8,6 +8,6 @@ azure:
 
 stpeter:
     scope: "api://dev-gcp.teamdagpenger.dp-stpeter/.default"
-    url: "http://dp-stpeter"
+    url: "https://dp-stpeter.intern.dev.nav.no"
 
 wonderwalled: true
