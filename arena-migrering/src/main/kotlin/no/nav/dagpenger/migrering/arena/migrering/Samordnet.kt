@@ -1,18 +1,18 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.util.*
+import java.util.UUID
 
-class OppholdINorge : OpplysningProdusent<Boolean> {
+class Samordnet : OpplysningProdusent<Boolean> {
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
 
-    override val opplysningsId: UUID = UUID.fromString("0194881f-9443-72b4-8b30-5f6cdb24d54e")
-    val opplysningsNavn: String = "Bruker har opphold i Norge"
+    override val opplysningsId: UUID = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a250")
+    val opplysningsNavn: String = "Er samordning utført"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "INORGE" }
+        val vilkaar = kontekst.sakTilMigrering.vedtakfakta.filter { vilkaar -> vilkaar.kode == "SAM" }
         if (vilkaar.size == 1) {
             return Opplysning(
                 navn = opplysningsNavn,
@@ -21,7 +21,7 @@ class OppholdINorge : OpplysningProdusent<Boolean> {
                 uuid = opplysningsId,
             )
         }
-        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker har opphold i Norge")
+        throw IllegalArgumentException("Klarte ikke å finne om samordning var utført")
     }
 
     private fun verdi(verdi: String?): Boolean? =
