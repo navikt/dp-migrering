@@ -44,6 +44,10 @@ spec:
       value: -XX:+UseParallelGC -XX:MaxRAMPercentage=75.0 -XX:ActiveProcessorCount=4
     - name: GRUPPER_SAKSBEHANDLER
       value: "{{azure.grupper.saksbehandler}}"
+    - name: STPETER_URL
+      value: "{{stpeter.url}}"
+    - name: STPETER_SCOPE
+      value: "{{stpeter.scope}}"
   envFrom:
     - secret: dp-migrering
   {{#if ingresses}}
