@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.shadow.jar)
 }
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
 
     implementation(project(path = ":konfigurasjon"))
@@ -12,15 +16,14 @@ dependencies {
     implementation(project(path = ":arena-innsyn"))
 
     implementation(libs.bundles.jackson)
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.09.17-12.38.b4f6d88558ca")
 
-    // implementation(libs.bundles.postgres)
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
     implementation("com.oracle.database.jdbc:ojdbc11:23.26.3.0.0")
     implementation(libs.hikari)
     implementation(libs.kotlinquery)
-    // implementation(libs.rapids.and.rivers)
     implementation(libs.konfig)
     implementation(libs.kotlin.logging)
     implementation(libs.flyway)
@@ -44,31 +47,17 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
 
-    testImplementation("com.h2database:h2:2.5.250")
-
-    // testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.mockk)
     testImplementation(libs.mock.oauth2.server)
     testImplementation("io.ktor:ktor-server-test-host-jvm:${libs.versions.ktor.get()}")
     testImplementation("io.ktor:ktor-client-content-negotiation:${libs.versions.ktor.get()}")
-//    testImplementation("io.ktor:ktor-serialization-jackson3:${libs.versions.ktor.get()}")
     testImplementation("com.approvaltests:approvaltests:31.0.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.5.0")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
-    testImplementation("com.h2database:h2:2.5.250") // nyeste versjon offisielt støttet av flyway 12.0.3
+    testImplementation("com.h2database:h2:2.5.250")
+    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.09.17-12.38.b4f6d88558ca")
 }
 
 application {
     mainClass.set("no.nav.dagpenger.migrering.AppKt")
 }
-
-// tasks.test {
-//    val erCI = System.getenv("CI")?.toBoolean() == true
-//    val defaultParallelism = if (erCI) 1 else 8
-//    val parallelism = System.getenv("TEST_PARALLELISM")?.toInt() ?: defaultParallelism
-//    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
-//    systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
-//    systemProperty("junit.jupiter.execution.parallel.config.strategy", "fixed")
-//    systemProperty("junit.jupiter.execution.parallel.config.fixed.parallelism", parallelism)
-//    systemProperty("junit.jupiter.execution.parallel.config.fixed.max-pool-size", parallelism)
-// }

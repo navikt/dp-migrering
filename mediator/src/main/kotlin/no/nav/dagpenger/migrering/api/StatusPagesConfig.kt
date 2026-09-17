@@ -13,6 +13,7 @@ import io.ktor.server.plugins.statuspages.StatusPagesConfig
 import io.ktor.server.request.uri
 import io.ktor.server.response.header
 import io.ktor.server.response.respond
+import no.dagpenger.stpeter.plugin.TilgangAvvistException
 import no.nav.dagpenger.migrering.arena.api.models.HttpProblem
 import java.net.URI
 
@@ -63,6 +64,24 @@ fun StatusPagesConfig.statusPagesConfig() {
                 type = URI("urn:error:not_found"),
                 detail = cause.message,
                 instance = URI(call.request.uri),
+            ),
+        )
+    }
+    exception<TilgangAvvistException> { call, cause ->
+        call.response.header("Content-Type", ContentType.Application.ProblemJson.toString())
+        call.respond(
+            cause.status,
+            HttpProblem(
+                status = cause.status.value,
+                title = cause.title,
+                type = cause.type,
+                detail = cause.detail,
+                instance = cause.instance,
+                properties =
+                    mutableMapOf<String, Any>().apply {
+                        cause.traceId?.let { put("traceId", it) }
+                        cause.kanOverstyres?.let { put("kanOverstyres", it) }
+                    },
             ),
         )
     }
