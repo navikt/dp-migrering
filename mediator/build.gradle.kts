@@ -16,7 +16,7 @@ dependencies {
     implementation(project(path = ":arena-innsyn"))
 
     implementation(libs.bundles.jackson)
-    implementation("no.nav.dagpenger:stpeter-plugin:2026.09.17-12.38.b4f6d88558ca")
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.09.17-12.42.649971f1d7ad")
 
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
 
