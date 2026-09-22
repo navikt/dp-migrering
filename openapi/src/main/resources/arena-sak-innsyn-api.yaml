@@ -6,7 +6,7 @@ info:
   contact:
     name: "#team-dagpenger"
 servers:
-  - url: https://dp-arena-gw.dev-fss-pub.nais.io
+  - url: https://dp-migrering.dev-fss-pub.nais.io
     description: dev
 #  - url: https://dp-arena.intern.nav.no
 #    description: prod
@@ -451,7 +451,7 @@ components:
       bearerFormat: JWT
       description: |
         Bruker [AzureAD](https://docs.nais.io/security/auth/azure-ad) til autentisering. 
-        Token må ha `audience` satt til `[cluster].teamdagpenger.dp-arena-gw`.
+        Token må ha `audience` satt til `[cluster].teamdagpenger.dp-migrering`.
         
         For å teste APIet kan du lage et gyldig OBO-token ved å bruke wonderwalled:
-        - [dev-fss](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-fss.teamdagpenger.dp-arena-gw)
+        - [dev-fss](https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-fss.teamdagpenger.dp-migrering)
