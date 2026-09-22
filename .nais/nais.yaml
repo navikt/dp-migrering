@@ -48,8 +48,19 @@ spec:
       value: "{{stpeter.url}}"
     - name: STPETER_SCOPE
       value: "{{stpeter.scope}}"
-  envFrom:
-    - secret: dp-migrering
+    - name: DB_USERNAME_PATH
+      value: "/secrets/dbcreds/username"
+    - name: DB_PASSWORD_PATH
+      value: "/secrets/dbcreds/password"
+    - name: DB_JDBC_URL_PATH
+      value: "/secrets/dbconfig/jdbc_url"
+  vault:
+    enabled: true
+    paths:
+      - kvPath: "{{ vault_db_config_path }}"
+        mountPath: /secrets/dbconfig
+      - kvPath: "{{ vault_db_creds_path }}"
+        mountPath: /secrets/dbcreds
   {{#if ingresses}}
   ingresses:
     {{#each ingresses as |url|}}

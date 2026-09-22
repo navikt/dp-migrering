@@ -10,4 +10,7 @@ stpeter:
     scope: "api://dev-gcp.teamdagpenger.dp-stpeter/.default"
     url: "https://dp-stpeter.intern.dev.nav.no"
 
+vault_db_config_path: oracle/data/dev/config/arena_q2
+vault_db_creds_path: oracle/data/dev/creds/arena_q2-arena_tilgang_dag
+
 wonderwalled: true
