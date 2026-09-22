@@ -3,25 +3,25 @@ package no.nav.dagpenger.migrering.arena.migrering
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.UUID
 
-class Samordnet : OpplysningProdusent<Boolean> {
+class OppfyllerKravetTilAlder : OpplysningProdusent<Boolean> {
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
 
-    override val opplysningsId: UUID = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a250")
-    val opplysningsNavn: String = "Er samordning utført"
+    override val opplysningsId: UUID = UUID.fromString("0194881f-940b-76ff-acf5-ba7bcb367237")
+    val opplysningsNavn: String = "Bruker oppfyller kravet til alder"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "SAM" }
-        if (vedtakfakta.size == 1) {
+        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "UNDER67" }
+        if (vilkaar.size == 1) {
             return Opplysning(
                 navn = opplysningsNavn,
-                verdi = verdi(vedtakfakta.first().verdi),
-                gyldigFraOgMed = vedtakfakta.first().gyldigFra,
+                verdi = verdi(vilkaar.first().verdi),
+                gyldigFraOgMed = vilkaar.first().gyldigFra,
                 uuid = opplysningsId,
             )
         }
-        throw IllegalArgumentException("Klarte ikke å finne om samordning var utført")
+        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker oppfyller oppfyller kravet til alder")
     }
 
     private fun verdi(verdi: String?): Boolean? =

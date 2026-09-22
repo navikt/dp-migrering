@@ -4,8 +4,12 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
 import no.nav.dagpenger.migrering.arena.migrering.Dagpengegrunnlag
+import no.nav.dagpenger.migrering.arena.migrering.InntektPeriode1
+import no.nav.dagpenger.migrering.arena.migrering.InntektPeriode2
+import no.nav.dagpenger.migrering.arena.migrering.InntektPeriode3
 import no.nav.dagpenger.migrering.arena.migrering.MedlemAvFolketrygden
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
+import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilAlder
 import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilHeltidDeltid
 import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilMobilitet
 import no.nav.dagpenger.migrering.arena.migrering.OppholdINorge
@@ -34,6 +38,10 @@ class MigreringServiceSpec :
                     UkessatsEtterSamordning(),
                     UkessatsForSamordning(),
                     Samordnet(),
+                    InntektPeriode1(),
+                    InntektPeriode2(),
+                    InntektPeriode3(),
+                    OppfyllerKravetTilAlder(),
                 ),
                 repository = arenaRepository,
             )
@@ -45,6 +53,6 @@ class MigreringServiceSpec :
                     initiertAv = "user1",
                 )
 
-            opplysninger.size shouldBe 9
+            opplysninger.size shouldBe 13
         }
     })

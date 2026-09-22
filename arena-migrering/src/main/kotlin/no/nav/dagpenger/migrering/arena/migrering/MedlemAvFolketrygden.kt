@@ -3,6 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.UUID
 
+// Ikke mappet
 class MedlemAvFolketrygden : OpplysningProdusent<Boolean> {
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")

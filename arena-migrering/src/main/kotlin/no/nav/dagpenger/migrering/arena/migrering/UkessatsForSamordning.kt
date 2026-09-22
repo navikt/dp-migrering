@@ -12,12 +12,12 @@ class UkessatsForSamordning : OpplysningProdusent<Int> {
     val opplysningsNavn: String = "Ukessats med barnetillegg før samordning"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
-        val vilkaar = kontekst.sakTilMigrering.vedtakfakta.filter { vilkaar -> vilkaar.kode == "UKESFSAM" }
-        if (vilkaar.size == 1) {
+        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "UKESFSAM" }
+        if (vedtakfakta.size == 1) {
             return Opplysning(
                 navn = opplysningsNavn,
-                verdi = verdi(vilkaar.first().verdi),
-                gyldigFraOgMed = vilkaar.first().gyldigFra,
+                verdi = verdi(vedtakfakta.first().verdi),
+                gyldigFraOgMed = vedtakfakta.first().gyldigFra,
                 uuid = opplysningsId,
             )
         }
