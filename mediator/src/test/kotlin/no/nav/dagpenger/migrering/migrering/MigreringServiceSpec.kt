@@ -10,6 +10,8 @@ import no.nav.dagpenger.migrering.arena.migrering.InntektPeriode2
 import no.nav.dagpenger.migrering.arena.migrering.InntektPeriode3
 import no.nav.dagpenger.migrering.arena.migrering.MedlemAvFolketrygden
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
+import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravRegistrertArbeidssoker
+import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravRegistrertArbeidssokerBool
 import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilAlder
 import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilHeltidDeltid
 import no.nav.dagpenger.migrering.arena.migrering.OppfyllerKravetTilMobilitet
@@ -44,6 +46,8 @@ class MigreringServiceSpec :
                     InntektPeriode3(),
                     OppfyllerKravetTilAlder(),
                     Dagsats(),
+                    OppfyllerKravRegistrertArbeidssoker(),
+                    OppfyllerKravRegistrertArbeidssokerBool(),
                 ),
                 repository = arenaRepository,
             )
@@ -52,9 +56,10 @@ class MigreringServiceSpec :
             val opplysninger =
                 migreringsService.initierMigrering(
                     sakId = 15603478,
+                    personId = 2321609,
                     initiertAv = "user1",
                 )
 
-            opplysninger.size shouldBe 14
+            opplysninger.size shouldBe 16
         }
     })

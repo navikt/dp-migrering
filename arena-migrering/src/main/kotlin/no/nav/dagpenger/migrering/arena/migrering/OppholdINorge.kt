@@ -1,7 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.util.*
+import java.util.UUID
 
 class OppholdINorge : OpplysningProdusent<Boolean> {
     companion object {

@@ -89,9 +89,48 @@ class ArenaRepository(
         return select
     }
 
-    fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
+    fun hentPersonInfo(personId: Int): List<ArenaSakMigrering.ArenaPersonMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'RETTIGHETSGRUPPEKODE' AS kolonne
+                     , rettighetsgruppekode   AS kolonneverdi
+                     , mod_dato
+                FROM person
+                WHERE person_id = :personId
+                UNION ALL
+                SELECT 'FORMIDLINGSGRUPPEKODE' AS kolonne
+                     , formidlingsgruppekode   AS kolonneverdi
+                     , mod_dato
+                FROM person
+                WHERE person_id = :personId
+--                SELECT kolonne
+--                     , konvertert
+--                     , mod_dato
+--                FROM person 
+--                 UNPIVOT ( konvertert FOR kolonne IN (rettighetsgruppekode, formidlingsgruppekode) 
+--                 )
+--                WHERE person_id = 
+                """.trimIndent(),
+                mapOf("personId" to personId),
+            ) { row ->
+                ArenaSakMigrering.ArenaPersonMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("kolonneverdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    fun hentSakTilMigrering(
+        sakId: Int,
+        personId: Int,
+    ): ArenaSakMigrering =
         ArenaSakMigrering(
             vilkaarsVurderinger = hentVilkaarvurdering(sakId),
             vedtakfakta = hentVedtakfakta(sakId),
+            personopplysninger = hentPersonInfo(personId),
         )
 }
