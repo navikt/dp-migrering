@@ -89,31 +89,39 @@ class ArenaRepository(
         return select
     }
 
-    fun hentPersonInfo(personId: Int): List<ArenaSakMigrering.ArenaPersonMigrering> {
+    fun hentPersonInfo(sakId: Int): List<ArenaSakMigrering.ArenaPersonMigrering> {
         val select =
             select(
                 // language=oracle
                 """
-                SELECT 'RETTIGHETSGRUPPEKODE' AS kolonne
-                     , rettighetsgruppekode   AS kolonneverdi
-                     , mod_dato
-                FROM person
-                WHERE person_id = :personId
+                SELECT 'RETTIGHETSGRUPPEKODE'   AS kolonne
+                     , p.rettighetsgruppekode   AS kolonneverdi
+                     , p.mod_dato
+                FROM   person p
+                     , sak s
+                WHERE  s.sak_id = :sakId
+                AND    s.tabellnavnalias = 'PERS'
+                AND    s.objekt_id = p.person_id 
                 UNION ALL
                 SELECT 'FORMIDLINGSGRUPPEKODE' AS kolonne
-                     , formidlingsgruppekode   AS kolonneverdi
-                     , mod_dato
-                FROM person
-                WHERE person_id = :personId
---                SELECT kolonne
---                     , konvertert
---                     , mod_dato
---                FROM person 
---                 UNPIVOT ( konvertert FOR kolonne IN (rettighetsgruppekode, formidlingsgruppekode) 
---                 )
---                WHERE person_id = 
+                     , p.formidlingsgruppekode AS kolonneverdi
+                     , p.mod_dato
+                FROM   person p
+                     , sak s
+                WHERE  s.sak_id = :sakId
+                AND    s.tabellnavnalias = 'PERS'
+                AND    s.objekt_id = p.person_id 
+                UNION ALL
+                SELECT 'FODSELSDATO'                         AS kolonne
+                     , TO_CHAR(p.fodselsdato, 'YYYY-MM-DD')  AS kolonneverdi 
+                     , p.mod_dato
+                FROM   person p
+                     , sak s
+                WHERE  s.sak_id = :sakId
+                AND    s.tabellnavnalias = 'PERS'
+                AND    s.objekt_id = p.person_id 
                 """.trimIndent(),
-                mapOf("personId" to personId),
+                mapOf("sakId" to sakId),
             ) { row ->
                 ArenaSakMigrering.ArenaPersonMigrering(
                     kode = row.string("kolonne"),
@@ -124,13 +132,10 @@ class ArenaRepository(
         return select
     }
 
-    fun hentSakTilMigrering(
-        sakId: Int,
-        personId: Int,
-    ): ArenaSakMigrering =
+    fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
         ArenaSakMigrering(
             vilkaarsVurderinger = hentVilkaarvurdering(sakId),
             vedtakfakta = hentVedtakfakta(sakId),
-            personopplysninger = hentPersonInfo(personId),
+            personopplysninger = hentPersonInfo(sakId),
         )
 }

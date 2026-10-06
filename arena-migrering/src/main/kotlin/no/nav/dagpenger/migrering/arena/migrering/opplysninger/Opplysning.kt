@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import java.time.LocalDate
 import java.util.UUID

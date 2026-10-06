@@ -1,10 +1,12 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
-import java.time.LocalDateTime
-import java.util.UUID
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningProdusent
+import java.time.LocalDateTime
+import java.util.UUID
 
 class MigreringsOrchestrator(
     private val produsenter: List<OpplysningProdusent<*>>,
@@ -12,11 +14,10 @@ class MigreringsOrchestrator(
 ) {
     suspend fun initierMigrering(
         sakId: Int,
-        personId: Int,
         initiertAv: String,
     ): List<Opplysning<*>> =
         coroutineScope {
-            val sakTilMigrering = repository.hentSakTilMigrering(sakId, personId)
+            val sakTilMigrering = repository.hentSakTilMigrering(sakId)
             val deferredOpplysninger =
                 produsenter.map { produsent ->
                     async {

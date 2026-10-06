@@ -1,18 +1,20 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-class OppfyllerKravetTilMobilitet : OpplysningProdusent<Boolean> {
+// Ikke mappet
+class MedlemAvFolketrygden : OpplysningProdusent<Boolean> {
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
 
-    override val opplysningsId: UUID = UUID.fromString("0194881f-9442-707b-a6ee-e96c06877bdb")
-    val opplysningsNavn: String = "Bruker oppfyller kravet til mobilitet"
+    override val opplysningsId: UUID = UUID.fromString("0194881f-9443-72b4-8b30-5f6cdb24d54c")
+    val opplysningsNavn: String = "Bruker er medlem av folketrygden"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "GEOMOB" }
+        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "MEDLFOLKT" }
         if (vilkaar.size == 1) {
             return Opplysning(
                 navn = opplysningsNavn,
@@ -21,7 +23,7 @@ class OppfyllerKravetTilMobilitet : OpplysningProdusent<Boolean> {
                 uuid = opplysningsId,
             )
         }
-        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker oppfyller kravet til mobilitet")
+        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker var medlem av Folketrygden")
     }
 
     private fun verdi(verdi: String?): Boolean? =
