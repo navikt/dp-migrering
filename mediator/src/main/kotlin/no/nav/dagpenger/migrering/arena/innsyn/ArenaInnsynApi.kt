@@ -86,7 +86,11 @@ internal fun Application.arenaInnsynApi(
                     val identForespørsel = call.receive<IdentForesporsel>()
                     val ident = identForespørsel.ident.tilPersonIdentfikator()
 
-                    stPeter.vedTilgangTilPerson(ident.identifikator(), call.token()) {
+                    stPeter.vedTilgangTilPersonUtenOppslagslogg(
+                        ident = ident.identifikator(),
+                        token = call.token(),
+                        originRoute = "/arena/innsyn/person",
+                    ) {
                         val personId = arenaInnsynResponseService.hentPersonId(ident.identifikator())
                         call.respond(
                             status = HttpStatusCode.OK,
@@ -101,7 +105,11 @@ internal fun Application.arenaInnsynApi(
                     val arenaPerson =
                         call.hentEllerAvvisVedIkkeFunnet { arenaInnsynResponseService.hentPerson(personId) }
 
-                    stPeter.vedTilgangTilPerson(arenaPerson.fodselsnummer, call.token()) {
+                    stPeter.vedTilgangTilPerson(
+                        ident = arenaPerson.fodselsnummer,
+                        token = call.token(),
+                        originRoute = "/arena/innsyn/person/{personId}",
+                    ) {
                         call.respond(
                             status = HttpStatusCode.OK,
                             message = arenaPerson,
@@ -115,7 +123,11 @@ internal fun Application.arenaInnsynApi(
                             arenaInnsynResponseService.hentArenaSakerForPerson(personId = personId)
                         }
 
-                    stPeter.vedTilgangTilPerson(arenaSakerForPerson.ident, call.token()) {
+                    stPeter.vedTilgangTilPerson(
+                        ident = arenaSakerForPerson.ident,
+                        token = call.token(),
+                        originRoute = "/arena/innsyn/sak/person/{personId}",
+                    ) {
                         call.respond(
                             status = HttpStatusCode.OK,
                             message = arenaSakerForPerson.saker.map { it.tilKontrakt() },
@@ -131,7 +143,11 @@ internal fun Application.arenaInnsynApi(
 
                     val sak = call.hentEllerAvvisVedIkkeFunnet { arenaInnsynResponseService.hentSak(sakId) }
 
-                    stPeter.vedTilgangTilPerson(sak.person.fodselsnummer, call.token()) {
+                    stPeter.vedTilgangTilPerson(
+                        ident = sak.person.fodselsnummer,
+                        token = call.token(),
+                        originRoute = "/arena/innsyn/sak/{sakId}/detaljert",
+                    ) {
                         call.respond(
                             status = HttpStatusCode.OK,
                             message = sak,
@@ -152,7 +168,11 @@ internal fun Application.arenaInnsynApi(
 
                     val sak = call.hentEllerAvvisVedIkkeFunnet { arenaInnsynResponseService.hentSak(saksnummer) }
 
-                    stPeter.vedTilgangTilPerson(sak.person.fodselsnummer, call.token()) {
+                    stPeter.vedTilgangTilPerson(
+                        ident = sak.person.fodselsnummer,
+                        token = call.token(),
+                        originRoute = "/arena/innsyn/sak/{aar}/{lopenummer}/detaljert",
+                    ) {
                         call.respond(
                             status = HttpStatusCode.OK,
                             message = sak,

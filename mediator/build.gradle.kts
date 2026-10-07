@@ -16,7 +16,7 @@ dependencies {
     implementation(project(path = ":arena-innsyn"))
 
     implementation(libs.bundles.jackson)
-    implementation("no.nav.dagpenger:stpeter-plugin:2026.10.06-13.37.d280e1c84aaf")
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.10.07-14.29.f8ba1b5b995d")
 
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
 
@@ -55,7 +55,7 @@ dependencies {
     testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("com.h2database:h2:2.5.252")
-    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.06-13.37.d280e1c84aaf")
+    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.07-14.29.f8ba1b5b995d")
 }
 
 application {
