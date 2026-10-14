@@ -49,6 +49,6 @@ internal class ApplicationBuilder(
     fun stop() = rapidsConnection.stop()
 
     override fun onStartup(rapidsConnection: RapidsConnection) {
-        logger.info { "Starter opp dp-behandling" }
+        logger.info { "Starter opp dp-migrering" }
     }
 }
