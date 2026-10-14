@@ -18,6 +18,7 @@ dependencies {
 
     implementation(libs.bundles.jackson)
     implementation("no.nav.dagpenger:stpeter-plugin:2026.10.13-18.56.454f41e83517")
+    implementation(libs.rapids.and.rivers)
 
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
 
