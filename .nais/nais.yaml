@@ -54,6 +54,8 @@ spec:
       value: "/secrets/dbcreds/password"
     - name: DB_JDBC_URL_PATH
       value: "/secrets/dbconfig/jdbc_url"
+  kafka:
+    pool: "{{ kafka.pool }}"
   vault:
     enabled: true
     paths:

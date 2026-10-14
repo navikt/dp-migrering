@@ -20,7 +20,12 @@ object Configuration {
 
     private val defaultProperties =
         ConfigurationMap(
-            mapOf(),
+            mapOf(
+                "RAPID_APP_NAME" to "dp-migrering",
+                "KAFKA_CONSUMER_GROUP_ID" to "dp-migrering-v1",
+                "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
+                "KAFKA_RESET_POLICY" to "LATEST",
+            ),
         )
 
     object Grupper : PropertyGroup() {
