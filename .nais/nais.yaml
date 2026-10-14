@@ -91,7 +91,7 @@ spec:
     inbound:
       rules:
         - application: dp-arena-innsyn-klient
-          cluster: dev-gcp
+          cluster: "{{environment}}-gcp"
           namespace: teamdagpenger
         {{#if wonderwalled}}
 #        - application: wonderwalled-azure
