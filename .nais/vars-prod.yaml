@@ -1,0 +1,16 @@
+ingresses:
+  - https://dp-migrering.prod-fss-pub.nais.io
+
+azure:
+  tenant: nav.no
+  grupper:
+    saksbehandler: "2e9c63d8-322e-4c1f-b500-a0abb812761c" # 0000-GA-Dagpenger-Saksbehandler
+
+stpeter:
+    scope: "api://prod-gcp.teamdagpenger.dp-stpeter/.default"
+    url: "https://dp-stpeter.intern.prod.nav.no"
+
+vault_db_config_path: oracle/data/prod/config/arena_q2
+vault_db_creds_path: oracle/data/prod/creds/arena_q2-arena_tilgang_dag
+
+wonderwalled: true
