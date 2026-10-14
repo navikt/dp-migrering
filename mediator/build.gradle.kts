@@ -1,8 +1,12 @@
 plugins {
     id("common")
     application
-    kotlin("plugin.serialization") version "2.4.10"
+    kotlin("plugin.serialization") version "2.4.21"
     alias(libs.plugins.shadow.jar)
+}
+
+repositories {
+    mavenLocal()
 }
 
 dependencies {
@@ -13,24 +17,23 @@ dependencies {
     implementation(project(path = ":arena-migrering"))
 
     implementation(libs.bundles.jackson)
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.10.13-18.56.454f41e83517")
 
-    // implementation(libs.bundles.postgres)
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
     implementation("com.oracle.database.jdbc:ojdbc11:23.26.3.0.0")
     implementation(libs.hikari)
     implementation(libs.kotlinquery)
-    // implementation(libs.rapids.and.rivers)
     implementation(libs.konfig)
     implementation(libs.kotlin.logging)
     implementation(libs.flyway)
-    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.31.1")
-    implementation("io.opentelemetry:opentelemetry-api:1.65.0")
-    implementation("io.prometheus:prometheus-metrics-core:1.8.0")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.32.0")
+    implementation("io.opentelemetry:opentelemetry-api:1.67.0")
+    implementation("io.prometheus:prometheus-metrics-core:1.9.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.1")
-    implementation("org.slf4j:slf4j-api:2.0.19")
-    implementation("ch.qos.logback:logback-classic:1.6.3")
+    implementation("org.slf4j:slf4j-api:2.0.20")
+    implementation("ch.qos.logback:logback-classic:1.6.5")
 
     implementation(libs.bundles.ktor.client)
     implementation(libs.bundles.ktor.server)
@@ -45,31 +48,17 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
 
-    testImplementation("com.h2database:h2:2.5.250")
-
-    // testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.mockk)
     testImplementation(libs.mock.oauth2.server)
     testImplementation("io.ktor:ktor-server-test-host-jvm:${libs.versions.ktor.get()}")
     testImplementation("io.ktor:ktor-client-content-negotiation:${libs.versions.ktor.get()}")
-//    testImplementation("io.ktor:ktor-serialization-jackson3:${libs.versions.ktor.get()}")
     testImplementation("com.approvaltests:approvaltests:31.0.0")
-    testImplementation("com.tngtech.archunit:archunit-junit5:1.5.0")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
-    testImplementation("com.h2database:h2:2.5.250") // nyeste versjon offisielt støttet av flyway 12.0.3
+    testImplementation("com.h2database:h2:2.5.252")
+    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.13-18.56.454f41e83517")
 }
 
 application {
     mainClass.set("no.nav.dagpenger.migrering.AppKt")
 }
-
-// tasks.test {
-//    val erCI = System.getenv("CI")?.toBoolean() == true
-//    val defaultParallelism = if (erCI) 1 else 8
-//    val parallelism = System.getenv("TEST_PARALLELISM")?.toInt() ?: defaultParallelism
-//    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
-//    systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
-//    systemProperty("junit.jupiter.execution.parallel.config.strategy", "fixed")
-//    systemProperty("junit.jupiter.execution.parallel.config.fixed.parallelism", parallelism)
-//    systemProperty("junit.jupiter.execution.parallel.config.fixed.max-pool-size", parallelism)
-// }

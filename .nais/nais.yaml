@@ -1,7 +1,7 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: dp-arena-gw
+  name: dp-migrering
   namespace: teamdagpenger
   labels:
     team: teamdagpenger
@@ -44,8 +44,23 @@ spec:
       value: -XX:+UseParallelGC -XX:MaxRAMPercentage=75.0 -XX:ActiveProcessorCount=4
     - name: GRUPPER_SAKSBEHANDLER
       value: "{{azure.grupper.saksbehandler}}"
-  envFrom:
-    - secret: dp-migrering
+    - name: STPETER_URL
+      value: "{{stpeter.url}}"
+    - name: STPETER_SCOPE
+      value: "{{stpeter.scope}}"
+    - name: DB_USERNAME_PATH
+      value: "/secrets/dbcreds/username"
+    - name: DB_PASSWORD_PATH
+      value: "/secrets/dbcreds/password"
+    - name: DB_JDBC_URL_PATH
+      value: "/secrets/dbconfig/jdbc_url"
+  vault:
+    enabled: true
+    paths:
+      - kvPath: "{{ vault_db_config_path }}"
+        mountPath: /secrets/dbconfig
+      - kvPath: "{{ vault_db_creds_path }}"
+        mountPath: /secrets/dbcreds
   {{#if ingresses}}
   ingresses:
     {{#each ingresses as |url|}}
@@ -76,7 +91,7 @@ spec:
     inbound:
       rules:
         - application: dp-arena-innsyn-klient
-          cluster: dev-gcp
+          cluster: "{{environment}}-gcp"
           namespace: teamdagpenger
         {{#if wonderwalled}}
 #        - application: wonderwalled-azure

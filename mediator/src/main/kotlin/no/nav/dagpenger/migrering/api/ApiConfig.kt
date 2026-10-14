@@ -14,14 +14,11 @@ internal fun Application.authenticationConfig(authFactory: AuthFactory) {
                 azureAd()
             }
         }
-//        jwt("admin") {
-//            with(authFactory) {
-//                adminTilgang()
-//            }
-//        }
     }
 }
 
 internal fun Application.apiConfig(authFactory: AuthFactory) {
-    arenaInnsynApi(authFactory)
+    arenaInnsynApi(
+        authFactory,
+    )
 }

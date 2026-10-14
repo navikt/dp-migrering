@@ -13,6 +13,7 @@ import io.ktor.server.plugins.statuspages.StatusPagesConfig
 import io.ktor.server.request.uri
 import io.ktor.server.response.header
 import io.ktor.server.response.respond
+import no.dagpenger.stpeter.plugin.TilgangAvvistException
 import no.nav.dagpenger.migrering.arena.api.models.HttpProblem
 import java.net.URI
 
@@ -66,6 +67,24 @@ fun StatusPagesConfig.statusPagesConfig() {
             ),
         )
     }
+    exception<TilgangAvvistException> { call, cause ->
+        call.response.header("Content-Type", ContentType.Application.ProblemJson.toString())
+        call.respond(
+            cause.status,
+            HttpProblem(
+                status = cause.status.value,
+                title = cause.title,
+                type = cause.type,
+                detail = cause.detail,
+                instance = cause.instance,
+                properties =
+                    mutableMapOf<String, Any>().apply {
+                        cause.traceId?.let { put("traceId", it) }
+                        cause.kanOverstyres?.let { put("kanOverstyres", it) }
+                    },
+            ),
+        )
+    }
     exception<Throwable> { call, cause ->
         call.application.log.error(
             "ukjent feil: ${cause.message}. svarer med InternalServerError og en feilmelding i JSON",
@@ -78,7 +97,9 @@ fun StatusPagesConfig.statusPagesConfig() {
                 status = HttpStatusCode.InternalServerError.value,
                 title = "Uventet feil",
                 type = URI("urn:error:internal_error"),
-                detail = "Uventet feil: ${cause.message}",
+                // Ikke ekko cause.message til klient — kan lekke interne detaljer (SQL-feil, klassenavn m.m.).
+                // Full detalj er allerede logget over; se applikasjonsloggen for feilsøking.
+                detail = "En uventet feil oppstod. Se applikasjonslogg for detaljer.",
                 instance = URI(call.request.uri),
             ),
         )

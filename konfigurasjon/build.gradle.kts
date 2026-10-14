@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.konfig)
+    api(libs.konfig)
     implementation(libs.kotlin.logging)
 }

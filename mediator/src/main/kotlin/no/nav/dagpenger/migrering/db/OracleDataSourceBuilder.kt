@@ -1,28 +1,28 @@
 package no.nav.dagpenger.migrering.db
 
-import ch.qos.logback.core.util.OptionHelper.getEnv
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.micrometer.core.instrument.Clock
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
+import no.nav.dagpenger.migrering.konfigurasjon.Configuration
+import no.nav.dagpenger.migrering.konfigurasjon.Configuration.arenaDatabaseConfig
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-private const val DB_USERNAME_KEY = "DB_USERNAME"
-private const val DB_PASSWORD_KEY = "DB_PASSWORD"
-private const val DB_URL_KEY = "DB_URL"
-
 // Understands how to create a data source from environment variables
 internal class OracleDataSourceBuilder {
-    private fun getOrThrow(key: String): String = getEnv(key) ?: error("Mangler miljøvariabel $key")
+    // private fun getOrThrow(key: String): String = getEnv(key) ?: error("Mangler miljøvariabel $key")
 
     private val baseConfig =
         HikariConfig().apply {
-            jdbcUrl = getOrThrow(DB_URL_KEY).ensurePrefix("jdbc:oracle:thin:@").stripCredentials()
-            username = getOrThrow(DB_USERNAME_KEY)
-            password = getOrThrow(DB_PASSWORD_KEY)
+            jdbcUrl =
+                Configuration.properties.arenaDatabaseConfig.jdbcUrl
+                    .ensurePrefix("jdbc:oracle:thin:@")
+                    .stripCredentials()
+            username = Configuration.properties.arenaDatabaseConfig.username
+            password = Configuration.properties.arenaDatabaseConfig.password
 
             // Default 30 sekund
             connectionTimeout = 10.seconds.inWholeMilliseconds
