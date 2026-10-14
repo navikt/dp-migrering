@@ -8,7 +8,7 @@ azure:
 
 stpeter:
     scope: "api://prod-gcp.teamdagpenger.dp-stpeter/.default"
-    url: "https://dp-stpeter.intern.prod.nav.no"
+    url: "https://dp-stpeter.intern.nav.no"
 
 environment: prod
 
