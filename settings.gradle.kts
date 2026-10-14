@@ -19,3 +19,4 @@ include("openapi")
 
 include("konfigurasjon")
 include("arena-innsyn")
+include("arena-migrering")
