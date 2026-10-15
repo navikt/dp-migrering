@@ -6,6 +6,7 @@ import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.IkkePavirketAvStrekLockout
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode2
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode3
@@ -14,6 +15,7 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravRegi
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilAlder
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilHeltidDeltid
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilMobilitet
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerVilkarTilTaptAbeidsinntekt
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppholdINorge
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Samordnet
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.SisteAvsluttendeKalenderManed
@@ -46,6 +48,8 @@ class MigreringServiceSpec :
                     OppfyllerKravetTilAlder(),
                     Dagsats(),
                     OppfyllerKravRegistrertArbeidssoker(),
+                    OppfyllerVilkarTilTaptAbeidsinntekt(),
+                    IkkePavirketAvStrekLockout(),
                 ),
                 repository = arenaRepository,
             )
@@ -57,6 +61,6 @@ class MigreringServiceSpec :
                     initiertAv = "user1",
                 )
 
-            opplysninger.size shouldBe 15
+            opplysninger.size shouldBe 17
         }
     })
