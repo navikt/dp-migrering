@@ -21,6 +21,7 @@ class ArenaMigreringApiSpec :
                     status shouldBe HttpStatusCode.OK
                     val body = body<StartMigreringResponse>()
                     body.opplysninger?.size shouldBe 15
+                    rapid.inspektør.size shouldBe 1
                 }
             }
         }

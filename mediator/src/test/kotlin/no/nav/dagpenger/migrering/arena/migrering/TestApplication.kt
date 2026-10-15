@@ -43,6 +43,7 @@ import no.nav.security.mock.oauth2.MockOAuth2Server
 
 class TestContext(
     val client: HttpClient,
+    val rapid: TestRapid,
 ) {
     internal suspend fun autentisert(
         httpMethod: HttpMethod = HttpMethod.Get,
@@ -197,7 +198,7 @@ object TestApplication {
                     }
                 }
 
-            test(TestContext(testClient))
+            test(TestContext(testClient, rapid))
         }
     }
 }
