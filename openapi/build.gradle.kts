@@ -56,4 +56,23 @@ fabrikt {
             serializationLibrary = Jackson
         }
     }
+
+    generate("arena-migrering-api") {
+        apiFile = file("$projectDir/src/main/resources/arena-migrering-api.yaml")
+        basePackage = "no.nav.dagpenger.arena.migrering.api"
+        skip = false
+        quarkusReflectionConfig = disabled
+        typeOverrides {
+            datetime = LocalDateTime
+        }
+        model {
+            generate = enabled
+            validationLibrary = NoValidation
+            extensibleEnums = disabled
+            sealedInterfacesForOneOf = enabled
+            ignoreUnknownProperties = disabled
+            nonNullMapValues = enabled
+            serializationLibrary = Jackson
+        }
+    }
 }
