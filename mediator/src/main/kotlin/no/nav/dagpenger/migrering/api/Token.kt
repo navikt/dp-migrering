@@ -16,3 +16,9 @@ fun ApplicationCall.token(): String {
 
     return token
 }
+
+fun ApplicationCall.oidcToken(): OidcToken {
+    val token: String = requireNotNull(this.request.headers[HttpHeaders.Authorization]).split(" ")[1]
+
+    return OidcToken(token)
+}
