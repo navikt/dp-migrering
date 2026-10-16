@@ -31,7 +31,7 @@ dependencies {
     implementation(libs.flyway)
     implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.32.0")
     implementation("io.opentelemetry:opentelemetry-api:1.67.0")
-    implementation("io.prometheus:prometheus-metrics-core:1.9.0")
+    implementation("io.prometheus:prometheus-metrics-core:1.10.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.1")
     implementation("org.slf4j:slf4j-api:2.0.20")
     implementation("ch.qos.logback:logback-classic:1.6.5")
