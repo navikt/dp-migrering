@@ -693,6 +693,35 @@ COMMENT ON TABLE "LOV_VEDTAK_SAKSOPPLYSNING"  IS 'Liste over saksopplysninger so
 
 
 --------------------------------------------------------
+--  DDL for Table MELDEGRUPPE
+--------------------------------------------------------
+CREATE TABLE "MELDEGRUPPE"
+(	"PERSON_ID" NUMBER NOT NULL,
+     "MELDEGRUPPEKODE" VARCHAR2(5) NOT NULL,
+     "DATO_FRA" DATE NOT NULL,
+     "DATO_TIL" DATE,
+     "HENDELSESDATO" DATE,
+     "STATUS_AKTIV" VARCHAR2(1) NOT NULL,
+     "BEGRUNNELSE" VARCHAR2(255),
+     "STYRENDE_VEDTAK_ID" NUMBER,
+     "REG_USER" VARCHAR2(8),
+     "REG_DATO" DATE,
+     "MOD_USER" VARCHAR2(8),
+     "MOD_DATO" DATE,
+     "MELDEGRUPPE_ID" NUMBER
+);
+
+COMMENT ON COLUMN "MELDEGRUPPE"."PERSON_ID" IS 'Referanse til PERSON';
+COMMENT ON COLUMN "MELDEGRUPPE"."MELDEGRUPPEKODE" IS 'Referanse til MELDEGRUPPETYPE';
+COMMENT ON COLUMN "MELDEGRUPPE"."DATO_FRA" IS 'Gyldighetsperiode fra';
+COMMENT ON COLUMN "MELDEGRUPPE"."DATO_TIL" IS 'Gyldighetsperiode til';
+COMMENT ON COLUMN "MELDEGRUPPE"."HENDELSESDATO" IS 'Dato for endret meldegruppe';
+COMMENT ON COLUMN "MELDEGRUPPE"."STATUS_AKTIV" IS 'Angir om meldegruppen for denne perioden er aktiv. For å få et bilde av meldegruppen for en person i en periode er det kun aktuelt å se på rader med status_aktiv=J';
+COMMENT ON COLUMN "MELDEGRUPPE"."BEGRUNNELSE" IS 'Tekstlig begrunnelse for endring av meldegruppe';
+COMMENT ON COLUMN "MELDEGRUPPE"."STYRENDE_VEDTAK_ID" IS 'Referanse til VEDTAK_ID som setter meldegruppen';
+COMMENT ON TABLE "MELDEGRUPPE"  IS 'Inneholder historikk å nåværende status for en persons meldegruppe. For å få et bilde av meldegruppen for en person i en periode er det kun aktuelt å se på rader med status_aktiv=JA. Meldegruppe settes ut fra vedtak og personforhold. Setting av meldegruppe er implementert i metoden mk_meldestatus.RevurderMeldegruppe';
+
+--------------------------------------------------------
 --  DDL for Table MELDEKORT
 --------------------------------------------------------
 
