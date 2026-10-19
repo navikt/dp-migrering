@@ -57,7 +57,7 @@ dependencies {
     testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("com.h2database:h2:2.5.252")
-    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.15-06.45.bd9f26ef3881")
+    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.19-12.53.59e62bf486dd")
 }
 
 application {
