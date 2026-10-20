@@ -24,12 +24,19 @@ class ArenaStatistikkRepository(
 
     fun tellMenneskerPerRettighetstatus(): Map<Boolean, Long> =
         select(
+            // language=oracle
             """
-            SELECT rettighetstatus, COUNT(*) AS antall
-            FROM arena_rettighetstatus
-            GROUP BY rettighetstatus
+            SELECT 'false' hva, COUNT(*) antall
+            FROM   meldegruppe
+            WHERE  status_aktiv = 'J'
+            AND    meldegruppekode = 'DAGP'
+            AND    ( (SYSDATE BETWEEN dato_fra AND NVL(dato_til, SYSDATE)) OR (dato_fra > SYSDATE) )
+            UNION ALL
+            SELECT 'true' hva, COUNT(*) antall
+            FROM   person
+            WHERE  rettighetsgruppekode = 'DAGP';
             """.trimIndent(),
         ) { row ->
-            row.boolean("rettighetstatus") to row.long("antall")
+            row.boolean("hva") to row.long("antall")
         }.toMap()
 }
