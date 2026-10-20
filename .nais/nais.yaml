@@ -36,13 +36,13 @@ spec:
     max: 2
   resources:
     limits:
-      memory: 544Mi
+      memory: 768Mi
     requests:
       cpu: 50m
-      memory: 544Mi
+      memory: 768Mi
   env:
     - name: JDK_JAVA_OPTIONS
-      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=75.0 -XX:ActiveProcessorCount=4
+      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=50.0 -XX:ActiveProcessorCount=4
     - name: GRUPPER_SAKSBEHANDLER
       value: "{{azure.grupper.saksbehandler}}"
     - name: STPETER_URL
@@ -90,6 +90,8 @@ spec:
 
   accessPolicy:
     outbound:
+      external:
+        - host: teamdagpenger-unleash-api.nav.cloud.nais.io
       rules:
         - application: logging
           namespace: nais-system
