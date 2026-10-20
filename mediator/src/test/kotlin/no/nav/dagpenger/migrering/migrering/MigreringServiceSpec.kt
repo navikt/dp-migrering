@@ -1,5 +1,6 @@
 package no.nav.dagpenger.migrering.migrering
 
+import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
@@ -27,6 +28,7 @@ class MigreringServiceSpec :
         val h2DataSourceBuilder = H2DataSourceBuilder()
         h2DataSourceBuilder.runMigration()
 
+        val rapid = TestRapid()
         val arenaRepository = ArenaRepository(h2DataSourceBuilder.dataSource)
         val migreringsService =
             MigreringsOrchestrator(
@@ -48,15 +50,23 @@ class MigreringServiceSpec :
                     OppfyllerKravRegistrertArbeidssoker(),
                 ),
                 repository = arenaRepository,
+                rapidsConnection = rapid,
             )
 
-        "skal bladi bladi" {
-            val opplysninger =
-                migreringsService.initierMigrering(
-                    sakId = 15603478,
-                    initiertAv = "user1",
-                )
+        "skal lage migreringshendelse" {
 
-            opplysninger.size shouldBe 15
+            migreringsService.initierMigrering(
+                sakId = 15603478,
+                initiertAv = "user1",
+            )
+
+            rapid.inspektør.size shouldBe 1
+            val message = rapid.inspektør.message(0)
+
+            with(message) {
+                this["sakId"].asInt() shouldBe 15603478
+                this["initiertAv"].asString() shouldBe "user1"
+                this["opplysninger"].size() shouldBe 15
+            }
         }
     })

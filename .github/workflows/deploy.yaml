@@ -56,8 +56,8 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-fss
-          RESOURCE: .nais/nais.yaml
-          VAR: image=${{ needs.build.outputs.image }}
+          RESOURCE: .nais/nais.yaml,.nais/unleash.yaml
+          VAR: image=${{ needs.build.outputs.image }},unleashEnvironment=development
           VARS: .nais/vars-dev.yaml
           PRINT_PAYLOAD: true
 
@@ -75,7 +75,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-fss
-          RESOURCE: .nais/nais.yaml
-          VAR: image=${{ needs.build.outputs.image }}
+          RESOURCE: .nais/nais.yaml,.nais/unleash.yaml
+          VAR: image=${{ needs.build.outputs.image }},unleashEnvironment=production
           VARS: .nais/vars-prod.yaml
           PRINT_PAYLOAD: true
