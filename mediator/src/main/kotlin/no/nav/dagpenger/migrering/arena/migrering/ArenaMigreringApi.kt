@@ -11,18 +11,11 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import no.nav.dagpenger.migrering.api.FeatureNotEnabledException
-import no.nav.dagpenger.migrering.api.auth.AuthFactory
-import no.nav.dagpenger.migrering.api.authenticationConfig
 import no.nav.dagpenger.migrering.api.oidcToken
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
-internal fun Application.arenaMigreringApi(
-    authFactory: AuthFactory,
-    orchestrator: MigreringsOrchestrator,
-) {
-    authenticationConfig(authFactory)
-
+internal fun Application.arenaMigreringApi(orchestrator: MigreringsOrchestrator) {
     routing {
         route("/arena/migrering") {
             swaggerUI(path = "openapi", swaggerFile = "arena-migrering-api.yaml", {

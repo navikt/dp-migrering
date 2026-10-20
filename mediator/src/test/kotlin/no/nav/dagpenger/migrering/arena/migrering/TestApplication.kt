@@ -19,6 +19,7 @@ import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.testing.testApplication
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.auth.AuthFactory.azure_app
+import no.nav.dagpenger.migrering.api.authenticationConfig
 import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.TestApplication.testAzureAdToken
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
@@ -108,8 +109,8 @@ object TestApplication {
     val arenaRepository = ArenaRepository(h2DataSourceBuilder.dataSource)
 
     val api: Application.() -> Unit = {
+        authenticationConfig(authFactory)
         arenaMigreringApi(
-            authFactory,
             orchestrator =
                 MigreringsOrchestrator(
                     listOf(

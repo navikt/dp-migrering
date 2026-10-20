@@ -18,8 +18,6 @@ import no.dagpenger.stpeter.plugin.StPeterPlugin
 import no.dagpenger.stpeter.plugin.TilgangAvvistException
 import no.nav.dagpenger.migrering.Ident.Companion.tilPersonIdentfikator
 import no.nav.dagpenger.migrering.api.UnprocessableContentException
-import no.nav.dagpenger.migrering.api.auth.AuthFactory
-import no.nav.dagpenger.migrering.api.authenticationConfig
 import no.nav.dagpenger.migrering.api.token
 import no.nav.dagpenger.migrering.arena.api.models.IdentForesporsel
 import no.nav.dagpenger.migrering.arena.api.models.PersonIdResponse
@@ -56,7 +54,6 @@ private inline fun <T> ApplicationCall.hentEllerAvvisVedIkkeFunnet(hent: () -> T
  */
 
 internal fun Application.arenaInnsynApi(
-    authFactory: AuthFactory,
     dataSource: Lazy<DataSource> = OracleDataSourceBuilder().dataSource,
     stPeter: StPeterPlugin = StPeterPlugin(),
 ) {
@@ -71,8 +68,6 @@ internal fun Application.arenaInnsynApi(
             sakPersonRepository = ArenaSakPersonRepository(dataSource),
             personRepository = ArenaPersonRepository(dataSource),
         )
-
-    authenticationConfig(authFactory)
 
     routing {
         route("/arena/innsyn") {

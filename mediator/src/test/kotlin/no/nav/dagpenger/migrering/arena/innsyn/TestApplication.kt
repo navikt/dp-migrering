@@ -21,6 +21,7 @@ import no.dagpenger.stpeter.plugin.StPeterPlugin
 import no.dagpenger.stpeter.plugin.test.StPeterWithOAuthMock
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.auth.AuthFactory.azure_app
+import no.nav.dagpenger.migrering.api.authenticationConfig
 import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.testAzureAdToken
 import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
@@ -120,8 +121,8 @@ object TestApplication {
     }
 
     val api: Application.() -> Unit = {
+        authenticationConfig(authFactory)
         arenaInnsynApi(
-            authFactory,
             h2DataSourceBuilder.dataSource,
             StPeterPlugin(config = StPeterConfig(stPeterWithOAuthMockServer.config())),
         )

@@ -25,12 +25,10 @@ internal fun Application.apiConfig(
     migreringsOrchestrator: MigreringsOrchestrator,
     dataSource: Lazy<DataSource>,
 ) {
-    arenaInnsynApi(
-        authFactory = authFactory,
-        dataSource = dataSource,
-    )
+    authenticationConfig(authFactory)
+
+    arenaInnsynApi(dataSource = dataSource)
     arenaMigreringApi(
-        authFactory,
         orchestrator = migreringsOrchestrator,
     )
 }
