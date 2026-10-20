@@ -8,6 +8,7 @@ import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.arena.innsyn.arenaInnsynApi
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
 import no.nav.dagpenger.migrering.arena.migrering.arenaMigreringApi
+import javax.sql.DataSource
 
 internal fun Application.authenticationConfig(authFactory: AuthFactory) {
     install(Authentication) {
@@ -22,9 +23,11 @@ internal fun Application.authenticationConfig(authFactory: AuthFactory) {
 internal fun Application.apiConfig(
     authFactory: AuthFactory,
     migreringsOrchestrator: MigreringsOrchestrator,
+    dataSource: Lazy<DataSource>,
 ) {
     arenaInnsynApi(
-        authFactory,
+        authFactory = authFactory,
+        dataSource = dataSource,
     )
     arenaMigreringApi(
         authFactory,

@@ -43,6 +43,8 @@ internal class ApplicationBuilder(
         private val logger = KotlinLogging.logger { }
     }
 
+    private val dataSource = OracleDataSourceBuilder().dataSource
+
     private val rapidsConnection: RapidsConnection =
         RapidApplication.create(
             env = config,
@@ -59,6 +61,7 @@ internal class ApplicationBuilder(
         ) { server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>, rapid: KafkaRapid ->
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),
+                dataSource = dataSource,
                 migreringsOrchestrator =
                     MigreringsOrchestrator(
                         rapidsConnection = rapid,
@@ -80,7 +83,7 @@ internal class ApplicationBuilder(
                                 Dagsats(),
                                 OppfyllerKravRegistrertArbeidssoker(),
                             ),
-                        repository = ArenaRepository(OracleDataSourceBuilder().dataSource),
+                        repository = ArenaRepository(dataSource),
                     ),
             )
         }
@@ -96,6 +99,6 @@ internal class ApplicationBuilder(
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-migrering" }
 
-        OppdaterMenneskerMetrikk.start(ArenaStatistikkRepository(OracleDataSourceBuilder().dataSource))
+        OppdaterMenneskerMetrikk.start(ArenaStatistikkRepository(dataSource))
     }
 }
