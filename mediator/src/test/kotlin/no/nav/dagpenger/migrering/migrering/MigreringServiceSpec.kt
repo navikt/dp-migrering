@@ -5,8 +5,11 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallBarnMedBarnetillegg
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.FastsattVanligArbeidstid
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.HarRettighet
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode2
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode3
@@ -48,6 +51,9 @@ class MigreringServiceSpec :
                     OppfyllerKravetTilAlder(),
                     Dagsats(),
                     OppfyllerKravRegistrertArbeidssoker(),
+                    AntallBarnMedBarnetillegg(),
+                    FastsattVanligArbeidstid(),
+                    HarRettighet(),
                 ),
                 repository = arenaRepository,
                 rapidsConnection = rapid,
@@ -66,7 +72,7 @@ class MigreringServiceSpec :
             with(message) {
                 this["sakId"].asInt() shouldBe 15603478
                 this["initiertAv"].asString() shouldBe "user1"
-                this["opplysninger"].size() shouldBe 15
+                this["opplysninger"].size() shouldBe 18
             }
         }
     })
