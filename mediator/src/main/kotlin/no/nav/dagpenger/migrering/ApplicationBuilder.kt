@@ -16,6 +16,7 @@ import no.nav.dagpenger.migrering.api.apiConfig
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
+import no.nav.dagpenger.migrering.arena.migrering.MigrationRiver
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
@@ -86,6 +87,7 @@ internal class ApplicationBuilder(
                         repository = ArenaRepository(dataSource),
                     ),
             )
+            MigrationRiver(rapidsConnection = rapid)
         }
 
     init {
