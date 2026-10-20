@@ -15,6 +15,7 @@ dependencies {
     implementation(project(path = ":openapi"))
     implementation(project(path = ":arena-innsyn"))
     implementation(project(path = ":arena-migrering"))
+    implementation(project(path = ":arena-statisikk"))
 
     implementation(libs.bundles.jackson)
     implementation("no.nav.dagpenger:stpeter-plugin:2026.10.19-12.53.59e62bf486dd")
