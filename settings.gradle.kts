@@ -7,7 +7,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("no.nav.dagpenger:dp-version-catalog:20261015.316")
+            from("no.nav.dagpenger:dp-version-catalog:20261019.320")
         }
     }
 }
@@ -20,3 +20,4 @@ include("openapi")
 include("konfigurasjon")
 include("arena-innsyn")
 include("arena-migrering")
+include("arena-statisikk")

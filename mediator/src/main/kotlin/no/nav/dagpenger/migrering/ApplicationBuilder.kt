@@ -10,9 +10,12 @@ import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
+import no.dagpenger.ArenaStatistikkRepository
+import no.dagpenger.OppdaterMenneskerMetrikk
 import no.nav.dagpenger.migrering.api.apiConfig
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.statusPagesConfig
+import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
 import no.nav.helse.rapids_rivers.RapidApplication
 
@@ -50,5 +53,7 @@ internal class ApplicationBuilder(
 
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-migrering" }
+
+        OppdaterMenneskerMetrikk.start(ArenaStatistikkRepository(OracleDataSourceBuilder().dataSource))
     }
 }

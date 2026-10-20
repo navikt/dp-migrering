@@ -15,9 +15,10 @@ dependencies {
     implementation(project(path = ":openapi"))
     implementation(project(path = ":arena-innsyn"))
     implementation(project(path = ":arena-migrering"))
+    implementation(project(path = ":arena-statisikk"))
 
     implementation(libs.bundles.jackson)
-    implementation("no.nav.dagpenger:stpeter-plugin:2026.10.13-18.56.454f41e83517")
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.10.19-12.53.59e62bf486dd")
     implementation(libs.rapids.and.rivers)
 
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
@@ -31,7 +32,7 @@ dependencies {
     implementation(libs.flyway)
     implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.32.0")
     implementation("io.opentelemetry:opentelemetry-api:1.67.0")
-    implementation("io.prometheus:prometheus-metrics-core:1.9.0")
+    implementation("io.prometheus:prometheus-metrics-core:1.10.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.1")
     implementation("org.slf4j:slf4j-api:2.0.20")
     implementation("ch.qos.logback:logback-classic:1.6.5")
@@ -57,7 +58,7 @@ dependencies {
     testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("com.h2database:h2:2.5.252")
-    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.13-18.56.454f41e83517")
+    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.19-12.53.59e62bf486dd")
 }
 
 application {
