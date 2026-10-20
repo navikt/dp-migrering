@@ -10,9 +10,12 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import no.nav.dagpenger.migrering.api.FeatureNotEnabledException
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.authenticationConfig
 import no.nav.dagpenger.migrering.api.oidcToken
+import no.nav.dagpenger.migrering.konfigurasjon.Feature
+import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
 internal fun Application.arenaMigreringApi(
     authFactory: AuthFactory,
@@ -31,12 +34,18 @@ internal fun Application.arenaMigreringApi(
                 post("/sak/{sakId}") {
                     val sakId = call.parameters["sakId"]?.toInt() ?: throw BadRequestException("SakId mangler")
 
-                    val message =
-                        orchestrator.initierMigrering(sakId = sakId, initiertAv = call.oidcToken().navIdent())
-                    call.respond(
-                        status = HttpStatusCode.OK,
-                        message = message,
-                    )
+                    if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
+                        val message =
+                            orchestrator.initierMigrering(sakId = sakId, initiertAv = call.oidcToken().navIdent())
+                        call.respond(
+                            status = HttpStatusCode.OK,
+                            message = message,
+                        )
+                    } else {
+                        throw FeatureNotEnabledException(
+                            message = "Feature for å starte migrering er deaktivert",
+                        )
+                    }
                 }
             }
         }

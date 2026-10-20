@@ -53,16 +53,6 @@ class MigreringServiceSpec :
                 rapidsConnection = rapid,
             )
 
-//        "skal bladi bladi" {
-//            val opplysninger =
-//                migreringsService.initierMigrering(
-//                    sakId = 15603478,
-//                    initiertAv = "user1",
-//                )
-//
-//            opplysninger.size shouldBe 15
-//        }
-
         "skal lage migreringshendelse" {
 
             migreringsService.initierMigrering(

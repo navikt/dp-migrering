@@ -2,6 +2,7 @@ package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import com.natpryce.konfig.ConfigurationMap
+import io.getunleash.FakeUnleash
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.header
@@ -38,12 +39,14 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UkessatsEtterSamo
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UkessatsForSamordning
 import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
+import no.nav.dagpenger.migrering.konfigurasjon.unleash
 import no.nav.dagpenger.migrering.objectMapper
 import no.nav.security.mock.oauth2.MockOAuth2Server
 
 class TestContext(
     val client: HttpClient,
     val rapid: TestRapid,
+    val unleash: FakeUnleash,
 ) {
     internal suspend fun autentisert(
         httpMethod: HttpMethod = HttpMethod.Get,
@@ -198,7 +201,7 @@ object TestApplication {
                     }
                 }
 
-            test(TestContext(testClient, rapid))
+            test(TestContext(testClient, rapid, unleash as FakeUnleash))
         }
     }
 }
