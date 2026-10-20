@@ -14,6 +14,7 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.MedlemAvFolketryg
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravRegistrertArbeidssoker
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilAlder
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilHeltidDeltid
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilMinsteinntekt
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilMobilitet
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerVilkarTilTaptAbeidsinntekt
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppholdINorge
@@ -50,6 +51,7 @@ class MigreringServiceSpec :
                     OppfyllerKravRegistrertArbeidssoker(),
                     OppfyllerVilkarTilTaptAbeidsinntekt(),
                     IkkePavirketAvStrekLockout(),
+                    OppfyllerKravetTilMinsteinntekt(),
                 ),
                 repository = arenaRepository,
             )
@@ -61,6 +63,6 @@ class MigreringServiceSpec :
                     initiertAv = "user1",
                 )
 
-            opplysninger.size shouldBe 17
+            opplysninger.size shouldBe 18
         }
     })
