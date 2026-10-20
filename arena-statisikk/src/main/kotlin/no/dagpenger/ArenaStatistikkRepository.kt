@@ -42,7 +42,7 @@ class ArenaStatistikkRepository(
             """
             SELECT COUNT(*) antall
             FROM   person
-            WHERE  rettighetsgruppekode = 'DAGP';
+            WHERE  rettighetsgruppekode = 'DAGP'
             """.trimIndent(),
         ) { row ->
             row.long("antall")
