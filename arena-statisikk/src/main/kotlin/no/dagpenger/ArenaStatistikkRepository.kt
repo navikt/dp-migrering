@@ -22,21 +22,32 @@ class ArenaStatistikkRepository(
             )
         }
 
-    fun tellMenneskerPerRettighetstatus(): Map<Boolean, Long> =
+    fun totalMennesker(): Long =
         select(
             // language=oracle
             """
-            SELECT 'false' hva, COUNT(*) antall
+            SELECT COUNT(*) antall
             FROM   meldegruppe
             WHERE  status_aktiv = 'J'
             AND    meldegruppekode = 'DAGP'
             AND    ( (SYSDATE BETWEEN dato_fra AND NVL(dato_til, SYSDATE)) OR (dato_fra > SYSDATE) )
-            UNION ALL
-            SELECT 'true' hva, COUNT(*) antall
+            """.trimIndent(),
+        ) { row ->
+            row.long("antall")
+        }.firstOrNull() ?: 0L
+
+    fun totalMenneskerMedRettighet(): Long =
+        select(
+            // language=oracle
+            """
+            SELECT COUNT(*) antall
             FROM   person
             WHERE  rettighetsgruppekode = 'DAGP';
             """.trimIndent(),
         ) { row ->
-            row.boolean("hva") to row.long("antall")
-        }.toMap()
+            row.long("antall")
+        }.firstOrNull() ?: 0L
+
+    fun tellMenneskerPerRettighetstatus(): Map<Boolean, Long> =
+        mapOf(true to totalMenneskerMedRettighet(), false to (totalMennesker() - totalMenneskerMedRettighet()))
 }

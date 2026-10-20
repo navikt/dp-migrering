@@ -17,6 +17,6 @@ class ArenaStatistikkRepositorySpec :
             val antallDagpengepersoner = arenaStatistikkRepository.tellMenneskerPerRettighetstatus()
 
             antallDagpengepersoner[true] shouldBe 1L
-            antallDagpengepersoner[false] shouldBe 1L
+            antallDagpengepersoner[false] shouldBe 0L
         }
     })
