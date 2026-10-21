@@ -19,6 +19,11 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTi
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilHeltidDeltid
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilMobilitet
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppholdINorge
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Rettighettype
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.RettighettypeDagpenger
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.RettighettypeFisk
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.RettighettypeLonnsgaranti
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.RettighettypePermittert
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Samordnet
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.SisteAvsluttendeKalenderManed
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UkessatsEtterSamordning
@@ -54,6 +59,11 @@ class MigreringServiceSpec :
                     AntallBarnMedBarnetillegg(),
                     FastsattVanligArbeidstid(),
                     HarRettighet(),
+                    RettighettypeDagpenger(),
+                    RettighettypeFisk(),
+                    RettighettypePermittert(),
+                    RettighettypeLonnsgaranti(),
+                    Rettighettype(),
                 ),
                 repository = arenaRepository,
                 rapidsConnection = rapid,
@@ -72,7 +82,7 @@ class MigreringServiceSpec :
             with(message) {
                 this["sakId"].asInt() shouldBe 15603478
                 this["initiertAv"].asString() shouldBe "user1"
-                this["opplysninger"].size() shouldBe 18
+                this["opplysninger"].size() shouldBe 23
             }
         }
     })

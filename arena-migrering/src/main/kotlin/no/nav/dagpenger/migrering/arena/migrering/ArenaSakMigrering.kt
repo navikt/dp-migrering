@@ -6,6 +6,7 @@ data class ArenaSakMigrering(
     val vilkaarsVurderinger: List<ArenaVilkaarMigrering>,
     val vedtakfakta: List<ArenaVedtakfaktaMigrering>,
     val personopplysninger: List<ArenaPersonMigrering>,
+    val rettighetstype: List<ArenaRetttighetstypeMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,
@@ -20,6 +21,12 @@ data class ArenaSakMigrering(
     )
 
     data class ArenaPersonMigrering(
+        val kode: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
+    data class ArenaRetttighetstypeMigrering(
         val kode: String,
         val verdi: String,
         val gyldigFra: LocalDate,
