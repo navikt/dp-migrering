@@ -163,11 +163,77 @@ class ArenaRepository(
         return select
     }
 
+    fun hentAntallForbrukteDagerDP(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'ForbrukteDagerDP' AS kolonne
+                     , 42                 AS verdi
+                     , SYSDATE            AS mod_dato
+                FROM   dual
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaForbrukteDagerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    fun hentAntallForbrukteDagerFISK(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'ForbrukteDagerFISK' AS kolonne
+                     , 0                    AS verdi
+                     , SYSDATE              AS mod_dato
+                FROM   dual
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaForbrukteDagerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    fun hentAntallForbrukteDagerPERM(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'ForbrukteDagerPERM' AS kolonne
+                     , 0                    AS verdi
+                     , SYSDATE              AS mod_dato
+                FROM   dual
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaForbrukteDagerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
     fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
         ArenaSakMigrering(
             vilkaarsVurderinger = hentVilkaarvurdering(sakId),
             vedtakfakta = hentVedtakfakta(sakId),
             personopplysninger = hentPersonInfo(sakId),
             rettighetstype = hentRettighetkode(sakId),
+            forbrukteDagerDP = hentAntallForbrukteDagerDP(sakId),
+            forbrukteDagerFISK = hentAntallForbrukteDagerFISK(sakId),
+            forbrukteDagerPERM = hentAntallForbrukteDagerPERM(sakId),
         )
 }

@@ -9,6 +9,9 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallBarnMedBarn
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.FastsattVanligArbeidstid
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.ForbrukteDagerDP
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.ForbrukteDagerFISK
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.ForbrukteDagerPERM
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.HarRettighet
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode2
@@ -64,6 +67,9 @@ class MigreringServiceSpec :
                     RettighettypePermittert(),
                     RettighettypeLonnsgaranti(),
                     Rettighettype(),
+                    ForbrukteDagerDP(),
+                    ForbrukteDagerFISK(),
+                    ForbrukteDagerPERM(),
                 ),
                 repository = arenaRepository,
                 rapidsConnection = rapid,
@@ -82,7 +88,7 @@ class MigreringServiceSpec :
             with(message) {
                 this["sakId"].asInt() shouldBe 15603478
                 this["initiertAv"].asString() shouldBe "user1"
-                this["opplysninger"].size() shouldBe 23
+                this["opplysninger"].size() shouldBe 26
             }
         }
     })
