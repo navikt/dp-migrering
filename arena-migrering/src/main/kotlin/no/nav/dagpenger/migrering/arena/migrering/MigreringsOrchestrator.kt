@@ -86,7 +86,7 @@ class MigreringsOrchestrator(
                     "opplysninger" to
                         opplysninger.map {
                             mapOf(
-                                "verdi" to it.verdi.toString(),
+                                "verdi" to it.verdi,
                                 "gyldigFraOgMed" to it.gyldigFraOgMed.toString(),
                                 "uuid" to it.uuid.toString(),
                             )
