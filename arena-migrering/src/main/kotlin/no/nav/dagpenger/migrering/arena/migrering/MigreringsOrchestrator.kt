@@ -22,7 +22,13 @@ class MigreringsOrchestrator(
         initiertAv: String,
     ): StartMigreringResponse {
         val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
-        val startMigreringMelding = lagStartMigreringMelding(sakId, initiertAv, opplysninger)
+        val startMigreringMelding =
+            lagStartMigreringMelding(
+                sakId = sakId,
+                initiertAv = initiertAv,
+                opplysninger = opplysninger,
+                ident = "12345678987", // repository.hentIdentForSak(sakId),
+            )
 
         rapidsConnection.publish(startMigreringMelding.toJson())
         return StartMigreringResponse(
@@ -68,6 +74,7 @@ class MigreringsOrchestrator(
     private fun lagStartMigreringMelding(
         sakId: Int,
         initiertAv: String,
+        ident: String,
         opplysninger: List<Opplysning<*>>,
     ): JsonMessage {
         val message =
@@ -76,7 +83,15 @@ class MigreringsOrchestrator(
                 mapOf(
                     "sakId" to sakId,
                     "initiertAv" to initiertAv,
-                    "opplysninger" to opplysninger,
+                    "opplysninger" to
+                        opplysninger.map {
+                            mapOf(
+                                "verdi" to it.verdi.toString(),
+                                "gyldigFraOgMed" to it.gyldigFraOgMed.toString(),
+                                "uuid" to it.uuid.toString(),
+                            )
+                        },
+                    "ident" to ident,
                 ),
             )
 

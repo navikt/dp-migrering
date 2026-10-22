@@ -138,4 +138,20 @@ class ArenaRepository(
             vedtakfakta = hentVedtakfakta(sakId),
             personopplysninger = hentPersonInfo(sakId),
         )
+
+    fun hentIdentForSak(sakId: Int): String {
+        select(
+            // language=oracle
+            """
+            SELECT pers.fodselsnr
+            FROM   sak
+            JOIN   person pers ON pers.person_id = sak.objekt_id
+            WHERE  sak.sak_id = :sak_id
+            """.trimIndent(),
+            mapOf("sakId" to sakId),
+        ) { row ->
+            row.string("fodselsnummer")
+        }.firstOrNull()?.let { return it }
+        throw IllegalStateException("Fant ikke ident for sakId: $sakId")
+    }
 }

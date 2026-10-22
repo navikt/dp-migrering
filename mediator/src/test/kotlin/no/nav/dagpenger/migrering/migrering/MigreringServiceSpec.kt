@@ -67,6 +67,7 @@ class MigreringServiceSpec :
                 this["sakId"].asInt() shouldBe 15603478
                 this["initiertAv"].asString() shouldBe "user1"
                 this["opplysninger"].size() shouldBe 15
+                this["ident"].asString() shouldBe "12345678987"
             }
         }
     })
