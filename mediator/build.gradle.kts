@@ -18,7 +18,7 @@ dependencies {
     implementation(project(path = ":arena-statisikk"))
 
     implementation(libs.bundles.jackson)
-    implementation("no.nav.dagpenger:stpeter-plugin:2026.10.21-18.50.4ee78304fa7f")
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.10.22-12.56.24558e302c36")
     implementation(libs.rapids.and.rivers)
 
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
