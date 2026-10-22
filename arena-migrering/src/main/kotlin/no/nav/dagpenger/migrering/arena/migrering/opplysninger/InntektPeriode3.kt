@@ -9,7 +9,7 @@ class InntektPeriode3 : OpplysningProdusent<Int> {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
 
-    override val opplysningsId: UUID = UUID.fromString("0194881f-9410-7481-b263-4606fdd10cad")
+    override val opplysningsId: UUID = UUID.fromString("0194881f-9410-7481-b263-4606fdd10caf")
     val opplysningsNavn: String = "Utbetalt inntekt periode 3"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
