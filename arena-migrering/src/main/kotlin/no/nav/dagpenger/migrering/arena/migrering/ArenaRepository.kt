@@ -146,11 +146,11 @@ class ArenaRepository(
             SELECT pers.fodselsnr
             FROM   sak
             JOIN   person pers ON pers.person_id = sak.objekt_id
-            WHERE  sak.sak_id = :sak_id
+            WHERE  sak.sak_id = :sakId
             """.trimIndent(),
             mapOf("sakId" to sakId),
         ) { row ->
-            row.string("fodselsnummer")
+            row.string("fodselsnr")
         }.firstOrNull()?.let { return it }
         throw IllegalStateException("Fant ikke ident for sakId: $sakId")
     }

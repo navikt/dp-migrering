@@ -27,7 +27,7 @@ class MigreringsOrchestrator(
                 sakId = sakId,
                 initiertAv = initiertAv,
                 opplysninger = opplysninger,
-                ident = "12345678987", // repository.hentIdentForSak(sakId),
+                ident = repository.hentIdentForSak(sakId),
             )
 
         rapidsConnection.publish(startMigreringMelding.toJson())
