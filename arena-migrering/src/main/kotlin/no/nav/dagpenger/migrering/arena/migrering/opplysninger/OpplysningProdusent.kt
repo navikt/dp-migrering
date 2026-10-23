@@ -5,6 +5,7 @@ import java.util.UUID
 
 interface OpplysningProdusent<T> {
     val opplysningsId: UUID
+    val opplysningsNavn: String
 
     suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>
 }

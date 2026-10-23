@@ -10,7 +10,7 @@ class InntektPeriode3 : OpplysningProdusent<Int> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9410-7481-b263-4606fdd10caf")
-    val opplysningsNavn: String = "Utbetalt inntekt periode 3"
+    override val opplysningsNavn: String = "Utbetalt inntekt periode 3"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
         val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "INTTREDS" }

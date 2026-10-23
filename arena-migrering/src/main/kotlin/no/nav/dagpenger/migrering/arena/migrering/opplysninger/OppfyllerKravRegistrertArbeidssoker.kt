@@ -10,7 +10,7 @@ class OppfyllerKravRegistrertArbeidssoker : OpplysningProdusent<Boolean> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9442-707b-a6ee-e96c06877be1")
-    val opplysningsNavn: String = "Oppfyller kravet til å være registrert som arbeidssøker"
+    override val opplysningsNavn: String = "Oppfyller kravet til å være registrert som arbeidssøker"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val personopplysninger =

@@ -10,7 +10,7 @@ class Dagpengegrunnlag : OpplysningProdusent<Int> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9410-7481-b263-4606fdd10cbd")
-    val opplysningsNavn: String = "Dagpengegrunnlag for bruker"
+    override val opplysningsNavn: String = "Dagpengegrunnlag for bruker"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
         val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "GRUNN" }

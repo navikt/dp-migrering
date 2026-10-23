@@ -11,7 +11,7 @@ class MedlemAvFolketrygden : OpplysningProdusent<Boolean> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9443-72b4-8b30-5f6cdb24d54c")
-    val opplysningsNavn: String = "Bruker er medlem av folketrygden"
+    override val opplysningsNavn: String = "Bruker er medlem av folketrygden"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "MEDLFOLKT" }

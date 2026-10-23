@@ -9,6 +9,7 @@ import no.nav.dagpenger.arena.migrering.api.models.OpplysningResponse
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningProdusent
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -92,6 +93,8 @@ class MigreringsOrchestrator(
                             )
                         },
                     "ident" to ident,
+                    "innvilgetFraOgMed" to LocalDate.now(),
+//                    "innvilgetTilOgMed" to null,
                 ),
             )
 

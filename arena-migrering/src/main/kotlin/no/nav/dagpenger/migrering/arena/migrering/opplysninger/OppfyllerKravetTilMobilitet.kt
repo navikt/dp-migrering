@@ -10,7 +10,7 @@ class OppfyllerKravetTilMobilitet : OpplysningProdusent<Boolean> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9442-707b-a6ee-e96c06877bdb")
-    val opplysningsNavn: String = "Bruker oppfyller kravet til mobilitet"
+    override val opplysningsNavn: String = "Bruker oppfyller kravet til mobilitet"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "GEOMOB" }

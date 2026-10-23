@@ -12,7 +12,7 @@ class SisteAvsluttendeKalenderManed : OpplysningProdusent<LocalDate> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9414-7823-8d29-0e25b7feb7d0")
-    val opplysningsNavn: String = "SisteAvsluttendeKalendrmåned for bruker"
+    override val opplysningsNavn: String = "SisteAvsluttendeKalendrmåned for bruker"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> {
         val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "INTP1SLUTT" }

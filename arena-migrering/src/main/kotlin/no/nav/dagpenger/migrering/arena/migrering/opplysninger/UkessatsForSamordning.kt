@@ -10,7 +10,7 @@ class UkessatsForSamordning : OpplysningProdusent<Int> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a240")
-    val opplysningsNavn: String = "Ukessats med barnetillegg før samordning"
+    override val opplysningsNavn: String = "Ukessats med barnetillegg før samordning"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
         val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "UKESFSAM" }

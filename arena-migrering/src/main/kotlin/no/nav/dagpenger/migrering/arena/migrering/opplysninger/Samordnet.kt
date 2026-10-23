@@ -10,7 +10,7 @@ class Samordnet : OpplysningProdusent<Boolean> {
     }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a250")
-    val opplysningsNavn: String = "Er samordning utført"
+    override val opplysningsNavn: String = "Er samordning utført"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "SAM" }

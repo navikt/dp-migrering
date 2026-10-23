@@ -18,12 +18,23 @@ class MigrationRiver(
     init {
         River(rapidsConnection)
             .apply {
-                precondition { it.requireValue("@event_name", "start_migrering") }
+                precondition {
+                    it.requireAny(
+                        "@event_name",
+                        listOf(
+                            "migrering_startet",
+                            "start_migrering",
+                            "teknisk_migrering_fullfort",
+                            "migrering_avbrutt",
+                        ),
+                    )
+                }
                 validate {
                     it.interestedIn(
                         "sakId",
                         "initiertAv",
                         "opplysninger",
+                        "arsak",
                     )
                 }
             }.register(this)
@@ -35,6 +46,31 @@ class MigrationRiver(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        logger.info { "Mottok start-migrering for sakId=${packet["sakId"]}" }
+        when (val eventName = packet["@event_name"].asString()) {
+            "start_migrering" -> {
+                val sakId = packet["sakId"].asInt()
+                val initiertAv = packet["initiertAv"].asString()
+                val opplysninger = packet["opplysninger"].asArray()
+                val arsak = packet["arsak"].asString()
+
+                logger.info { "Mottok start-migrering for sakId=$sakId, initiertAv=$initiertAv, arsak=$arsak" }
+                logger.debug { "Opplysninger: $opplysninger" }
+            }
+
+            "teknisk_migrering_fullfort" -> {
+                val sakId = packet["sakId"].asInt()
+                logger.info { "Mottok teknisk_migrering_fullfort for sakId=$sakId" }
+            }
+
+            "migrering_avbrutt" -> {
+                val sakId = packet["sakId"].asInt()
+                val arsak = packet["arsak"].asString()
+                logger.info { "Mottok migrering_avbrutt for sakId=$sakId, arsak=$arsak" }
+            }
+
+            else -> {
+                logger.warn { "Ukjent event_name: $eventName" }
+            }
+        }
     }
 }
