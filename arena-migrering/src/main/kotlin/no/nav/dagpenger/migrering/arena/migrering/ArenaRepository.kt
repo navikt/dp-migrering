@@ -137,6 +137,7 @@ class ArenaRepository(
             vilkaarsVurderinger = hentVilkaarvurdering(sakId),
             vedtakfakta = hentVedtakfakta(sakId),
             personopplysninger = hentPersonInfo(sakId),
+            tidsbegrensetVedtak = emptyList(),
         )
 
     fun hentIdentForSak(sakId: Int): String {

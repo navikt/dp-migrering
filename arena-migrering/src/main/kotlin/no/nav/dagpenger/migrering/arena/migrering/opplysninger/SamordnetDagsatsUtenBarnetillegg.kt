@@ -9,5 +9,10 @@ class SamordnetDagsatsUtenBarnetillegg : OpplysningProdusent<String> {
     override val opplysningsNavn: String = "Samordnet dagsats uten barnetillegg"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> =
-        Opplysning(opplysningsNavn, "1242", LocalDate.of(2018, 6, 21), opplysningsId)
+        Opplysning(
+            navn = opplysningsNavn,
+            verdi = "1242",
+            gyldigFraOgMed = LocalDate.of(2018, 6, 21),
+            uuid = opplysningsId,
+        )
 }

@@ -3,6 +3,8 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 object Opplysninger {
     val produsenter: List<OpplysningProdusent<*>> =
         listOf(
+            AntallGjenstaendeDagerForAKunneGjenoppta(),
+            AntallBarnSomGirRettTilBarnetillegg(),
             MedlemAvFolketrygden(),
             OppholdINorge(),
             Dagpengegrunnlag(),

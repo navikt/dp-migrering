@@ -5,6 +5,7 @@ class AntallGjenstaendeDagerForAKunneGjenoppta : OpplysningProdusent<Int> {
     override val opplysningsNavn: String = "Antall gjenstående dager for å kunne gjenoppta"
 
     override suspend fun produser(kontekst: no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst): Opplysning<Int> =
+        // TODO: Hva er dette?
         Opplysning(
             navn = opplysningsNavn,
             verdi = 0,

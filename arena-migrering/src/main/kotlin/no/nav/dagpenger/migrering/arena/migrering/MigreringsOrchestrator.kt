@@ -69,7 +69,7 @@ class MigreringsOrchestrator(
                     }
                 }
 
-            deferredOpplysninger.awaitAll()
+            deferredOpplysninger.awaitAll().filterNotNull()
         }
 
     private fun lagStartMigreringMelding(
