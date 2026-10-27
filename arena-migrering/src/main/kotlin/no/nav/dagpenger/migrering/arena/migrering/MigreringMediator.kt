@@ -96,29 +96,29 @@ class MigreringMediator(
 }
 
 fun Opplysning<*>.toVerdiDTOType(): MigreringGrunnlagOpplysningVerdiDTOTypeDTO =
-    when (this.verdi) {
-        is String -> {
+    when (verdiType) {
+        String::class -> {
             MigreringGrunnlagOpplysningVerdiDTOTypeDTO.STRING
         }
 
-        is Int, is Long -> {
+        Byte::class, Short::class, Int::class, Long::class -> {
             MigreringGrunnlagOpplysningVerdiDTOTypeDTO.INTEGER
         }
 
-        is Float, is Double, is java.math.BigDecimal -> {
+        Float::class, Double::class, java.math.BigDecimal::class -> {
             MigreringGrunnlagOpplysningVerdiDTOTypeDTO.FLOAT
         }
 
-        is Boolean -> {
+        Boolean::class -> {
             MigreringGrunnlagOpplysningVerdiDTOTypeDTO.BOOLEAN
         }
 
-        is LocalDate -> {
+        LocalDate::class -> {
             MigreringGrunnlagOpplysningVerdiDTOTypeDTO.DATE
         }
 
         else -> {
-            error("Ustøttet verditype: ${this::class.qualifiedName}")
+            error("Ustøttet verditype for opplysning '$navn': $verdiType")
         }
     }
 

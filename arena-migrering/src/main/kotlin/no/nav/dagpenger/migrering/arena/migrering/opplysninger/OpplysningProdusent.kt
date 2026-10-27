@@ -4,7 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-interface OpplysningProdusent<T> {
+interface OpplysningProdusent<T : Any> {
     companion object {
         val logger = KotlinLogging.logger {}
     }
