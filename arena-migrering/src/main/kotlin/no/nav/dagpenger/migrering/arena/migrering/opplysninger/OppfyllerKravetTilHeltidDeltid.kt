@@ -13,16 +13,18 @@ class OppfyllerKravetTilHeltidDeltid : OpplysningProdusent<Boolean> {
     override val opplysningsNavn: String = "Bruker oppfyller kravet til heltid- og deltidsarbeid"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "HELDELT" }
-        if (vilkaar.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vilkaar.first().verdi),
-                gyldigFraOgMed = vilkaar.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.firstOrNull { vilkaar -> vilkaar.kode == "HELDELT" }
+
+        if (vilkaar == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker oppfyller kravet til heltid- og deltidsarbeid")
+
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vilkaar?.verdi),
+            gyldigFraOgMed = vilkaar?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Boolean? =

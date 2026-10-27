@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import java.time.LocalDate
 import java.util.UUID
 
 class Egenandel : OpplysningProdusent<String> {
@@ -9,5 +8,10 @@ class Egenandel : OpplysningProdusent<String> {
     override val opplysningsNavn: String = "Egenandel"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> =
-        Opplysning(opplysningsNavn, "3777", LocalDate.of(2018, 6, 21), opplysningsId)
+        Opplysning(
+            navn = opplysningsNavn,
+            verdi = null,
+            gyldigFraOgMed = null,
+            uuid = opplysningsId,
+        )
 }

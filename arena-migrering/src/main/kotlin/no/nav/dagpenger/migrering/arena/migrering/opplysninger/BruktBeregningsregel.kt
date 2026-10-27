@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import java.time.LocalDate
 import java.util.UUID
 
 class BruktBeregningsregel : OpplysningProdusent<String> {
@@ -10,9 +9,9 @@ class BruktBeregningsregel : OpplysningProdusent<String> {
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> =
         Opplysning(
-            opplysningsNavn,
-            "Inntekt etter avkortning og oppjustering siste 12 måneder",
-            LocalDate.of(2018, 6, 21),
-            opplysningsId,
+            navn = opplysningsNavn,
+            verdi = null,
+            gyldigFraOgMed = null,
+            uuid = opplysningsId,
         )
 }

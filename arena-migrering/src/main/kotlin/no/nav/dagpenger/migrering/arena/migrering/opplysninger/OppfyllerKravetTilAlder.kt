@@ -13,16 +13,16 @@ class OppfyllerKravetTilAlder : OpplysningProdusent<Boolean> {
     override val opplysningsNavn: String = "Bruker oppfyller kravet til alder"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "UNDER67" }
-        if (vilkaar.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vilkaar.first().verdi),
-                gyldigFraOgMed = vilkaar.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.firstOrNull { vilkaar -> vilkaar.kode == "UNDER67" }
+        if (vilkaar == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker oppfyller oppfyller kravet til alder")
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vilkaar?.verdi),
+            gyldigFraOgMed = vilkaar?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Boolean? =

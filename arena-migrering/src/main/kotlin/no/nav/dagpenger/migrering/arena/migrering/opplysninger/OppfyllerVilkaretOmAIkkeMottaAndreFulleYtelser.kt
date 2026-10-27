@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import java.time.LocalDate
 import java.util.UUID
 
 class OppfyllerVilkaretOmAIkkeMottaAndreFulleYtelser : OpplysningProdusent<Boolean> {
@@ -9,5 +8,10 @@ class OppfyllerVilkaretOmAIkkeMottaAndreFulleYtelser : OpplysningProdusent<Boole
     override val opplysningsNavn: String = "Oppfyller vilkåret om å ikke motta andre fulle ytelser"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
-        Opplysning(opplysningsNavn, true, LocalDate.of(2018, 6, 21), opplysningsId)
+        Opplysning(
+            navn = opplysningsNavn,
+            verdi = null,
+            gyldigFraOgMed = null,
+            uuid = opplysningsId,
+        )
 }

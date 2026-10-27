@@ -15,16 +15,13 @@ class SisteAvsluttendeKalenderManed : OpplysningProdusent<LocalDate> {
     override val opplysningsNavn: String = "SisteAvsluttendeKalendrmåned for bruker"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> {
-        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "INTP1SLUTT" }
-        if (vedtakfakta.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vedtakfakta.first().verdi),
-                gyldigFraOgMed = vedtakfakta.first().gyldigFra,
-                uuid = opplysningsId,
-            )
-        }
-        throw IllegalArgumentException("Klarte ikke å finne SisteAvsluttendeKalendrMåned for bruker")
+        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "INTP1SLUTT" }
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vedtakfakta?.verdi),
+            gyldigFraOgMed = vedtakfakta?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): LocalDate? =

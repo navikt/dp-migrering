@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import java.time.LocalDate
 import java.util.UUID
 
 class AntallDagerMedTidsbegrensetBortfall : OpplysningProdusent<Int> {
@@ -12,8 +11,8 @@ class AntallDagerMedTidsbegrensetBortfall : OpplysningProdusent<Int> {
         // TODO()
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = 0,
-            gyldigFraOgMed = LocalDate.of(2018, 6, 21),
+            verdi = null,
+            gyldigFraOgMed = null,
             uuid = opplysningsId,
         )
     }

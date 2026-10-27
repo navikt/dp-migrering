@@ -13,16 +13,18 @@ class OppholdINorge : OpplysningProdusent<Boolean> {
     override val opplysningsNavn: String = "Bruker har opphold i Norge"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "INORGE" }
-        if (vilkaar.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vilkaar.first().verdi),
-                gyldigFraOgMed = vilkaar.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.firstOrNull { vilkaar -> vilkaar.kode == "INORGE" }
+
+        if (vilkaar == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker har opphold i Norge")
+
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vilkaar?.verdi),
+            gyldigFraOgMed = vilkaar?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Boolean? =

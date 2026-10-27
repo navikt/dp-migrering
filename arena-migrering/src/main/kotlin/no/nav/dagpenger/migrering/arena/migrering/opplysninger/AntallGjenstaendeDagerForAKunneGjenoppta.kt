@@ -8,8 +8,8 @@ class AntallGjenstaendeDagerForAKunneGjenoppta : OpplysningProdusent<Int> {
         // TODO: Hva er dette?
         Opplysning(
             navn = opplysningsNavn,
-            verdi = 0,
-            gyldigFraOgMed = java.time.LocalDate.now(),
+            verdi = null,
+            gyldigFraOgMed = null,
             uuid = opplysningsId,
         )
 }

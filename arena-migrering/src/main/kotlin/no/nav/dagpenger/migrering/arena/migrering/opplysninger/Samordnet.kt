@@ -13,16 +13,18 @@ class Samordnet : OpplysningProdusent<Boolean> {
     override val opplysningsNavn: String = "Er samordning utført"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "SAM" }
-        if (vedtakfakta.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vedtakfakta.first().verdi),
-                gyldigFraOgMed = vedtakfakta.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "SAM" }
+
+        if (vedtakfakta == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne om samordning var utført")
+
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vedtakfakta?.verdi),
+            gyldigFraOgMed = vedtakfakta?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Boolean? =

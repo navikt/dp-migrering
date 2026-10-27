@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import java.time.LocalDate
 import java.util.UUID
 
 class SamordnetDagsatsUtenBarnetillegg : OpplysningProdusent<String> {
@@ -11,8 +10,8 @@ class SamordnetDagsatsUtenBarnetillegg : OpplysningProdusent<String> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = "1242",
-            gyldigFraOgMed = LocalDate.of(2018, 6, 21),
+            verdi = null,
+            gyldigFraOgMed = null,
             uuid = opplysningsId,
         )
 }

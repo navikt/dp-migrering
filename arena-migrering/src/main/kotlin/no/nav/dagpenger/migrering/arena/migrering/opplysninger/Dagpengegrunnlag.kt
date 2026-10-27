@@ -13,16 +13,19 @@ class Dagpengegrunnlag : OpplysningProdusent<Int> {
     override val opplysningsNavn: String = "Dagpengegrunnlag for bruker"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
-        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "GRUNN" }
-        if (vedtakfakta.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vedtakfakta.first().verdi),
-                gyldigFraOgMed = vedtakfakta.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+        val vedtakfakta =
+            kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "GRUNN" }
+
+        if (vedtakfakta == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne Dagpengegrunnlag for bruker")
+
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vedtakfakta?.verdi),
+            gyldigFraOgMed = vedtakfakta?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Int? = verdi?.toInt()

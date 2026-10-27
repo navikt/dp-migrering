@@ -9,5 +9,10 @@ class Provingsdato : OpplysningProdusent<LocalDate> {
     override val opplysningsNavn: String = "Prøvingsdato"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> =
-        Opplysning(opplysningsNavn, LocalDate.of(2018, 6, 21), LocalDate.of(2018, 6, 21), opplysningsId)
+        Opplysning(
+            navn = opplysningsNavn,
+            verdi = null,
+            gyldigFraOgMed = null,
+            uuid = opplysningsId,
+        )
 }

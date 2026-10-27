@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import java.time.LocalDate
 import java.util.UUID
 
 class OppfyllerVilkaretOmTapAvArbeidsinntektOgArbeidstid : OpplysningProdusent<Boolean> {
@@ -9,5 +8,10 @@ class OppfyllerVilkaretOmTapAvArbeidsinntektOgArbeidstid : OpplysningProdusent<B
     override val opplysningsNavn: String = "Oppfyller vilkåret om tap av arbeidsinntekt og arbeidstid"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
-        Opplysning(opplysningsNavn, true, LocalDate.of(2018, 6, 21), opplysningsId)
+        Opplysning(
+            navn = opplysningsNavn,
+            verdi = null,
+            gyldigFraOgMed = null,
+            uuid = opplysningsId,
+        )
 }
