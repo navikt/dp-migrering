@@ -73,8 +73,6 @@ components:
         - type: number
         - type: boolean
         - type: integer
-        - type: array
-        - type: object
 
     MigreringGrunnlag:
       type: object
