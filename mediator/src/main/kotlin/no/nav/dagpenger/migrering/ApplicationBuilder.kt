@@ -16,8 +16,8 @@ import no.nav.dagpenger.migrering.api.apiConfig
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
-import no.nav.dagpenger.migrering.arena.migrering.MigrationRiver
-import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMottak
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode1
@@ -63,9 +63,10 @@ internal class ApplicationBuilder(
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),
                 dataSource = dataSource,
-                migreringsOrchestrator =
-                    MigreringsOrchestrator(
+                migreringMediator =
+                    MigreringMediator(
                         rapidsConnection = rapid,
+                        objectMapper = objectMapper,
                         produsenter =
                             listOf(
                                 MedlemAvFolketrygden(),
@@ -87,7 +88,7 @@ internal class ApplicationBuilder(
                         repository = ArenaRepository(dataSource),
                     ),
             )
-            MigrationRiver(rapidsConnection = rapid)
+            MigreringMottak(rapidsConnection = rapid)
         }
 
     init {

@@ -8,7 +8,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.micrometer.core.instrument.MeterRegistry
 
-class MigrationRiver(
+class MigreringMottak(
     rapidsConnection: RapidsConnection,
 ) : River.PacketListener {
     companion object {

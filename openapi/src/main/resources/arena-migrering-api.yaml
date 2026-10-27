@@ -12,8 +12,8 @@ servers:
 #    description: prod
 paths:
   /arena/migrering/sak/{sakId}:
-    post:
-      summary: Initier migrering for en sak
+    get:
+      summary: Henter datagrunnlag for migrering av en sak fra Arena
       parameters:
         - name: sakId
           in: path
@@ -30,36 +30,130 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StartMigreringResponse"
+                $ref: "#/components/schemas/MigreringGrunnlag"
         default:
-          description: Feil ved initiering av migrering
+          description: Feil ved henting av datagrunnlag for migrering
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+    post:
+      summary: Starter migrering av en sak fra Arena
+      parameters:
+        - name: sakId
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Arena migrering
+      security:
+        - azureAd: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartMigrering"
+      responses:
+        "202":
+          description: Accepted
+        default:
+          description: Feil ved start av migrering
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/HttpProblem"
 components:
   schemas:
-
-    StartMigreringResponse:
+    MigreringGrunnlag:
       type: object
       properties:
+        sakId:
+          type: integer
+        initiertAv:
+          type: string
+        ident:
+          description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
+          type: string
+          pattern: "^[0-9]{11}$"
+        innvilgetFraOgMed:
+          type: string
+          format: date
+        innvilgetTilOgMed:
+          type: string
+          format: date
         opplysninger:
           type: array
           items:
-            $ref: "#/components/schemas/OpplysningResponse"
+            $ref: "#/components/schemas/MigreringGrunnlagOpplysning"
+      required:
+        - sakId
+        - initiertAv
+        - ident
+        - innvilgetFraOgMed
+        - opplysninger
 
-    OpplysningResponse:
+    MigreringGrunnlagOpplysning:
       type: object
       properties:
         navn:
           type: string
         verdi:
-          type: string
+          description: Opplysningens verdi. Typen avhenger av opplysningen.
         gyldigFraOgMed:
           type: string
           format: date
         uuid:
           type: string
+          format: uuid
+      required:
+        - navn
+        - uuid
+
+    StartMigrering:
+      type: object
+      properties:
+        sakId:
+          type: integer
+        initiertAv:
+          type: string
+        ident:
+          description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
+          type: string
+          pattern: "^[0-9]{11}$"
+        innvilgetFraOgMed:
+          type: string
+          format: date
+        innvilgetTilOgMed:
+          type: string
+          format: date
+        opplysninger:
+          type: array
+          items:
+            $ref: "#/components/schemas/StartMigreringOpplysning"
+      required:
+        - sakId
+        - initiertAv
+        - ident
+        - innvilgetFraOgMed
+        - opplysninger
+
+    StartMigreringOpplysning:
+      type: object
+      properties:
+        verdi:
+          description: Opplysningens verdi. Typen avhenger av opplysningen.
+        gyldigFraOgMed:
+          type: string
+          format: date
+        uuid:
+          type: string
+          format: uuid
+      required:
+        - verdi
+        - gyldigFraOgMed
+        - uuid
 
     HttpProblem:
       type: object

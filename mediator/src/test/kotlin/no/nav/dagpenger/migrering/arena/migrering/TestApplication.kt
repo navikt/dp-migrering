@@ -112,7 +112,7 @@ object TestApplication {
         authenticationConfig(authFactory)
         arenaMigreringApi(
             orchestrator =
-                MigreringsOrchestrator(
+                MigreringMediator(
                     listOf(
                         MedlemAvFolketrygden(),
                         OppholdINorge(),
@@ -132,6 +132,7 @@ object TestApplication {
                     ),
                     repository = arenaRepository,
                     rapidsConnection = rapid,
+                    objectMapper = objectMapper,
                 ),
         )
     }

@@ -44,7 +44,7 @@ internal class OracleDataSourceBuilder {
     private val hikariConfig by lazy {
         HikariConfig().apply {
             baseConfig.copyStateTo(this)
-            poolName = "app"
+            poolName = "arena"
             // Default 10
             maximumPoolSize = 10
         }

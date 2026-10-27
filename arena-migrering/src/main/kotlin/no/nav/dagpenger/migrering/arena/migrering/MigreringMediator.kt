@@ -1,48 +1,63 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import no.nav.dagpenger.arena.migrering.api.models.OpplysningResponse
-import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
+import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagDTO
+import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningDTO
+import no.nav.dagpenger.arena.migrering.api.models.StartMigreringDTO
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningProdusent
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.node.ObjectNode
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
-class MigreringsOrchestrator(
+class MigreringMediator(
     private val produsenter: List<OpplysningProdusent<*>>,
     private val repository: ArenaRepository,
     private val rapidsConnection: RapidsConnection,
+    private val objectMapper: ObjectMapper,
 ) {
-    suspend fun initierMigrering(
+    suspend fun hentMigreringGrunnlag(
         sakId: Int,
         initiertAv: String,
-    ): StartMigreringResponse {
+    ): MigreringGrunnlagDTO {
         val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
-        val startMigreringMelding =
-            lagStartMigreringMelding(
-                sakId = sakId,
-                initiertAv = initiertAv,
-                opplysninger = opplysninger,
-                ident = repository.hentIdentForSak(sakId),
-            )
+//        val startMigreringMelding =
+//            lagStartMigreringMelding(
+//                sakId = sakId,
+//                initiertAv = initiertAv,
+//                opplysninger = opplysninger,
+//                ident = repository.hentIdentForSak(sakId),
+//            )
 
-        rapidsConnection.publish(startMigreringMelding.toJson())
-        return StartMigreringResponse(
+        // rapidsConnection.publish(startMigreringMelding.toJson())
+
+        return MigreringGrunnlagDTO(
+            sakId = sakId,
+            initiertAv = initiertAv,
+            ident = repository.hentIdentForSak(sakId),
             opplysninger =
                 opplysninger.map {
-                    OpplysningResponse(
+                    MigreringGrunnlagOpplysningDTO(
                         navn = it.navn,
-                        verdi = it.verdi.toString(),
+                        verdi = it.verdi,
                         gyldigFraOgMed = it.gyldigFraOgMed,
-                        uuid = it.uuid.toString(),
+                        uuid = it.uuid,
                     )
                 },
+            innvilgetFraOgMed = LocalDate.now(),
+            innvilgetTilOgMed = null,
         )
+    }
+
+    fun startMigrering(startMigreringDTO: StartMigreringDTO) {
+        rapidsConnection.publish(toJsonMessage("start_migrering", startMigreringDTO).toJson())
     }
 
     private suspend fun hentOpplysningerForSak(
@@ -69,36 +84,17 @@ class MigreringsOrchestrator(
                     }
                 }
 
-            deferredOpplysninger.awaitAll().filterNotNull()
+            deferredOpplysninger.awaitAll()
         }
 
-    private fun lagStartMigreringMelding(
-        sakId: Int,
-        initiertAv: String,
-        ident: String,
-        opplysninger: List<Opplysning<*>>,
+    fun toJsonMessage(
+        eventName: String,
+        dto: Any,
     ): JsonMessage {
-        val message =
-            JsonMessage.newMessage(
-                "start_migrering",
-                mapOf(
-                    "sakId" to sakId,
-                    "initiertAv" to initiertAv,
-                    "opplysninger" to
-                        opplysninger.map {
-                            mapOf(
-                                "verdi" to it.verdi,
-                                "gyldigFraOgMed" to it.gyldigFraOgMed.toString(),
-                                "uuid" to it.uuid.toString(),
-                            )
-                        },
-                    "ident" to ident,
-                    "innvilgetFraOgMed" to LocalDate.now(),
-//                    "innvilgetTilOgMed" to null,
-                ),
-            )
-
-        return message
+        val node = objectMapper.valueToTree<ObjectNode>(dto)
+        node.put("@event_name", eventName)
+        val json = objectMapper.writeValueAsString(node)
+        return JsonMessage(json, MessageProblems(json))
     }
 }
 

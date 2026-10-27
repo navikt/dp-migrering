@@ -12,10 +12,9 @@ interface OpplysningProdusent<T> {
     val opplysningsId: UUID
     val opplysningsNavn: String
 
-    suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>?
+    suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>
 
-    fun vedManglendeOpplysning(): Opplysning<T>? {
+    fun vedManglendeOpplysning() {
         logger.info { "Fant ikke opplysning: $opplysningsNavn ($opplysningsId)" }
-        return null
     }
 }
