@@ -8,7 +8,9 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagDTO
 import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningDTO
+import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningVerdiDTO
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringDTO
+import no.nav.dagpenger.arena.migrering.api.models.toVerdiDTOType
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningProdusent
 import tools.jackson.databind.ObjectMapper
@@ -28,15 +30,6 @@ class MigreringMediator(
         initiertAv: String,
     ): MigreringGrunnlagDTO {
         val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
-//        val startMigreringMelding =
-//            lagStartMigreringMelding(
-//                sakId = sakId,
-//                initiertAv = initiertAv,
-//                opplysninger = opplysninger,
-//                ident = repository.hentIdentForSak(sakId),
-//            )
-
-        // rapidsConnection.publish(startMigreringMelding.toJson())
 
         return MigreringGrunnlagDTO(
             sakId = sakId,
@@ -46,7 +39,13 @@ class MigreringMediator(
                 opplysninger.map {
                     MigreringGrunnlagOpplysningDTO(
                         navn = it.navn,
-                        verdi = it.verdi,
+                        verdi =
+                            it.verdi?.let { verdi ->
+                                MigreringGrunnlagOpplysningVerdiDTO(
+                                    verdi = verdi,
+                                    type = verdi.toVerdiDTOType(),
+                                )
+                            },
                         gyldigFraOgMed = it.gyldigFraOgMed,
                         uuid = it.uuid,
                     )

@@ -66,6 +66,16 @@ paths:
                 $ref: "#/components/schemas/HttpProblem"
 components:
   schemas:
+    Any:
+      description: Opplysningens verdi. Typen avhenger av opplysningen.
+      anyOf:
+        - type: string
+        - type: number
+        - type: boolean
+        - type: integer
+        - type: array
+        - type: object
+
     MigreringGrunnlag:
       type: object
       properties:
@@ -100,7 +110,7 @@ components:
         navn:
           type: string
         verdi:
-          description: Opplysningens verdi. Typen avhenger av opplysningen.
+          $ref: "#/components/schemas/MigreringGrunnlagOpplysningVerdi"
         gyldigFraOgMed:
           type: string
           format: date
@@ -110,6 +120,24 @@ components:
       required:
         - navn
         - uuid
+
+    MigreringGrunnlagOpplysningVerdi:
+      type: object
+      properties:
+        verdi:
+          $ref: "#/components/schemas/Any"
+        type:
+          type: string
+          enum:
+            - date
+            - string
+            - integer
+            - float
+            - boolean
+      required:
+        - verdi
+        - type
+
 
     StartMigrering:
       type: object
@@ -143,7 +171,7 @@ components:
       type: object
       properties:
         verdi:
-          description: Opplysningens verdi. Typen avhenger av opplysningen.
+          $ref: "#/components/schemas/Any"
         gyldigFraOgMed:
           type: string
           format: date
