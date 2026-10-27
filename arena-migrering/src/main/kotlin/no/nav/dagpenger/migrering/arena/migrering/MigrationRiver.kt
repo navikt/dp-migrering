@@ -64,7 +64,7 @@ class MigrationRiver(
 
             "migrering_avbrutt" -> {
                 val sakId = packet["sakId"].asInt()
-                val arsak = packet["arsak"].asString()
+                val arsak = packet["arsak"]
                 logger.info { "Mottok migrering_avbrutt for sakId=$sakId, arsak=$arsak" }
             }
 
