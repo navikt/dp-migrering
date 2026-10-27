@@ -9,8 +9,8 @@ import kotlinx.coroutines.coroutineScope
 import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagDTO
 import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningDTO
 import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningVerdiDTO
+import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningVerdiDTOTypeDTO
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringDTO
-import no.nav.dagpenger.arena.migrering.api.models.toVerdiDTOType
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningProdusent
 import tools.jackson.databind.ObjectMapper
@@ -40,12 +40,10 @@ class MigreringMediator(
                     MigreringGrunnlagOpplysningDTO(
                         navn = it.navn,
                         verdi =
-                            it.verdi?.let { verdi ->
-                                MigreringGrunnlagOpplysningVerdiDTO(
-                                    verdi = verdi,
-                                    type = verdi.toVerdiDTOType(),
-                                )
-                            },
+                            MigreringGrunnlagOpplysningVerdiDTO(
+                                verdi = it.verdi,
+                                type = it.toVerdiDTOType(),
+                            ),
                         gyldigFraOgMed = it.gyldigFraOgMed,
                         uuid = it.uuid,
                     )
@@ -96,6 +94,33 @@ class MigreringMediator(
         return JsonMessage(json, MessageProblems(json))
     }
 }
+
+fun Opplysning<*>.toVerdiDTOType(): MigreringGrunnlagOpplysningVerdiDTOTypeDTO =
+    when (this.verdi) {
+        is String -> {
+            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.STRING
+        }
+
+        is Int, is Long -> {
+            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.INTEGER
+        }
+
+        is Float, is Double, is java.math.BigDecimal -> {
+            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.FLOAT
+        }
+
+        is Boolean -> {
+            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.BOOLEAN
+        }
+
+        is LocalDate -> {
+            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.DATE
+        }
+
+        else -> {
+            error("Ustøttet verditype: ${this::class.qualifiedName}")
+        }
+    }
 
 // fun JsonMessage.toStartMigreringResponse(): StartMigreringResponse {
 //    val opplysninger = this["opplysninger"].asArray().toList().map { it.toOpplysningResponse() }

@@ -133,7 +133,6 @@ components:
             - float
             - boolean
       required:
-        - verdi
         - type
 
 
