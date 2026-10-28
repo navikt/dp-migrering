@@ -8,7 +8,7 @@ class OppfyllerKravetTilVerneplikt : OpplysningProdusent<Boolean> {
     override val opplysningsNavn: String = "Oppfyller kravet til verneplikt"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val opplysning = kontekst.sakTilMigrering.vilkaarsVurderinger.firstOrNull { it.kode == "IKKEVP" }
+        val opplysning = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "VERNP3AV12" }
 
         if (opplysning == null) {
             vedManglendeOpplysning()
@@ -24,8 +24,8 @@ class OppfyllerKravetTilVerneplikt : OpplysningProdusent<Boolean> {
 
     fun verdi(verdi: String?): Boolean? =
         when (verdi) {
-            "N" -> true
-            "J" -> false
+            "J" -> true
+            "N" -> false
             else -> null
         }
 }
