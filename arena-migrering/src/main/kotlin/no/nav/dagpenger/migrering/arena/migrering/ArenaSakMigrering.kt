@@ -6,6 +6,10 @@ data class ArenaSakMigrering(
     val vilkaarsVurderinger: List<ArenaVilkaarMigrering>,
     val vedtakfakta: List<ArenaVedtakfaktaMigrering>,
     val personopplysninger: List<ArenaPersonMigrering>,
+    val rettighetstype: List<ArenaRetttighetstypeMigrering>,
+    val forbrukteDagerDP: List<ArenaForbrukteDagerMigrering>,
+    val forbrukteDagerPERM: List<ArenaForbrukteDagerMigrering>,
+    val forbrukteDagerFISK: List<ArenaForbrukteDagerMigrering>,
     val tidsbegrensetVedtak: List<ArenaTidsbegrensetVedtakMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
@@ -26,7 +30,18 @@ data class ArenaSakMigrering(
         val gyldigFra: LocalDate,
     )
 
-    // TODO(): Må sees nærmere på
+    data class ArenaRetttighetstypeMigrering(
+        val kode: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
+    data class ArenaForbrukteDagerMigrering(
+        val kode: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
     data class ArenaTidsbegrensetVedtakMigrering(
         val kode: String,
         val verdi: String,

@@ -17,14 +17,15 @@ class MigreringRepositoryPostgres(
             session.run(
                 action =
                     queryOf(
+                        //language=postgresql
                         statement =
                             """
                             INSERT INTO migrering (id, ident, sak_id, initiert_av, hendelse, melding)
-                            VALUES (:migreringId, :ident, :sakId, :initiertAv, :hendelse, :melding)
+                            VALUES (:meldingId, :ident, :sakId, :initiertAv, :hendelse, :melding)
                             """.trimIndent(),
                         paramMap =
                             mapOf(
-                                "migreringId" to UUID.fromString(message["migreringId"].asString()),
+                                "meldingId" to UUID.fromString(message["@id"].asString()),
                                 "sakId" to message["sakId"].asInt(),
                                 "initiertAv" to message["initiertAv"].asString(),
                                 "hendelse" to message["@event_name"],

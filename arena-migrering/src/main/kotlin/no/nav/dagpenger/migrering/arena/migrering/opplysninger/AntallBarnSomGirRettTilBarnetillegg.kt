@@ -13,16 +13,16 @@ class AntallBarnSomGirRettTilBarnetillegg : OpplysningProdusent<Int> {
     override val opplysningsNavn: String = "Antall barn som gir rett til barnetillegg"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
-        val fakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { it.kode == "BARNMSTON" }
+        val opplysning = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { it.kode == "BARNMSTON" }
 
-        if (fakta == null) {
-            logger.info { "Fant ingen fakta for kode BARNMSTON" }
+        if (opplysning == null) {
+            vedManglendeOpplysning()
         }
 
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = fakta?.verdi?.toInt(),
-            gyldigFraOgMed = fakta?.gyldigFra,
+            verdi = opplysning?.verdi?.toInt(),
+            gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
         )
     }

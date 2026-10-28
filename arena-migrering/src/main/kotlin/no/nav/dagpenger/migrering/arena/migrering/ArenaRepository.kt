@@ -132,12 +132,110 @@ class ArenaRepository(
         return select
     }
 
+    fun hentRettighetkode(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'RETTIGHETKODE' AS kolonne
+                     , rettighetkode
+                     , mod_dato
+                FROM   vedtak vedt
+                WHERE  vedt.sak_id = :sakId
+                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                AND    vedt.utfallkode = 'JA'
+                AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
+                AND    vedt.vedtaktypekode IN ('O','E','G','S')
+                AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
+                ORDER BY vedt.til_dato DESC NULLS FIRST,
+                         vedt.fra_dato DESC,
+                         vedt.mod_dato DESC
+                FETCH FIRST 1 ROW ONLY
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaRetttighetstypeMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("rettighetkode"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    fun hentAntallForbrukteDagerDP(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'ForbrukteDagerDP' AS kolonne
+                     , 42                 AS verdi
+                     , SYSDATE            AS mod_dato
+                FROM   dual
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaForbrukteDagerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    fun hentAntallForbrukteDagerFISK(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'ForbrukteDagerFISK' AS kolonne
+                     , 0                    AS verdi
+                     , SYSDATE              AS mod_dato
+                FROM   dual
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaForbrukteDagerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    fun hentAntallForbrukteDagerPERM(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'ForbrukteDagerPERM' AS kolonne
+                     , 0                    AS verdi
+                     , SYSDATE              AS mod_dato
+                FROM   dual
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaForbrukteDagerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
     fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
         ArenaSakMigrering(
             vilkaarsVurderinger = hentVilkaarvurdering(sakId),
             vedtakfakta = hentVedtakfakta(sakId),
             personopplysninger = hentPersonInfo(sakId),
             tidsbegrensetVedtak = emptyList(),
+            rettighetstype = hentRettighetkode(sakId),
+            forbrukteDagerDP = hentAntallForbrukteDagerDP(sakId),
+            forbrukteDagerPERM = hentAntallForbrukteDagerPERM(sakId),
+            forbrukteDagerFISK = hentAntallForbrukteDagerFISK(sakId),
         )
 
     fun hentIdentForSak(sakId: Int): String {

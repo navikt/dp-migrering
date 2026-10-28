@@ -37,8 +37,10 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravRegi
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilAlder
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilHeltidDeltid
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilMobilitet
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilVerneplikt
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppgittAndreYtelserUtenforNav
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppholdINorge
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OrdinareDagpenger
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Samordnet
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.SamordnetDagsatsUtenBarnetillegg
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.SisteAvsluttendeKalenderManed
@@ -108,6 +110,8 @@ internal class ApplicationBuilder(
                                 UtfallEtterSamordning(),
                                 OppgittAndreYtelserUtenforNav(),
                                 DagsatsMedBarnetilleggEtterSamordningOg90Regel(),
+                                OrdinareDagpenger(),
+                                OppfyllerKravetTilVerneplikt(),
                             ),
                         repository = ArenaRepository(dataSource),
                     ),
