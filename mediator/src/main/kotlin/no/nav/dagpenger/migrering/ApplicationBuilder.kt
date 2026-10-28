@@ -18,21 +18,33 @@ import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMottak
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallBarnSomGirRettTilBarnetillegg
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallStonadsdager
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallStonadsuker
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.DagsatsMedBarnetilleggEtterSamordningOg90Regel
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Egenandel
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.FastsattArbeidstidPerUkeForTap
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Fodselsdato
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode2
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode3
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.KravTilProsentvisTapAvArbeidstid
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.MedlemAvFolketrygden
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.MedlemHarReduserteYtelserFraFolketrygden
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravRegistrertArbeidssoker
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilAlder
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilHeltidDeltid
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilMobilitet
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppgittAndreYtelserUtenforNav
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppholdINorge
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Samordnet
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.SamordnetDagsatsUtenBarnetillegg
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.SisteAvsluttendeKalenderManed
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UkessatsEtterSamordning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UkessatsForSamordning
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UtfallEtterSamordning
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
 import no.nav.helse.rapids_rivers.RapidApplication
@@ -84,6 +96,18 @@ internal class ApplicationBuilder(
                                 OppfyllerKravetTilAlder(),
                                 Dagsats(),
                                 OppfyllerKravRegistrertArbeidssoker(),
+                                Fodselsdato(),
+                                AntallStonadsuker(),
+                                AntallStonadsdager(),
+                                AntallBarnSomGirRettTilBarnetillegg(),
+                                FastsattArbeidstidPerUkeForTap(),
+                                Egenandel(),
+                                KravTilProsentvisTapAvArbeidstid(),
+                                SamordnetDagsatsUtenBarnetillegg(),
+                                MedlemHarReduserteYtelserFraFolketrygden(),
+                                UtfallEtterSamordning(),
+                                OppgittAndreYtelserUtenforNav(),
+                                DagsatsMedBarnetilleggEtterSamordningOg90Regel(),
                             ),
                         repository = ArenaRepository(dataSource),
                     ),
