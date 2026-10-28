@@ -10,6 +10,7 @@ import io.micrometer.core.instrument.MeterRegistry
 
 class MigreringMottak(
     rapidsConnection: RapidsConnection,
+//    private val migreringRepository: MigreringRepository,
 ) : River.PacketListener {
     companion object {
         private val logger = KotlinLogging.logger {}
@@ -23,9 +24,9 @@ class MigreringMottak(
                         "@event_name",
                         listOf(
                             "migrering_startet",
-                            "start_migrering",
-                            "teknisk_migrering_fullfort",
+                            "migrering_behandling_opprettet",
                             "migrering_avbrutt",
+                            "migrering_bekreftet",
                         ),
                     )
                 }
@@ -47,7 +48,7 @@ class MigreringMottak(
         meterRegistry: MeterRegistry,
     ) {
         when (val eventName = packet["@event_name"].asString()) {
-            "start_migrering" -> {
+            "migrering_startet" -> {
                 val sakId = packet["sakId"].asInt()
                 val initiertAv = packet["initiertAv"].asString()
                 val opplysninger = packet["opplysninger"].asArray()
@@ -55,17 +56,28 @@ class MigreringMottak(
 
                 logger.info { "Mottok start-migrering for sakId=$sakId, initiertAv=$initiertAv, arsak=$arsak" }
                 logger.debug { "Opplysninger: $opplysninger" }
+
+                // migreringRepository.lagre(packet)
             }
 
-            "teknisk_migrering_fullfort" -> {
+            "migrering_behandling_opprettet" -> {
                 val sakId = packet["sakId"].asInt()
-                logger.info { "Mottok teknisk_migrering_fullfort for sakId=$sakId" }
+                logger.info { "Mottok $eventName for sakId=$sakId" }
+
+                // migreringRepository.lagre(packet)
             }
 
             "migrering_avbrutt" -> {
                 val sakId = packet["sakId"].asInt()
                 val arsak = packet["arsak"]
-                logger.info { "Mottok migrering_avbrutt for sakId=$sakId, arsak=$arsak" }
+                logger.info { "Mottok $eventName for sakId=$sakId, arsak=$arsak" }
+            }
+
+            "migrering_bekreftet" -> {
+                val sakId = packet["sakId"].asInt()
+                logger.info { "Mottok $eventName for sakId=$sakId" }
+
+                // migreringRepository.lagre(packet)
             }
 
             else -> {

@@ -54,7 +54,7 @@ class MigreringMediator(
     }
 
     fun startMigrering(startMigreringDTO: StartMigreringDTO) {
-        rapidsConnection.publish(toJsonMessage("start_migrering", startMigreringDTO).toJson())
+        rapidsConnection.publish(toJsonMessage("migrering_startet", startMigreringDTO).toJson())
     }
 
     private suspend fun hentOpplysningerForSak(
