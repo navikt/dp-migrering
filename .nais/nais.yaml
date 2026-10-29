@@ -80,26 +80,26 @@ spec:
       claims:
         groups:
           - id: "{{azure.grupper.saksbehandler}}"
-#  gcp:
-#    sqlInstances:
-#      - type: POSTGRES_18
-#        highAvailability: true
-#        diskAutoresize: true
-#        pointInTimeRecovery: true
-#        retainedBackups: {{gcp.sql.retainedBackups}}
-#        tier: "{{gcp.sql.tier}}"
-#        flags:
-#          - name: cloudsql.enable_pgaudit
-#            value: "true"
-#          - name: pgaudit.log
-#            value: "write,ddl,role"
-#          - name: pgaudit.log_parameter
-#            value: "on"
-#          - name: pgaudit.log_relation
-#            value: "on"
-#        databases:
-#          - name: migrering
-#            envVarPrefix: DB
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_18
+        highAvailability: true
+        diskAutoresize: true
+        pointInTimeRecovery: true
+        retainedBackups: {{gcp.sql.retainedBackups}}
+        tier: "{{gcp.sql.tier}}"
+        flags:
+          - name: cloudsql.enable_pgaudit
+            value: "true"
+          - name: pgaudit.log
+            value: "write,ddl,role"
+          - name: pgaudit.log_parameter
+            value: "on"
+          - name: pgaudit.log_relation
+            value: "on"
+        databases:
+          - name: migrering
+            envVarPrefix: DB
 
   observability:
     logging:
