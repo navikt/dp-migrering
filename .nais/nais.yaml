@@ -49,14 +49,15 @@ spec:
       value: "{{stpeter.url}}"
     - name: STPETER_SCOPE
       value: "{{stpeter.scope}}"
-    - name: DB_USERNAME_PATH
-      value: "/secrets/dbcreds/username"
-    - name: DB_PASSWORD_PATH
-      value: "/secrets/dbcreds/password"
-    - name: DB_JDBC_URL_PATH
-      value: "/secrets/dbconfig/jdbc_url"
+#    - name: DB_USERNAME_PATH
+#      value: "/secrets/dbcreds/username"
+#    - name: DB_PASSWORD_PATH
+#      value: "/secrets/dbcreds/password"
+#    - name: DB_JDBC_URL_PATH
+#      value: "/secrets/dbconfig/jdbc_url"
   envFrom:
     - secret: dp-migrering-unleash-api-token
+    - secret: arena-tilgang-dag-q2-oracle
   kafka:
     pool: "{{ kafka.pool }}"
   vault:
@@ -126,5 +127,5 @@ spec:
 #          namespace: nais
         - application: azure-token-generator
           namespace: nais
-          cluster: dev-gcp
+#          cluster: dev-gcp
         {{/if}}
