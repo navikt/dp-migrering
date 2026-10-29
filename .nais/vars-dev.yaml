@@ -12,6 +12,8 @@ stpeter:
 
 environment: dev
 
+arena-secret: arena-tilgang-dag-q2-oracle
+
 gcp:
   sql:
     tier: db-custom-1-3840
