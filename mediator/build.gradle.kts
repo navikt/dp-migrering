@@ -16,6 +16,7 @@ dependencies {
     implementation(project(path = ":arena-innsyn"))
     implementation(project(path = ":arena-migrering"))
     implementation(project(path = ":arena-statisikk"))
+    implementation(project(path = ":uuid-v7"))
 
     implementation(libs.bundles.jackson)
     implementation("no.nav.dagpenger:stpeter-plugin:2026.10.22-12.56.24558e302c36")

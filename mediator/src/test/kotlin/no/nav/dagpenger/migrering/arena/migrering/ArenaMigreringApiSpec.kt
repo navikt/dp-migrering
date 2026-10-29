@@ -55,6 +55,7 @@ class ArenaMigreringApiSpec :
                         """
                         {
                             "sakId": 13699879,
+                            "migreringId": "0194881f-9428-74d5-b160-f63a4c61a24e",
                             "innvilgetFraOgMed": "${LocalDate.of(2026, 1, 5)}",
                             "innvilgetTilOgMed": null,
                             "initiertAv": "Z990798",

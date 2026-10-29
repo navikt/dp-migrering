@@ -6,7 +6,5 @@ import java.util.UUID
 interface MigreringRepository {
     fun lagre(message: JsonMessage)
 
-    fun hentMigrering(saksnummer: String)
-
-    fun hentMigrering(migreringId: UUID)
+    fun hentMigrering(migreringId: UUID): List<MigreringLedger>
 }

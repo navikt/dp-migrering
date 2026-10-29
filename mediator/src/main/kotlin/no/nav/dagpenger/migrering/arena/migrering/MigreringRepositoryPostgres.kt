@@ -36,11 +36,5 @@ class MigreringRepositoryPostgres(
         }
     }
 
-    override fun hentMigrering(saksnummer: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun hentMigrering(migreringId: UUID) {
-        TODO("Not yet implemented")
-    }
+    override fun hentMigrering(migreringId: UUID): List<MigreringLedger> = emptyList()
 }

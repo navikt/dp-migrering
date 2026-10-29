@@ -13,6 +13,7 @@ import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningVe
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringDTO
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningProdusent
+import no.nav.dagpenger.uuid.UUIDv7
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.node.ObjectNode
 import java.time.LocalDate
@@ -32,6 +33,7 @@ class MigreringMediator(
         val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
 
         return MigreringGrunnlagDTO(
+            migreringId = UUIDv7.ny(),
             sakId = sakId,
             initiertAv = initiertAv,
             ident = repository.hentIdentForSak(sakId),

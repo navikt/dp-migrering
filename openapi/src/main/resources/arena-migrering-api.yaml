@@ -79,6 +79,9 @@ components:
       properties:
         sakId:
           type: integer
+        migreringId:
+          type: string
+          format: uuid
         initiertAv:
           type: string
         ident:
@@ -97,6 +100,7 @@ components:
             $ref: "#/components/schemas/MigreringGrunnlagOpplysning"
       required:
         - sakId
+        - migreringId
         - initiertAv
         - ident
         - innvilgetFraOgMed
@@ -141,6 +145,9 @@ components:
       properties:
         sakId:
           type: integer
+        migreringId:
+          type: string
+          format: uuid
         initiertAv:
           type: string
         ident:
@@ -159,6 +166,7 @@ components:
             $ref: "#/components/schemas/StartMigreringOpplysning"
       required:
         - sakId
+        - migreringId
         - initiertAv
         - ident
         - innvilgetFraOgMed

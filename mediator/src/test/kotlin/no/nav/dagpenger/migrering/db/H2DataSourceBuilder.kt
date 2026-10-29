@@ -38,7 +38,7 @@ internal class H2DataSourceBuilder {
         HikariDataSource(config).use {
             Flyway
                 .configure()
-                .locations("classpath:flyway")
+                .locations("classpath:flyway/arena")
                 .connectRetries(10)
                 .dataSource(it)
                 .load()
