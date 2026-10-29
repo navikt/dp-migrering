@@ -24,11 +24,10 @@ class MigreringMottak(
                         "@event_name",
                         listOf(
                             "migrering_startet",
+                            "migrering_feilet",
                             "behandling_opprettet",
                             "behandling_avbrutt",
-                            "migrering_behandling_opprettet",
-                            "migrering_avbrutt",
-                            "migrering_bekreftet",
+                            "forslag_til_behandlingsresultat",
                         ),
                     )
                 }
