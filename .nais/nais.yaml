@@ -117,6 +117,7 @@ spec:
       rules:
         - application: logging
           namespace: nais-system
+        - application: dp-stpeter
     inbound:
       rules:
         - application: dp-arena-innsyn-klient
