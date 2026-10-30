@@ -57,7 +57,7 @@ spec:
 #      value: "/secrets/dbconfig/jdbc_url"
   envFrom:
     - secret: dp-migrering-unleash-api-token
-    - secret: "{{ arena-secret }}"
+    - secret: dp-migrering-oracle
   kafka:
     pool: "{{ kafka.pool }}"
   vault:
