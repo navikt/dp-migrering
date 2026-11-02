@@ -7,6 +7,8 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.micrometer.core.instrument.MeterRegistry
+import no.nav.dagpenger.migrering.konfigurasjon.Feature
+import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
 class MigreringMottak(
     rapidsConnection: RapidsConnection,
@@ -51,11 +53,11 @@ class MigreringMottak(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        val eventName = packet["@event_name"].asString()
-        val sakId = packet["sakId"].asInt()
+        if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
+            val eventName = packet["@event_name"].asString()
+            val sakId = packet["sakId"].asInt()
 
-        logger.info { "Mottok $eventName for sakId=$sakId" }
-
-        // migreringRepository.lagre(packet)
+            logger.info { "Mottok $eventName for sakId=$sakId" }
+        }
     }
 }

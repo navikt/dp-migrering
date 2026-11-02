@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation(project(path = ":openapi"))
     implementation(project(path = ":uuid-v7"))
+    implementation(project(path = ":konfigurasjon"))
     implementation(libs.kotlin.logging)
     implementation("io.ktor:ktor-server-status-pages:${libs.versions.ktor.get()}")
     implementation(libs.kotlinquery)
