@@ -116,7 +116,7 @@ internal class ApplicationBuilder(
                         repository = ArenaRepository(dataSource),
                     ),
             )
-            MigreringMottak(rapidsConnection = rapid)
+            MigreringMottak(rapidsConnection = rapid, objectMapper = objectMapper)
         }
 
     init {

@@ -5,10 +5,12 @@ plugins {
 dependencies {
     implementation(project(path = ":openapi"))
     implementation(project(path = ":uuid-v7"))
+    implementation(project(path = ":behandling-kontrakt"))
     implementation(libs.kotlin.logging)
     implementation("io.ktor:ktor-server-status-pages:${libs.versions.ktor.get()}")
     implementation(libs.kotlinquery)
     implementation(libs.rapids.and.rivers)
+    implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
 
     testImplementation(libs.bundles.kotest.assertions)
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
