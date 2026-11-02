@@ -5,6 +5,10 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class UkessatsEtterSamordning : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<Int> = Int::class.java
+
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
@@ -24,6 +28,7 @@ class UkessatsEtterSamordning : OpplysningProdusent<Int> {
             verdi = verdi(vedtakfakta?.verdi),
             gyldigFraOgMed = vedtakfakta?.gyldigFra,
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
     }
 

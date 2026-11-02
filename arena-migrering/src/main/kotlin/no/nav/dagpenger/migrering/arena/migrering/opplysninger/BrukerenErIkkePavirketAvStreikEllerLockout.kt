@@ -5,6 +5,9 @@ import java.time.LocalDate
 import java.util.UUID
 
 class BrukerenErIkkePavirketAvStreikEllerLockout : OpplysningProdusent<Boolean> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-91df-746a-a8ac-4a6b2b30685f")
     override val opplysningsNavn: String = "Brukeren er ikke påvirket av streik eller lock-out"
 
@@ -21,6 +24,7 @@ class BrukerenErIkkePavirketAvStreikEllerLockout : OpplysningProdusent<Boolean> 
             verdi = verdi(fakta?.verdi),
             gyldigFraOgMed = LocalDate.of(2018, 6, 21),
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
     }
 

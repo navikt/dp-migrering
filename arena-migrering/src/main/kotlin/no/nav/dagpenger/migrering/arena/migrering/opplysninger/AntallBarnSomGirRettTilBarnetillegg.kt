@@ -5,6 +5,10 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class AntallBarnSomGirRettTilBarnetillegg : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<Int> = Int::class.java
+
     companion object {
         val logger = KotlinLogging.logger {}
     }
@@ -24,6 +28,7 @@ class AntallBarnSomGirRettTilBarnetillegg : OpplysningProdusent<Int> {
             verdi = opplysning?.verdi?.toInt(),
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
     }
 }

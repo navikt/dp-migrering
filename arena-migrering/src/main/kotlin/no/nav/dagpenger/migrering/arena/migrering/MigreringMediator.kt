@@ -98,7 +98,7 @@ class MigreringMediator(
 }
 
 fun Opplysning<*>.toVerdiDTOType(): MigreringGrunnlagOpplysningVerdiDTOTypeDTO =
-    when (verdiType) {
+    when (type) {
         String::class -> {
             MigreringGrunnlagOpplysningVerdiDTOTypeDTO.STRING
         }
@@ -120,7 +120,7 @@ fun Opplysning<*>.toVerdiDTOType(): MigreringGrunnlagOpplysningVerdiDTOTypeDTO =
         }
 
         else -> {
-            error("Ustøttet verditype for opplysning '$navn': $verdiType")
+            error("Ustøttet verditype for opplysning '$navn': $type")
         }
     }
 

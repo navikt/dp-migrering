@@ -6,6 +6,10 @@ import java.time.LocalDate
 import java.util.UUID
 
 class AntallDagerMedSanksjon : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = false
+    override val opplysningsType: Class<Int> = Int::class.java
+
     companion object {
         val logger = KotlinLogging.logger {}
     }
@@ -25,6 +29,7 @@ class AntallDagerMedSanksjon : OpplysningProdusent<Int> {
             verdi = fakta?.verdi?.toInt()?.div(5), // TODO() Dette må sjekkes
             gyldigFraOgMed = LocalDate.of(2018, 6, 21),
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
     }
 }

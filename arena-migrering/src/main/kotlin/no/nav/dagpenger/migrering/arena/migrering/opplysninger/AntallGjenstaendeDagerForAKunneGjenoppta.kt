@@ -1,6 +1,9 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 class AntallGjenstaendeDagerForAKunneGjenoppta : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = false
+    override val opplysningsType: Class<Int> = Int::class.java
     override val opplysningsId: java.util.UUID = java.util.UUID.fromString("019d0059-0e34-76a7-ab91-42925a1d03a3")
     override val opplysningsNavn: String = "Antall gjenstående dager for å kunne gjenoppta"
 
@@ -11,5 +14,6 @@ class AntallGjenstaendeDagerForAKunneGjenoppta : OpplysningProdusent<Int> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
 }

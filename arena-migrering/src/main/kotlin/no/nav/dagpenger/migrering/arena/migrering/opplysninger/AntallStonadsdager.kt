@@ -4,6 +4,9 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class AntallStonadsdager : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = false
+    override val opplysningsType: Class<Int> = Int::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-943d-77a7-969c-147999f15457")
     override val opplysningsNavn: String = "Antall stønadsdager"
 
@@ -20,6 +23,7 @@ class AntallStonadsdager : OpplysningProdusent<Int> {
             verdi = fakta?.verdi?.toInt()?.times(5), // TODO() Dette må sjekkes
             gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
     }
 }

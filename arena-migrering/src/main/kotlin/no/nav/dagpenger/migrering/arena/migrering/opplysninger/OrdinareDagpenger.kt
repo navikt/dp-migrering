@@ -3,6 +3,9 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 
 class OrdinareDagpenger : OpplysningProdusent<Boolean> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: java.util.UUID = java.util.UUID.fromString("0194881f-9444-7a73-a458-0af81c034d8a")
     override val opplysningsNavn: String = "Ordinære dagpenger"
 
@@ -20,6 +23,7 @@ class OrdinareDagpenger : OpplysningProdusent<Boolean> {
             verdi = opplysning != null,
             gyldigFraOgMed = opplysning?.gyldigFra ?: gyldigFra?.gyldigFra,
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
     }
 }

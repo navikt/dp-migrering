@@ -4,6 +4,9 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class ErIlagtSanksjonsperiodeVedSelvforskyldtArbeidsloshet : OpplysningProdusent<Boolean> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = false
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("019e82fc-04e7-7f8d-bd52-6a7041ebb15f")
     override val opplysningsNavn: String = "Er ilagt sanskjonsperiode ved selvforskyldt arbeidsløshet"
 
@@ -13,5 +16,6 @@ class ErIlagtSanksjonsperiodeVedSelvforskyldtArbeidsloshet : OpplysningProdusent
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
 }

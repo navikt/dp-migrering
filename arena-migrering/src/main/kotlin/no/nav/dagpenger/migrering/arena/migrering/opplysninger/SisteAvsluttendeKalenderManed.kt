@@ -7,6 +7,10 @@ import java.time.YearMonth
 import java.util.UUID
 
 class SisteAvsluttendeKalenderManed : OpplysningProdusent<LocalDate> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<LocalDate> = LocalDate::class.java
+
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
@@ -21,6 +25,7 @@ class SisteAvsluttendeKalenderManed : OpplysningProdusent<LocalDate> {
             verdi = verdi(vedtakfakta?.verdi),
             gyldigFraOgMed = vedtakfakta?.gyldigFra,
             uuid = opplysningsId,
+            type = opplysningsType.kotlin,
         )
     }
 
