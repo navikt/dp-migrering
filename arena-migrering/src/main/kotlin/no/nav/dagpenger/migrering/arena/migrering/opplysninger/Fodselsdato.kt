@@ -10,14 +10,14 @@ class Fodselsdato : OpplysningProdusent<LocalDate> {
     override val opplysningsNavn: String = "Fødselsdato"
 
     override suspend fun produser(kontekst: no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst): Opplysning<LocalDate> {
-        val opplysning = kontekst.sakTilMigrering.personopplysninger.firstOrNull { it.kode == "FODSELSDATO" }
+        val opplysning = kontekst.sakTilMigrering.personFodselsdatoMigrering.firstOrNull { it.kode == "FODSELSDATO" }
 
         if (opplysning == null) {
             vedManglendeOpplysning()
         }
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = opplysning?.verdi?.let { LocalDate.parse(it) },
+            verdi = opplysning?.verdi,
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
             type = opplysningsType.kotlin,
