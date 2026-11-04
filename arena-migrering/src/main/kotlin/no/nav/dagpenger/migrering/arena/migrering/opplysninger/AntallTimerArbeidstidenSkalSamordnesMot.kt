@@ -1,5 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -7,8 +8,13 @@ class AntallTimerArbeidstidenSkalSamordnesMot : OpplysningProdusent<Double> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
     override val opplysningsType: Class<Double> = Double::class.java
-    override val opplysningsId: UUID = UUID.fromString("0194881f-9433-70e9-a85b-c246150c45d1")
-    override val opplysningsNavn: String = "Uføretrygd etter lovens kapittel 12"
+
+    companion object {
+        val logger = KotlinLogging.logger {}
+    }
+
+    override val opplysningsId: UUID = UUID.fromString("0194881f-9434-79e8-a64d-1a23cc5d86ed")
+    override val opplysningsNavn: String = "Antall timer arbeidstiden skal samordnes mot"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Double> =
         Opplysning(

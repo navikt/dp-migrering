@@ -3,6 +3,8 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
+// QA OK
+
 class AntallBarnSomGirRettTilBarnetillegg : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true

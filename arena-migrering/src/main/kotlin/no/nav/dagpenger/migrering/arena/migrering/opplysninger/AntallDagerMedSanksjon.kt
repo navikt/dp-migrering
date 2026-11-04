@@ -2,11 +2,12 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import java.time.LocalDate
 import java.util.UUID
 
+// QA OK
+
 class AntallDagerMedSanksjon : OpplysningProdusent<Int> {
-    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
     override val opplysningsType: Class<Int> = Int::class.java
 
@@ -26,10 +27,12 @@ class AntallDagerMedSanksjon : OpplysningProdusent<Int> {
         }
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = fakta?.verdi?.toInt()?.div(5), // TODO() Dette må sjekkes
-            gyldigFraOgMed = LocalDate.of(2018, 6, 21),
+            verdi = verdi(fakta?.verdi),
+            gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
             type = opplysningsType.kotlin,
         )
     }
+
+    private fun verdi(verdi: String?): Int? = verdi?.toInt()?.times(5)
 }

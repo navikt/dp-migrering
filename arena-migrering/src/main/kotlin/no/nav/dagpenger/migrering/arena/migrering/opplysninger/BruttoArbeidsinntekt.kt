@@ -15,7 +15,7 @@ class BruttoArbeidsinntekt : OpplysningProdusent<Int> {
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9413-77ce-92ec-d29700f04245")
     override val opplysningsNavn: String = "Brutto arbeidsinntekt"
-// Mulig det holder med Innrtektsopplysninger (slutter på 244)
+// Mulig det holder med Inntektsopplysninger (slutter på 244)
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
         Opplysning(
