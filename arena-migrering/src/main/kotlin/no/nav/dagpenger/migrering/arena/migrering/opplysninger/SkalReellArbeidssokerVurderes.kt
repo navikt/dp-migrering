@@ -4,10 +4,10 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-class SkalReellArbeidssøkerVurderes : OpplysningProdusent<Int> {
+class SkalReellArbeidssokerVurderes : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Int> = Int::class.java
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -17,7 +17,7 @@ class SkalReellArbeidssøkerVurderes : OpplysningProdusent<Int> {
     override val opplysningsNavn: String = "Skal reell arbeidssøker vurderes"
 
 // Forventer at den skal være true ? Feil ordlyd
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
             verdi = null,
