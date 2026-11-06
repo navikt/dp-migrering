@@ -48,6 +48,9 @@ dependencies {
     implementation("io.ktor:ktor-server-metrics-micrometer:${libs.versions.ktor.get()}")
     implementation("io.ktor:ktor-serialization-jackson3:${libs.versions.ktor.get()}")
 
+    runtimeOnly("org.postgresql:postgresql:42.7.14")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:${libs.versions.flyway.get()}")
+
     testImplementation("io.kotest:kotest-assertions-core-jvm:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
     testImplementation(libs.rapids.and.rivers.test)
@@ -59,8 +62,6 @@ dependencies {
     testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("org.testcontainers:postgresql:1.21.4")
-    testRuntimeOnly("org.postgresql:postgresql:42.7.14")
-    testRuntimeOnly("org.flywaydb:flyway-database-postgresql:${libs.versions.flyway.get()}")
     testImplementation("com.h2database:h2:2.5.252")
     testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.22-12.56.24558e302c36")
 }
