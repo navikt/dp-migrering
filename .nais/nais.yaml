@@ -49,23 +49,11 @@ spec:
       value: "{{stpeter.url}}"
     - name: STPETER_SCOPE
       value: "{{stpeter.scope}}"
-    - name: DB_USERNAME_PATH
-      value: "/secrets/dbcreds/username"
-    - name: DB_PASSWORD_PATH
-      value: "/secrets/dbcreds/password"
-    - name: DB_JDBC_URL_PATH
-      value: "/secrets/dbconfig/jdbc_url"
   envFrom:
     - secret: dp-migrering-unleash-api-token
+    - secret: dp-migrering-oracle
   kafka:
     pool: "{{ kafka.pool }}"
-  vault:
-    enabled: true
-    paths:
-      - kvPath: "{{ vault_db_config_path }}"
-        mountPath: /secrets/dbconfig
-      - kvPath: "{{ vault_db_creds_path }}"
-        mountPath: /secrets/dbcreds
   {{#if ingresses}}
   ingresses:
     {{#each ingresses as |url|}}
@@ -79,6 +67,27 @@ spec:
       claims:
         groups:
           - id: "{{azure.grupper.saksbehandler}}"
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_18
+        highAvailability: true
+        diskAutoresize: true
+        pointInTimeRecovery: true
+        retainedBackups: {{gcp.sql.retainedBackups}}
+        tier: "{{gcp.sql.tier}}"
+        flags:
+          - name: cloudsql.enable_pgaudit
+            value: "true"
+          - name: pgaudit.log
+            value: "write,ddl,role"
+          - name: pgaudit.log_parameter
+            value: "on"
+          - name: pgaudit.log_relation
+            value: "on"
+        databases:
+          - name: migrering
+            envVarPrefix: DB
+
   observability:
     logging:
       destinations:
@@ -95,15 +104,11 @@ spec:
       rules:
         - application: logging
           namespace: nais-system
+        - application: dp-stpeter
     inbound:
       rules:
         - application: dp-arena-innsyn-klient
-          cluster: "{{environment}}-gcp"
-          namespace: teamdagpenger
         {{#if wonderwalled}}
-#        - application: wonderwalled-azure
-#          namespace: nais
         - application: azure-token-generator
           namespace: nais
-          cluster: dev-gcp
         {{/if}}

@@ -1,0 +1,26 @@
+package no.nav.dagpenger.migrering.arena.migrering.opplysninger
+
+import io.github.oshai.kotlinlogging.KotlinLogging
+import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.util.UUID
+
+class AntallDagerMedSanksjonSomErForbrukt : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = false
+    override val opplysningsType: Class<Int> = Int::class.java
+
+    companion object {
+        val logger = KotlinLogging.logger {}
+    }
+
+    override val opplysningsId: UUID = UUID.fromString("e8e28792-0ad4-4419-9cda-b166036e0fd9")
+    override val opplysningsNavn: String = "Antall dager med sanksjon som er forbrukt"
+
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
+        Opplysning(
+            navn = opplysningsNavn,
+            verdi = null,
+            gyldigFraOgMed = null,
+            uuid = opplysningsId,
+        )
+}

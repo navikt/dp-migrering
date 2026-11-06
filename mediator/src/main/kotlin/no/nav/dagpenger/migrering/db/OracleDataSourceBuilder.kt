@@ -6,7 +6,6 @@ import io.micrometer.core.instrument.Clock
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
-import no.nav.dagpenger.migrering.konfigurasjon.Configuration
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration.arenaDatabaseConfig
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -18,11 +17,11 @@ internal class OracleDataSourceBuilder {
     private val baseConfig =
         HikariConfig().apply {
             jdbcUrl =
-                Configuration.properties.arenaDatabaseConfig.jdbcUrl
+                arenaDatabaseConfig.jdbcUrl
                     .ensurePrefix("jdbc:oracle:thin:@")
                     .stripCredentials()
-            username = Configuration.properties.arenaDatabaseConfig.username
-            password = Configuration.properties.arenaDatabaseConfig.password
+            username = arenaDatabaseConfig.username
+            password = arenaDatabaseConfig.password
 
             // Default 30 sekund
             connectionTimeout = 10.seconds.inWholeMilliseconds
@@ -44,7 +43,7 @@ internal class OracleDataSourceBuilder {
     private val hikariConfig by lazy {
         HikariConfig().apply {
             baseConfig.copyStateTo(this)
-            poolName = "app"
+            poolName = "arena"
             // Default 10
             maximumPoolSize = 10
         }

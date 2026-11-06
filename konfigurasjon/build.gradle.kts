@@ -7,5 +7,5 @@ dependencies {
     api(libs.konfig)
     implementation(libs.kotlin.logging)
 
-    api("io.getunleash:unleash-client-java:12.3.1")
+    api("io.getunleash:unleash-client-java:12.3.2")
 }

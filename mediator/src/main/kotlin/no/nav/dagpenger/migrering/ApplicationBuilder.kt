@@ -16,24 +16,11 @@ import no.nav.dagpenger.migrering.api.apiConfig
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
-import no.nav.dagpenger.migrering.arena.migrering.MigrationRiver
-import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode1
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode2
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.InntektPeriode3
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.MedlemAvFolketrygden
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravRegistrertArbeidssoker
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilAlder
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilHeltidDeltid
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppfyllerKravetTilMobilitet
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OppholdINorge
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Samordnet
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.SisteAvsluttendeKalenderManed
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UkessatsEtterSamordning
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.UkessatsForSamordning
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
+import no.nav.dagpenger.migrering.arena.migrering.MigreringRepositoryPostgres
+import no.nav.dagpenger.migrering.arena.migrering.StartMigreringMottak
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
+import no.nav.dagpenger.migrering.db.PostgresDataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
 import no.nav.helse.rapids_rivers.RapidApplication
 
@@ -45,6 +32,7 @@ internal class ApplicationBuilder(
     }
 
     private val dataSource = OracleDataSourceBuilder().dataSource
+    private val postgresDataSourceBuilder = PostgresDataSourceBuilder()
 
     private val rapidsConnection: RapidsConnection =
         RapidApplication.create(
@@ -60,34 +48,21 @@ internal class ApplicationBuilder(
                 }
             },
         ) { server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>, rapid: KafkaRapid ->
+            val migreringMediator =
+                MigreringMediator(
+                    arenaRepository = ArenaRepository(dataSource),
+                    migreringRepository = MigreringRepositoryPostgres(postgresDataSourceBuilder.dbsession),
+                    rapidsConnection = rapid,
+                )
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),
                 dataSource = dataSource,
-                migreringsOrchestrator =
-                    MigreringsOrchestrator(
-                        rapidsConnection = rapid,
-                        produsenter =
-                            listOf(
-                                MedlemAvFolketrygden(),
-                                OppholdINorge(),
-                                Dagpengegrunnlag(),
-                                SisteAvsluttendeKalenderManed(),
-                                OppfyllerKravetTilHeltidDeltid(),
-                                OppfyllerKravetTilMobilitet(),
-                                UkessatsEtterSamordning(),
-                                UkessatsForSamordning(),
-                                Samordnet(),
-                                InntektPeriode1(),
-                                InntektPeriode2(),
-                                InntektPeriode3(),
-                                OppfyllerKravetTilAlder(),
-                                Dagsats(),
-                                OppfyllerKravRegistrertArbeidssoker(),
-                            ),
-                        repository = ArenaRepository(dataSource),
-                    ),
+                migreringMediator = migreringMediator,
             )
-            MigrationRiver(rapidsConnection = rapid)
+            StartMigreringMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
         }
 
     init {
@@ -100,6 +75,8 @@ internal class ApplicationBuilder(
 
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-migrering" }
+
+        postgresDataSourceBuilder.runMigration()
 
         OppdaterMenneskerMetrikk.start(ArenaStatistikkRepository(dataSource))
     }

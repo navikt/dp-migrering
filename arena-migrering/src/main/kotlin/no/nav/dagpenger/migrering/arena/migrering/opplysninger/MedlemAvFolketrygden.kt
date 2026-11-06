@@ -6,6 +6,10 @@ import java.util.UUID
 
 // Ikke mappet
 class MedlemAvFolketrygden : OpplysningProdusent<Boolean> {
+    override val rolle = OpplysningProdusent.Rolle.Resultat
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
+
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
@@ -14,16 +18,19 @@ class MedlemAvFolketrygden : OpplysningProdusent<Boolean> {
     override val opplysningsNavn: String = "Bruker er medlem av folketrygden"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.filter { vilkaar -> vilkaar.kode == "MEDLFOLKT" }
-        if (vilkaar.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vilkaar.first().verdi),
-                gyldigFraOgMed = vilkaar.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+        val vilkaar =
+            kontekst.sakTilMigrering.vilkaarsVurderinger.firstOrNull { vilkaar -> vilkaar.kode == "MEDLFOLKT" }
+
+        if (vilkaar == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne ut av om bruker var medlem av Folketrygden")
+
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vilkaar?.verdi),
+            gyldigFraOgMed = vilkaar?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Boolean? =

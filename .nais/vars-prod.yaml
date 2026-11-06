@@ -1,5 +1,5 @@
-ingresses:
-  - https://dp-migrering.prod-fss-pub.nais.io
+#ingresses:
+#  - https://dp-migrering.intern.nav.no
 
 azure:
   tenant: nav.no
@@ -8,14 +8,16 @@ azure:
 
 stpeter:
     scope: "api://prod-gcp.teamdagpenger.dp-stpeter/.default"
-    url: "https://dp-stpeter.intern.nav.no"
+    url: "http://dp-stpeter"
 
 environment: prod
 
+gcp:
+  sql:
+    tier: db-custom-1-3840
+    retainedBackups: 21
+
 kafka:
   pool: nav-prod
-
-vault_db_config_path: oracle/data/prod/config/arena
-vault_db_creds_path: oracle/data/prod/creds/arena-arena_tilgang_dag
 
 wonderwalled: true

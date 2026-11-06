@@ -5,6 +5,10 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class OppfyllerKravRegistrertArbeidssoker : OpplysningProdusent<Boolean> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
+
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
@@ -14,16 +18,19 @@ class OppfyllerKravRegistrertArbeidssoker : OpplysningProdusent<Boolean> {
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val personopplysninger =
-            kontekst.sakTilMigrering.personopplysninger.filter { personopplysninger -> personopplysninger.kode == "FORMIDLINGSGRUPPEKODE" }
-        if (personopplysninger.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(personopplysninger.first().verdi),
-                gyldigFraOgMed = personopplysninger.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+            kontekst.sakTilMigrering.personopplysninger
+                .firstOrNull { personopplysninger -> personopplysninger.kode == "FORMIDLINGSGRUPPEKODE" }
+
+        if (personopplysninger == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne om bruker oppfyller kravet til å være registrert som arbeidssøker")
+
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(personopplysninger?.verdi),
+            gyldigFraOgMed = personopplysninger?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Boolean? =
