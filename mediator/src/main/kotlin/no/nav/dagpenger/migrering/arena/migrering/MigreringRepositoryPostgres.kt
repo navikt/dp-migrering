@@ -41,7 +41,7 @@ class MigreringRepositoryPostgres(
                     //language=postgresql
                     statement =
                         """
-                        SELECT migrering_id, ident, sak_id, initiert_av, opprettet
+                        SELECT migrering_id, ident, sak_id, initiert_av, opprettet, migrerings_tidspunkt
                         FROM migrering
                         WHERE migrering_id = :migrering_id
                         """.trimIndent(),
@@ -53,6 +53,7 @@ class MigreringRepositoryPostgres(
                         sakId = row.int("sak_id"),
                         initiertAv = row.string("initiert_av"),
                         opprettet = row.localDateTime("opprettet"),
+                        migreringsTidspunkt = row.localDate("migrerings_tidspunkt"),
                     )
                 }.asSingle,
             )

@@ -4,6 +4,7 @@ Meldingsflyten kjøres med TestRapid og den faktiske MigreringMediator.
 Den andre tjenesten simuleres, og repository-et mockes.
 Dokumentet viser hele JSON-meldingen i hvert steg, inkludert transportmetadata.
 Variable tekstverdier i transportmetadata er erstattet med `<metadata>`.
+Den genererte migrerings-ID-en er erstattet med `<migreringId>`.
 
 ## 1. Migreringen starter uten opplysninger
 
@@ -14,8 +15,10 @@ Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket sv
   "@event_name" : "migrering_startet",
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
+  "ident" : "testident",
   "initiertAv" : "testbruker",
-  "migreringId" : "0194881f-9428-74d5-b160-f63a4c61a24e",
+  "migreringId" : "<migreringId>",
+  "migreringsTidspunkt" : "2026-11-06",
   "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
@@ -31,18 +34,21 @@ Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket sv
 
 ## 2. Den andre tjenesten etterspør dagsats
 
-Svaret har manglendeOpplysninger, men ingen opplysningsliste.
+Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme opplysningslisten.
 
 ```json
 {
   "@event_name" : "migrering_startet",
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
+  "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : [
     "0194881f-9428-74d5-b160-f63a4c61a24f"
   ],
-  "migreringId" : "0194881f-9428-74d5-b160-f63a4c61a24e",
+  "migreringId" : "<migreringId>",
+  "migreringsTidspunkt" : "2026-11-06",
+  "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [
@@ -64,9 +70,11 @@ Mottaket henter dagsats fra repository-et, publiserer den og markerer den som mi
   "@event_name" : "migrering_startet",
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
+  "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : null,
-  "migreringId" : "0194881f-9428-74d5-b160-f63a4c61a24e",
+  "migreringId" : "<migreringId>",
+  "migreringsTidspunkt" : "2026-11-06",
   "opplysninger" : [
     {
       "gyldigFraOgMed" : "2026-11-06",
@@ -100,11 +108,13 @@ Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samord
   "@event_name" : "migrering_startet",
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
+  "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : [
     "0194881f-9428-74d5-b160-f63a4c61a23c"
   ],
-  "migreringId" : "0194881f-9428-74d5-b160-f63a4c61a24e",
+  "migreringId" : "<migreringId>",
+  "migreringsTidspunkt" : "2026-11-06",
   "opplysninger" : [
     {
       "gyldigFraOgMed" : "2026-11-06",
@@ -119,9 +129,13 @@ Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samord
     {
       "id" : "<metadata>",
       "time" : "<metadata>"
+    },
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
     }
   ],
-  "system_read_count" : 0
+  "system_read_count" : 1
 }
 ```
 
@@ -134,9 +148,11 @@ Repository-et returnerer både tidligere migrert dagsats og etterspurt samordnin
   "@event_name" : "migrering_startet",
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
+  "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : null,
-  "migreringId" : "0194881f-9428-74d5-b160-f63a4c61a24e",
+  "migreringId" : "<migreringId>",
+  "migreringsTidspunkt" : "2026-11-06",
   "opplysninger" : [
     {
       "gyldigFraOgMed" : "2026-11-06",
@@ -161,9 +177,13 @@ Repository-et returnerer både tidligere migrert dagsats og etterspurt samordnin
     {
       "id" : "<metadata>",
       "time" : "<metadata>"
+    },
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
     }
   ],
-  "system_read_count" : 1
+  "system_read_count" : 2
 }
 ```
 

@@ -31,12 +31,13 @@ internal fun Application.arenaMigreringApi(orchestrator: MigreringMediator) {
                     val sakId = call.parameters["sakId"]?.toInt() ?: throw BadRequestException("SakId mangler")
 
                     if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
-                        val startMigreringDTO = call.receive<StartMigreringRequest>()
+                        val startMigreringRequest = call.receive<StartMigreringRequest>()
                         val migrering =
                             orchestrator.startMigrering(
                                 sakId = sakId,
                                 initiertAv = call.oidcToken().navIdent(),
-                                simulering = startMigreringDTO.simulering,
+                                simulering = startMigreringRequest.simulering,
+                                migreringsTidspunkt = startMigreringRequest.migreringsTidspunkt,
                             )
                         call.respond(
                             HttpStatusCode.Created,

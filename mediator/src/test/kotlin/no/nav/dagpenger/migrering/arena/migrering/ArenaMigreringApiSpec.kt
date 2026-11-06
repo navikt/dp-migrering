@@ -15,6 +15,7 @@ import no.nav.dagpenger.migrering.arena.migrering.TestApplication.withMockAuthSe
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -41,12 +42,14 @@ class ArenaMigreringApiSpec :
                         initiertAv = "Z999999",
                         opprettet = LocalDateTime.of(2026, 11, 6, 10, 0),
                         simulering = simulering,
+                        migreringsTidspunkt = LocalDate.of(2026, 11, 6),
                     )
                 coEvery {
                     mediator.startMigrering(
                         sakId = migrering.sakId,
                         initiertAv = migrering.initiertAv,
                         simulering = simulering,
+                        migreringsTidspunkt = migrering.migreringsTidspunkt,
                     )
                 } returns migrering
 
@@ -55,7 +58,14 @@ class ArenaMigreringApiSpec :
                         autentisert(
                             httpMethod = HttpMethod.Post,
                             endepunkt = "/arena/migrering/sak/${migrering.sakId}",
-                            body = """{"simulering": $simulering}""",
+                            //language=json
+                            body =
+                                """
+                                {
+                                  "simulering": $simulering,
+                                  "migreringsTidspunkt": "${migrering.migreringsTidspunkt}"
+                                }
+                                """.trimIndent(),
                         )
 
                     response.status shouldBe HttpStatusCode.Created
@@ -73,6 +83,7 @@ class ArenaMigreringApiSpec :
                         sakId = migrering.sakId,
                         initiertAv = migrering.initiertAv,
                         simulering = simulering,
+                        migreringsTidspunkt = migrering.migreringsTidspunkt,
                     )
                 }
             }

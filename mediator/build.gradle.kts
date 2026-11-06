@@ -30,7 +30,7 @@ dependencies {
     implementation(libs.konfig)
     implementation(libs.kotlin.logging)
     implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.33.1")
-    implementation("io.opentelemetry:opentelemetry-api:1.67.0")
+    implementation("io.opentelemetry:opentelemetry-api:1.68.0")
     implementation("io.prometheus:prometheus-metrics-core:1.10.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.2")
     implementation("org.slf4j:slf4j-api:2.0.20")

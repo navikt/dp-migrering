@@ -60,12 +60,7 @@ class MigreringRepositoryPostgresSpec :
         }
 
         "lagrer migrering med alle felter i Postgres" {
-            val migrering =
-                Migrering(
-                    ident = "test-ident",
-                    sakId = 12345,
-                    initiertAv = "test'bruker",
-                )
+            val migrering = nyMigrering()
 
             repository.lagre(migrering)
 
@@ -127,7 +122,8 @@ class MigreringRepositoryPostgresSpec :
 
 private fun nyMigrering() =
     Migrering(
-        ident = "test-ident",
+        ident = "12345678987",
         sakId = 12345,
         initiertAv = "testbruker",
+        migreringsTidspunkt = LocalDate.of(2026, 11, 5),
     )

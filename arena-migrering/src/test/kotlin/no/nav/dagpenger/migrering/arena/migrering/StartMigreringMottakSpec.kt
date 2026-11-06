@@ -1,11 +1,11 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
-import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.Called
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -39,25 +39,34 @@ class StartMigreringMottakSpec :
 
         "ignorerer den første migrering_startet-meldingen uten manglendeOpplysninger" {
             val test = StartMigreringTest()
+            test.startMigrering()
+            test.rapid.inspektør.size shouldBe 1
+            clearMocks(test.repository, answers = false)
 
-            test.rapid.sendTestMessage(migreringStartet(opplysninger = emptyList()))
+            test.rapid.sendTestMessage(
+                test.rapid.inspektør
+                    .message(0)
+                    .toString(),
+            )
 
-            test.rapid.inspektør.size shouldBe 0
+            test.rapid.inspektør.size shouldBe 1
             verify { test.repository wasNot Called }
         }
 
         "svarer med manglende opplysninger når den andre tjenesten ikke har mottatt noen ennå" {
             val test = StartMigreringTest()
-            val migreringId = UUID.randomUUID()
+            val migreringId = test.startMigrering().migreringId
             val opplysning = Opplysning("Dagsats", 1500, LocalDate.of(2026, 11, 6), UUID.randomUUID())
             every {
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
             } returns listOf(MigreringOpplysning(opplysning, false, null))
 
-            test.rapid.sendTestMessage(migreringStartet(migreringId, listOf(opplysning.uuid)))
+            test.rapid.sendTestMessage(
+                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning.uuid)),
+            )
 
-            test.rapid.inspektør.size shouldBe 1
-            val svar = test.rapid.inspektør.message(0)
+            test.rapid.inspektør.size shouldBe 2
+            val svar = test.rapid.inspektør.message(1)
             svar["@event_name"].asString() shouldBe "migrering_startet"
             svar["migreringId"].asString() shouldBe migreringId.toString()
             svar["sakId"].asInt() shouldBe 12345
@@ -78,7 +87,8 @@ class StartMigreringMottakSpec :
 
         "sender både tidligere migrerte og nye opplysninger gjennom flere svarrunder" {
             val test = StartMigreringTest()
-            val migreringId = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a24e")
+            val migrering = test.startMigrering()
+            val migreringId = migrering.migreringId
             val dagsats =
                 Opplysning(
                     "Dagsats",
@@ -88,7 +98,6 @@ class StartMigreringMottakSpec :
                 )
             val samordnet =
                 Opplysning("Samordnet", false, null, UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a23c"))
-            val mapper = JsonMapper.builder().build()
             val markdown =
                 StringBuilder(
                     """
@@ -98,6 +107,7 @@ class StartMigreringMottakSpec :
                     Den andre tjenesten simuleres, og repository-et mockes.
                     Dokumentet viser hele JSON-meldingen i hvert steg, inkludert transportmetadata.
                     Variable tekstverdier i transportmetadata er erstattet med `<metadata>`.
+                    Den genererte migrerings-ID-en er erstattet med `<migreringId>`.
 
                     """.trimIndent(),
                 ).appendLine()
@@ -112,49 +122,57 @@ class StartMigreringMottakSpec :
                     MigreringOpplysning(samordnet, false, null),
                 )
 
-            val startMelding = migreringStartet(migreringId, opplysninger = emptyList())
+            test.rapid.inspektør.size shouldBe 1
+            val startMelding = test.rapid.inspektør.message(0)
+            startMelding["@event_name"].asString() shouldBe "migrering_startet"
+            startMelding["migreringId"].asString() shouldBe migreringId.toString()
+            startMelding["ident"].asString() shouldBe "testident"
+            startMelding["sakId"].asInt() shouldBe 12345
+            startMelding["simulering"].asBoolean() shouldBe true
+            startMelding["initiertAv"].asString() shouldBe "testbruker"
+            startMelding["migreringsTidspunkt"].asString() shouldBe "2026-11-06"
+            startMelding["opplysninger"].asArray().toList() shouldBe emptyList()
             markdown.dokumenterMelding(
                 "1. Migreringen starter uten opplysninger",
                 "Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket svarer ikke.",
-                mapper.readTree(startMelding),
+                startMelding,
             )
-            test.rapid.sendTestMessage(startMelding)
-            test.rapid.inspektør.size shouldBe 0
+            test.rapid.sendTestMessage(startMelding.toString())
+            test.rapid.inspektør.size shouldBe 1
+            verify(exactly = 0) { test.repository.hentManglendeOpplysningerForMigrering(any(), any()) }
 
-            val førsteForespørsel = migreringStartet(migreringId, listOf(dagsats.uuid))
+            val førsteForespørsel = svarMedManglendeOpplysninger(startMelding, listOf(dagsats.uuid))
             markdown.dokumenterMelding(
                 "2. Den andre tjenesten etterspør dagsats",
-                "Svaret har manglendeOpplysninger, men ingen opplysningsliste.",
-                mapper.readTree(førsteForespørsel),
+                "Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme opplysningslisten.",
+                dokumentasjonMapper.readTree(førsteForespørsel),
             )
             test.rapid.sendTestMessage(førsteForespørsel)
-            test.rapid.inspektør.size shouldBe 1
+            test.rapid.inspektør.size shouldBe 2
+            val førsteSvar = test.rapid.inspektør.message(1)
             markdown.dokumenterMelding(
                 "3. Mottaket sender dagsats",
                 "Mottaket henter dagsats fra repository-et, publiserer den og markerer den som migrert.",
-                test.rapid.inspektør.message(0),
+                førsteSvar,
             )
-            test.rapid.inspektør
-                .message(0)["opplysninger"]
+            førsteSvar["migreringId"].asString() shouldBe migreringId.toString()
+            førsteSvar["manglendeOpplysninger"].isNull shouldBe true
+            førsteSvar["opplysninger"]
                 .asArray()
                 .toList()
                 .map { it["uuid"].asString() } shouldBe listOf(dagsats.uuid.toString())
 
             val andreForespørsel =
-                migreringStartet(
-                    migreringId,
-                    manglendeOpplysninger = listOf(samordnet.uuid),
-                    opplysninger = listOf(dagsats),
-                )
+                svarMedManglendeOpplysninger(førsteSvar, listOf(samordnet.uuid))
             markdown.dokumenterMelding(
                 "4. Den andre tjenesten etterspør samordning",
                 "Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samordning.",
-                mapper.readTree(andreForespørsel),
+                dokumentasjonMapper.readTree(andreForespørsel),
             )
             test.rapid.sendTestMessage(andreForespørsel)
 
-            test.rapid.inspektør.size shouldBe 2
-            val svar = test.rapid.inspektør.message(1)
+            test.rapid.inspektør.size shouldBe 3
+            val svar = test.rapid.inspektør.message(2)
             markdown.dokumenterMelding(
                 "5. Mottaket sender tidligere migrerte og nye opplysninger",
                 "Repository-et returnerer både tidligere migrert dagsats og etterspurt samordning. " +
@@ -193,21 +211,23 @@ class StartMigreringMottakSpec :
 
         "behandler ikke sitt eget svar på nytt" {
             val test = StartMigreringTest()
-            val migreringId = UUID.randomUUID()
+            val migreringId = test.startMigrering().migreringId
             val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
             every {
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
             } returns listOf(MigreringOpplysning(opplysning, false, null))
-            test.rapid.sendTestMessage(migreringStartet(migreringId, listOf(opplysning.uuid)))
-            test.rapid.inspektør.size shouldBe 1
+            test.rapid.sendTestMessage(
+                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning.uuid)),
+            )
+            test.rapid.inspektør.size shouldBe 2
 
             test.rapid.sendTestMessage(
                 test.rapid.inspektør
-                    .message(0)
+                    .message(1)
                     .toString(),
             )
 
-            test.rapid.inspektør.size shouldBe 1
+            test.rapid.inspektør.size shouldBe 2
             verify(exactly = 1) {
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
@@ -216,62 +236,73 @@ class StartMigreringMottakSpec :
 
         "svarer ikke når start migrering er deaktivert" {
             val test = StartMigreringTest()
+            test.startMigrering()
+            test.rapid.inspektør.size shouldBe 1
+            clearMocks(test.repository, answers = false)
             skruAvFeatures()
 
-            test.rapid.sendTestMessage(migreringStartet(manglendeOpplysninger = listOf(UUID.randomUUID())))
+            test.rapid.sendTestMessage(
+                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(UUID.randomUUID())),
+            )
 
-            test.rapid.inspektør.size shouldBe 0
+            test.rapid.inspektør.size shouldBe 1
             verify { test.repository wasNot Called }
         }
     })
 
 private class StartMigreringTest {
     val rapid = TestRapid()
+    private val arenaRepository = mockk<ArenaRepository>()
     val repository = mockk<MigreringRepository>()
+    private val mediator =
+        MigreringMediator(
+            arenaRepository = arenaRepository,
+            migreringRepository = repository,
+            rapidsConnection = rapid,
+        )
 
     init {
+        every { arenaRepository.hentIdentForSak(12345) } returns "testident"
+        every { arenaRepository.hentSakTilMigrering(12345) } returns
+            ArenaSakMigrering(
+                vilkaarsVurderinger = emptyList(),
+                vedtakfakta = emptyList(),
+                personopplysninger = emptyList(),
+                personFodselsdatoMigrering = emptyList(),
+                rettighetstype = emptyList(),
+                forbrukteDagerDP = emptyList(),
+                forbrukteDagerPERM = emptyList(),
+                forbrukteDagerFISK = emptyList(),
+                tidsbegrensetVedtak = emptyList(),
+            )
+        every { repository.lagre(any()) } just Runs
+        every { repository.lagreOpplysninger(any(), any()) } just Runs
         every { repository.markereOpplysningerSomMigrert(any(), any()) } just Runs
         StartMigreringMottak(
             rapidsConnection = rapid,
-            migreringMediator =
-                MigreringMediator(
-                    arenaRepository = mockk(),
-                    migreringRepository = repository,
-                    rapidsConnection = rapid,
-                ),
+            migreringMediator = mediator,
         )
     }
+
+    suspend fun startMigrering(): Migrering =
+        mediator.startMigrering(
+            sakId = 12345,
+            initiertAv = "testbruker",
+            simulering = true,
+            migreringsTidspunkt = LocalDate.of(2026, 11, 6),
+        )
 }
 
-private fun migreringStartet(
-    migreringId: UUID = UUID.randomUUID(),
-    manglendeOpplysninger: List<UUID>? = null,
-    opplysninger: List<Opplysning<*>>? = null,
+private fun svarMedManglendeOpplysninger(
+    melding: JsonNode,
+    manglendeOpplysninger: List<UUID>,
 ): String =
-    JsonMessage
-        .newMessage(
-            "migrering_startet",
-            buildMap {
-                put("migreringId", migreringId.toString())
-                put("sakId", 12345)
-                put("simulering", true)
-                put("initiertAv", "testbruker")
-                manglendeOpplysninger?.let { put("manglendeOpplysninger", it.map(UUID::toString)) }
-                opplysninger?.let {
-                    put(
-                        "opplysninger",
-                        it.map { opplysning ->
-                            mapOf(
-                                "navn" to opplysning.navn,
-                                "verdi" to opplysning.verdi,
-                                "gyldigFraOgMed" to opplysning.gyldigFraOgMed?.toString(),
-                                "uuid" to opplysning.uuid.toString(),
-                            )
-                        },
-                    )
-                }
-            },
-        ).toJson()
+    dokumentasjonMapper
+        .readTree(melding.toString())
+        .asObject()
+        .apply {
+            replace("manglendeOpplysninger", dokumentasjonMapper.valueToTree(manglendeOpplysninger.map(UUID::toString)))
+        }.toString()
 
 private fun StringBuilder.dokumenterMelding(
     tittel: String,
@@ -306,7 +337,14 @@ private fun normaliserMetadata(
         melding.isObject -> {
             dokumentasjonMapper.createObjectNode().apply {
                 melding.properties().sortedBy { it.key }.forEach { (navn, verdi) ->
-                    replace(navn, normaliserMetadata(verdi, metadata || navn in metadataFelter))
+                    replace(
+                        navn,
+                        if (navn == "migreringId") {
+                            dokumentasjonMapper.valueToTree<JsonNode>("<migreringId>")
+                        } else {
+                            normaliserMetadata(verdi, metadata || navn in metadataFelter)
+                        },
+                    )
                 }
             }
         }
