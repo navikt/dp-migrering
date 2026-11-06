@@ -46,12 +46,17 @@ components:
     StartMigreringRequest:
       type: object
       properties:
+        migreringsTidspunkt:
+          type: string
+          format: date
+          description: Dato for når migreringen skal kjøres.
         simulering:
           type: boolean
           description: Om migreringen skal kjøres i simuleringsmodus.
           default: false
       required:
         - simulering
+        - migreringsTidspunkt
 
     StartMigreringResponse:
       type: object

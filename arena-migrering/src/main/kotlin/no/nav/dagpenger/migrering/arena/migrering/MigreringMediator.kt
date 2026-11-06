@@ -9,6 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
 import tools.jackson.databind.node.NullNode
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -21,6 +22,7 @@ class MigreringMediator(
         sakId: Int,
         initiertAv: String,
         simulering: Boolean,
+        migreringsTidspunkt: LocalDate,
     ): Migrering {
         arenaRepository.hentIdentForSak(sakId)
         val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
@@ -31,6 +33,7 @@ class MigreringMediator(
                 ident = arenaRepository.hentIdentForSak(sakId),
                 initiertAv = initiertAv,
                 simulering = simulering,
+                migreringsTidspunkt = migreringsTidspunkt,
             )
         migreringRepository.lagre(migrering)
 
@@ -68,6 +71,7 @@ class MigreringMediator(
                     "migrering_startet",
                     mapOf(
                         "sakId" to migrering.sakId,
+                        "migreringsTidspunkt" to migrering.migreringsTidspunkt.toString(),
                         "simulering" to migrering.simulering,
                         "initiertAv" to migrering.initiertAv,
                         "ident" to migrering.ident,
