@@ -52,7 +52,7 @@ internal class ApplicationBuilder(
                 MigreringMediator(
                     arenaRepository = ArenaRepository(dataSource),
                     migreringRepository = MigreringRepositoryPostgres(postgresSession),
-                    rapidsConnection = rapidsConnection,
+                    rapidsConnection = rapid,
                 )
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),
