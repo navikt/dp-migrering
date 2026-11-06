@@ -30,7 +30,6 @@ class OppfyllerKravRegistrertArbeidssoker : OpplysningProdusent<Boolean> {
             verdi = verdi(personopplysninger?.verdi),
             gyldigFraOgMed = personopplysninger?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

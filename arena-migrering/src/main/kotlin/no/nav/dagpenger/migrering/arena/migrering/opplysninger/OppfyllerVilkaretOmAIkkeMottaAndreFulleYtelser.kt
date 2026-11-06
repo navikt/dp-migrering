@@ -16,6 +16,5 @@ class OppfyllerVilkaretOmAIkkeMottaAndreFulleYtelser : OpplysningProdusent<Boole
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

@@ -23,6 +23,5 @@ class DatoBrukerRegistrerteSegIVertsland : OpplysningProdusent<Date> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

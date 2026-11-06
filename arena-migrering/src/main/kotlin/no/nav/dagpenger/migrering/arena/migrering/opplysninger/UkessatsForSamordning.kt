@@ -29,7 +29,6 @@ class UkessatsForSamordning : OpplysningProdusent<Int> {
             verdi = verdi(vedtakfakta?.verdi),
             gyldigFraOgMed = vedtakfakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

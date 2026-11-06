@@ -17,5 +17,6 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
     testImplementation(libs.rapids.and.rivers.test)
+    testImplementation(libs.mockk)
     testImplementation("com.approvaltests:approvaltests:31.0.0")
 }

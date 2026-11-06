@@ -28,7 +28,6 @@ class Samordnet : OpplysningProdusent<Boolean> {
             verdi = verdi(vedtakfakta?.verdi),
             gyldigFraOgMed = vedtakfakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

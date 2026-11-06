@@ -29,7 +29,6 @@ class BrukerBlirPavirketAvStreikEllerLockOut : OpplysningProdusent<Boolean> {
             verdi = verdi(fakta?.verdi),
             gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

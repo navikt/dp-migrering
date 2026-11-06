@@ -31,7 +31,6 @@ class AntallStonadsuker : OpplysningProdusent<Int> {
             verdi = fakta?.verdi?.toInt(),
             gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 }

@@ -16,6 +16,5 @@ class HarGittAlleNodvendigeOpplysninger : OpplysningProdusent<Boolean> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

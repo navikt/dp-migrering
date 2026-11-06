@@ -23,7 +23,6 @@ class ForskutterteLonnsgarantimidlerIFormAvDagpenger : OpplysningProdusent<Boole
             verdi = opplysning != null,
             gyldigFraOgMed = opplysning?.gyldigFra ?: gyldigFra?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 }

@@ -24,6 +24,5 @@ class BruktBeregningsregel : OpplysningProdusent<String> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

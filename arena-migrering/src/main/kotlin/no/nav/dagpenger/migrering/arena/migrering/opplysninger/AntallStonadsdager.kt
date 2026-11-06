@@ -31,7 +31,6 @@ class AntallStonadsdager : OpplysningProdusent<Int> {
             verdi = fakta?.verdi?.toInt()?.times(5),
             gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 }

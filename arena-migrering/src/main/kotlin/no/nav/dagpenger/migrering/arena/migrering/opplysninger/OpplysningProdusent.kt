@@ -14,6 +14,8 @@ interface OpplysningProdusent<T : Any> {
     val opplysningsType: Class<T>
     val aktiv: Boolean
     val rolle: Rolle
+    val pakrevd: Boolean
+        get() = true
 
     enum class Rolle {
         Fakta,

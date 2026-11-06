@@ -22,6 +22,5 @@ class HarRettTilOrdinæreDagpengerGjennomArbeidsforhold : OpplysningProdusent<Bo
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

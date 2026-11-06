@@ -26,7 +26,6 @@ class OppfyllerKravetTilAlder : OpplysningProdusent<Boolean> {
             verdi = verdi(vilkaar?.verdi),
             gyldigFraOgMed = vilkaar?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

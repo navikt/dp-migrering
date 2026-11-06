@@ -20,7 +20,6 @@ class Fodselsdato : OpplysningProdusent<LocalDate> {
             verdi = opplysning?.verdi,
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 }

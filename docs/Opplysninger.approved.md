@@ -28,7 +28,7 @@
 |0194881f-943f-78d9-b874-00a4944c54ef|Egenandel|int|-|Fakta|true|
 |019e82fc-04e7-7f8d-bd52-6a7041ebb15f|Er ilagt sanskjonsperiode ved selvforskyldt arbeidsløshet|boolean|-|Fakta|false|
 |019df9b1-7052-72e9-9232-547f7cb6ba60|Er ilagt tidsbegrenset bortfall av dagpenger|boolean|-|Fakta|false|
-|0194881f-9435-72a8-b1ce-9575cbc2a76a|Fastsatt arbeidstid per uke for tap|int|-|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a76a|Fastsatt arbeidstid per uke for tap|double|-|Fakta|true|
 |0194881f-940b-76ff-acf5-ba7bcb367233|Fødselsdato|LocalDate|-|Fakta|true|
 |01973a27-d8b3-7ffd-a81a-a3826963b079|Forbrukt egenandel|int|-|Fakta|false|
 |0194881f-9433-70e9-a85b-c246150c45d2|Foreldrepenger etter lovens kapittel 14|boolean|-|Fakta|false|

@@ -11,7 +11,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import no.nav.dagpenger.arena.migrering.api.models.StartMigreringDTO
+import no.nav.dagpenger.arena.migrering.api.models.StartMigreringRequest
+import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
 import no.nav.dagpenger.migrering.api.FeatureNotEnabledException
 import no.nav.dagpenger.migrering.api.oidcToken
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
@@ -26,30 +27,28 @@ internal fun Application.arenaMigreringApi(orchestrator: MigreringMediator) {
             get { call.respond(HttpStatusCode.OK) }
 
             authenticate("azureAd") {
-                get("/sak/{sakId}") {
-                    val sakId = call.parameters["sakId"]?.toInt() ?: throw BadRequestException("SakId mangler")
-
-                    if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
-                        val message =
-                            orchestrator.hentMigreringGrunnlag(sakId = sakId, initiertAv = call.oidcToken().navIdent())
-                        call.respond(
-                            status = HttpStatusCode.OK,
-                            message = message,
-                        )
-                    } else {
-                        throw FeatureNotEnabledException(
-                            message = "Feature for å starte migrering er deaktivert",
-                        )
-                    }
-                }
-
                 post("/sak/{sakId}") {
                     val sakId = call.parameters["sakId"]?.toInt() ?: throw BadRequestException("SakId mangler")
 
                     if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
-                        val startMigreringDTO = call.receive<StartMigreringDTO>()
-                        orchestrator.startMigrering(startMigreringDTO)
-                        call.respond(HttpStatusCode.Accepted)
+                        val startMigreringDTO = call.receive<StartMigreringRequest>()
+                        val migrering =
+                            orchestrator.startMigrering(
+                                sakId = sakId,
+                                initiertAv = call.oidcToken().navIdent(),
+                                simulering = startMigreringDTO.simulering,
+                            )
+                        call.respond(
+                            HttpStatusCode.Created,
+                            StartMigreringResponse(
+                                sakId = sakId,
+                                migreringId = migrering.migreringId,
+                                simulering = migrering.simulering,
+                                initiertAv = migrering.initiertAv,
+                                ident = migrering.ident,
+                                migreringsTidspunkt = migrering.opprettet,
+                            ),
+                        )
                     } else {
                         throw FeatureNotEnabledException(
                             message = "Feature for å starte migrering er deaktivert",

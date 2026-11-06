@@ -101,4 +101,5 @@ object Opplysninger {
             UtfallEtterSamordning(),
             VilligTilABytteYrke(),
         )
+    val aktiveProdusenter: List<OpplysningProdusent<*>> = produsenter.filter { it.aktiv }
 }
