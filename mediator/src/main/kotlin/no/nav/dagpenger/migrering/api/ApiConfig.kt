@@ -6,7 +6,7 @@ import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.jwt
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.arena.innsyn.arenaInnsynApi
-import no.nav.dagpenger.migrering.arena.migrering.MigreringsOrchestrator
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.arenaMigreringApi
 import javax.sql.DataSource
 
@@ -22,13 +22,13 @@ internal fun Application.authenticationConfig(authFactory: AuthFactory) {
 
 internal fun Application.apiConfig(
     authFactory: AuthFactory,
-    migreringsOrchestrator: MigreringsOrchestrator,
+    migreringMediator: MigreringMediator,
     dataSource: Lazy<DataSource>,
 ) {
     authenticationConfig(authFactory)
 
     arenaInnsynApi(dataSource = dataSource)
     arenaMigreringApi(
-        orchestrator = migreringsOrchestrator,
+        orchestrator = migreringMediator,
     )
 }

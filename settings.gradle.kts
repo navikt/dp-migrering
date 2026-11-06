@@ -7,7 +7,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("no.nav.dagpenger:dp-version-catalog:20261022.323")
+            from("no.nav.dagpenger:dp-version-catalog:20261105.332")
         }
     }
 }
@@ -21,3 +21,5 @@ include("konfigurasjon")
 include("arena-innsyn")
 include("arena-migrering")
 include("arena-statisikk")
+include("uuid-v7")
+include("behandling-kontrakt")

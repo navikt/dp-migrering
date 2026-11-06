@@ -5,17 +5,20 @@ import io.ktor.server.application.Application
 import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.swagger.swaggerUI
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import no.nav.dagpenger.arena.migrering.api.models.StartMigreringRequest
+import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
 import no.nav.dagpenger.migrering.api.FeatureNotEnabledException
 import no.nav.dagpenger.migrering.api.oidcToken
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
-internal fun Application.arenaMigreringApi(orchestrator: MigreringsOrchestrator) {
+internal fun Application.arenaMigreringApi(orchestrator: MigreringMediator) {
     routing {
         route("/arena/migrering") {
             swaggerUI(path = "openapi", swaggerFile = "arena-migrering-api.yaml", {
@@ -28,11 +31,23 @@ internal fun Application.arenaMigreringApi(orchestrator: MigreringsOrchestrator)
                     val sakId = call.parameters["sakId"]?.toInt() ?: throw BadRequestException("SakId mangler")
 
                     if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
-                        val message =
-                            orchestrator.initierMigrering(sakId = sakId, initiertAv = call.oidcToken().navIdent())
+                        val startMigreringDTO = call.receive<StartMigreringRequest>()
+                        val migrering =
+                            orchestrator.startMigrering(
+                                sakId = sakId,
+                                initiertAv = call.oidcToken().navIdent(),
+                                simulering = startMigreringDTO.simulering,
+                            )
                         call.respond(
-                            status = HttpStatusCode.OK,
-                            message = message,
+                            HttpStatusCode.Created,
+                            StartMigreringResponse(
+                                sakId = sakId,
+                                migreringId = migrering.migreringId,
+                                simulering = migrering.simulering,
+                                initiertAv = migrering.initiertAv,
+                                ident = migrering.ident,
+                                migreringsTidspunkt = migrering.opprettet,
+                            ),
                         )
                     } else {
                         throw FeatureNotEnabledException(

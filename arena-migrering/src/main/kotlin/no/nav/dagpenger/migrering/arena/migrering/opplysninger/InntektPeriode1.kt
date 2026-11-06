@@ -5,6 +5,10 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class InntektPeriode1 : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = true
+    override val opplysningsType: Class<Int> = Int::class.java
+
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
     }
@@ -13,16 +17,19 @@ class InntektPeriode1 : OpplysningProdusent<Int> {
     override val opplysningsNavn: String = "Utbetalt inntekt periode 1"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
-        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.filter { vedtakfakta -> vedtakfakta.kode == "INTSISTE" }
-        if (vedtakfakta.size == 1) {
-            return Opplysning(
-                navn = opplysningsNavn,
-                verdi = verdi(vedtakfakta.first().verdi),
-                gyldigFraOgMed = vedtakfakta.first().gyldigFra,
-                uuid = opplysningsId,
-            )
+        val vedtakfakta =
+            kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "INTSISTE" }
+
+        if (vedtakfakta == null) {
+            vedManglendeOpplysning()
         }
-        throw IllegalArgumentException("Klarte ikke å finne Utbetalt inntekt periode 1")
+
+        return Opplysning(
+            navn = opplysningsNavn,
+            verdi = verdi(vedtakfakta?.verdi),
+            gyldigFraOgMed = vedtakfakta?.gyldigFra,
+            uuid = opplysningsId,
+        )
     }
 
     private fun verdi(verdi: String?): Int? = verdi?.toInt()
