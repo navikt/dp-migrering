@@ -1,0 +1,29 @@
+create table if not exists migrering
+(
+    migrering_id uuid    NOT NULL PRIMARY KEY,
+    ident        TEXT    NOT NULL,
+    sak_id       NUMERIC NOT NULL,
+    initiert_av  TEXT    NOT NULL,
+    opprettet    TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+create table if not exists migrering_opplysninger
+(
+    migrering_id uuid REFERENCES migrering (migrering_id),
+    opplysninger_id uuid NOT NULL,
+    migrert bool default false,
+    migrert_tidspunkt TIMESTAMP WITH TIME ZONE,
+    opplysning jsonb NOT NULL,
+    CONSTRAINT migrering_opplysninger_pk PRIMARY KEY (migrering_id, opplysninger_id),
+    CONSTRAINT unik_kobling UNIQUE (migrering_id, opplysninger_id)
+);
+
+-- create table if not exists migrering_hendelse
+-- (
+--     id           BIGSERIAL PRIMARY KEY,
+--     migrering_id uuid  NOT NULL,
+--     melding_id   uuid  NOT NULL UNIQUE,
+--     melding_type TEXT  NOT NULL,
+--     melding      jsonb NOT NULL
+-- );
+

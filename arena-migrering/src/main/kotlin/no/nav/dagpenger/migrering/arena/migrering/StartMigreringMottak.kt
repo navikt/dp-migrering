@@ -6,11 +6,14 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
+import no.nav.dagpenger.migrering.konfigurasjon.Feature
+import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
-class MigreringMottak(
+class StartMigreringMottak(
     rapidsConnection: RapidsConnection,
-//    private val migreringRepository: MigreringRepository,
+    private val migreringMediator: MigreringMediator,
 ) : River.PacketListener {
     companion object {
         private val logger = KotlinLogging.logger {}
@@ -19,27 +22,17 @@ class MigreringMottak(
     init {
         River(rapidsConnection)
             .apply {
-                precondition {
-                    it.requireAny(
-                        "@event_name",
-                        listOf(
-                            "migrering_startet",
-                            "migrering_feilet",
-                            "behandling_opprettet",
-                            "behandling_avbrutt",
-                            "forslag_til_behandlingsresultat",
-                        ),
-                    )
-                }
+                precondition { it.requireValue("@event_name", "migrering_startet") }
+
+// //                            "migrering_feilet",
+// //                            "behandling_opprettet",
+// //                            "behandling_avbrutt",
+// //                            "forslag_til_behandlingsresultat",
+
                 validate {
-                    it.interestedIn(
-                        "sakId",
-                        "ident",
+                    it.requireKey(
+                        "manglendeOpplysninger",
                         "migreringId",
-                        "initiertAv",
-                        "opplysninger",
-                        "arsak",
-                        "@id",
                     )
                 }
             }.register(this)
@@ -51,11 +44,13 @@ class MigreringMottak(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        val eventName = packet["@event_name"].asString()
-        val sakId = packet["sakId"].asInt()
-
-        logger.info { "Mottok $eventName for sakId=$sakId" }
-
-        // migreringRepository.lagre(packet)
+        if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
+            withLoggingContext(
+                "migreringId" to packet["migreringId"].asString(),
+            ) {
+                logger.info { "Mottok melding om manglende opplysninger for migrering" }
+                migreringMediator.svarManglendeOpplysninger(packet)
+            }
+        }
     }
 }

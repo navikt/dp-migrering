@@ -111,10 +111,26 @@ class ArenaRepository(
                 WHERE  s.sak_id = :sakId
                 AND    s.tabellnavnalias = 'PERS'
                 AND    s.objekt_id = p.person_id 
-                UNION ALL
-                SELECT 'FODSELSDATO'                         AS kolonne
-                     , TO_CHAR(p.fodselsdato, 'YYYY-MM-DD')  AS kolonneverdi 
-                     , p.mod_dato
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaPersonMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("kolonneverdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    fun hentFodselsdatoPerson(sakId: Int): List<ArenaSakMigrering.ArenaPersonFodselsdatoMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'FODSELSDATO'   AS kolonne
+                     , p.fodselsdato   AS kolonneverdi 
+                     , p.dato_fra      AS mod_dato
                 FROM   person p
                      , sak s
                 WHERE  s.sak_id = :sakId
@@ -123,9 +139,9 @@ class ArenaRepository(
                 """.trimIndent(),
                 mapOf("sakId" to sakId),
             ) { row ->
-                ArenaSakMigrering.ArenaPersonMigrering(
+                ArenaSakMigrering.ArenaPersonFodselsdatoMigrering(
                     kode = row.string("kolonne"),
-                    verdi = row.string("kolonneverdi"),
+                    verdi = row.localDate("kolonneverdi"),
                     gyldigFra = row.localDate("mod_dato"),
                 )
             }
@@ -231,6 +247,7 @@ class ArenaRepository(
             vilkaarsVurderinger = hentVilkaarvurdering(sakId),
             vedtakfakta = hentVedtakfakta(sakId),
             personopplysninger = hentPersonInfo(sakId),
+            personFodselsdatoMigrering = hentFodselsdatoPerson(sakId),
             tidsbegrensetVedtak = emptyList(),
             rettighetstype = hentRettighetkode(sakId),
             forbrukteDagerDP = hentAntallForbrukteDagerDP(sakId),

@@ -4,6 +4,9 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class HarGittAlleNodvendigeOpplysninger : OpplysningProdusent<Boolean> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = false
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("01a01e21-17ce-70c4-aac1-d25c30ecfac9")
     override val opplysningsNavn: String = "Har gitt alle nødvendige opplysninger?"
 

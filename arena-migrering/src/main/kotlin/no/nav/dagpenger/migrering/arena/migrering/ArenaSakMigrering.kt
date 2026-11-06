@@ -6,6 +6,7 @@ data class ArenaSakMigrering(
     val vilkaarsVurderinger: List<ArenaVilkaarMigrering>,
     val vedtakfakta: List<ArenaVedtakfaktaMigrering>,
     val personopplysninger: List<ArenaPersonMigrering>,
+    val personFodselsdatoMigrering: List<ArenaPersonFodselsdatoMigrering>,
     val rettighetstype: List<ArenaRetttighetstypeMigrering>,
     val forbrukteDagerDP: List<ArenaForbrukteDagerMigrering>,
     val forbrukteDagerPERM: List<ArenaForbrukteDagerMigrering>,
@@ -28,6 +29,12 @@ data class ArenaSakMigrering(
         val kode: String,
         val verdi: String,
         val gyldigFra: LocalDate,
+    )
+
+    data class ArenaPersonFodselsdatoMigrering(
+        val kode: String,
+        val verdi: LocalDate?,
+        val gyldigFra: LocalDate?,
     )
 
     data class ArenaRetttighetstypeMigrering(

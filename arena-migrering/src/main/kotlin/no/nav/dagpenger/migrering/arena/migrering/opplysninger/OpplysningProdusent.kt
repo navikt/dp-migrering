@@ -11,10 +11,22 @@ interface OpplysningProdusent<T : Any> {
 
     val opplysningsId: UUID
     val opplysningsNavn: String
+    val opplysningsType: Class<T>
+    val aktiv: Boolean
+    val rolle: Rolle
+    val pakrevd: Boolean
+        get() = true
+
+    enum class Rolle {
+        Fakta,
+        Resultat,
+    }
 
     suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>
 
     fun vedManglendeOpplysning() {
         logger.info { "Fant ikke opplysning: $opplysningsNavn ($opplysningsId)" }
     }
+
+    fun type(): Class<T> = opplysningsType
 }

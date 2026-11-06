@@ -69,6 +69,7 @@ internal class PostgresDataSourceBuilder {
                 .configure()
                 .connectRetries(10)
                 .dataSource(it)
+                .locations("classpath:flyway/migrering")
                 .load()
                 .migrate()
         }

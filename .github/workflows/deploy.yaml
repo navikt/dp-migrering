@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-java@v6.1.0
         with:
           distribution: temurin
-          java-version: 26.0.2+10
+          java-version: 25.0.5+8.0.LTS
       - uses: gradle/actions/wrapper-validation@v6.4.1
       - uses: gradle/actions/setup-gradle@v6.4.1
         id: build
@@ -61,21 +61,21 @@ jobs:
           VARS: .nais/vars-dev.yaml
           PRINT_PAYLOAD: true
 
-#  deploy-prod:
-#    name: Deploy to Production
-#    needs: [ build ]
-#    if: github.ref == 'refs/heads/main'
-#    runs-on: ubuntu-latest
-#    environment: prod-fss
-#    permissions:
-#      contents: "read"
-#      id-token: "write"
-#    steps:
-#      - uses: actions/checkout@v7.0.1
-#      - uses: nais/deploy/actions/deploy@v2
-#        env:
-#          CLUSTER: prod-fss
-#          RESOURCE: .nais/nais.yaml,.nais/unleash.yaml
-#          VAR: image=${{ needs.build.outputs.image }},unleashEnvironment=production
-#          VARS: .nais/vars-prod.yaml
-#          PRINT_PAYLOAD: true
+  deploy-prod:
+    name: Deploy to Production
+    needs: [ build ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod-gcp
+    permissions:
+      contents: "read"
+      id-token: "write"
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais.yaml,.nais/unleash.yaml
+          VAR: image=${{ needs.build.outputs.image }},unleashEnvironment=production
+          VARS: .nais/vars-prod.yaml
+          PRINT_PAYLOAD: true

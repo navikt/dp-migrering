@@ -4,6 +4,9 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class OppfyllerKravTilIkkeUtestengt : OpplysningProdusent<Boolean> {
+    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val aktiv: Boolean = false
+    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-9447-7e36-a569-3e9f42bff9f7")
     override val opplysningsNavn: String = "Oppfyller krav til ikke utestengt"
 

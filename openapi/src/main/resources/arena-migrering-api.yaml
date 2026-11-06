@@ -10,31 +10,6 @@ servers:
     description: dev
 paths:
   /arena/migrering/sak/{sakId}:
-    get:
-      summary: Henter datagrunnlag for migrering av en sak fra Arena
-      parameters:
-        - name: sakId
-          in: path
-          required: true
-          schema:
-            type: string
-      tags:
-        - Arena migrering
-      security:
-        - azureAd: [ ]
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MigreringGrunnlag"
-        default:
-          description: Feil ved henting av datagrunnlag for migrering
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/HttpProblem"
     post:
       summary: Starter migrering av en sak fra Arena
       parameters:
@@ -52,10 +27,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/StartMigrering"
+              $ref: "#/components/schemas/StartMigreringRequest"
       responses:
-        "202":
-          description: Accepted
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StartMigreringResponse"
         default:
           description: Feil ved start av migrering
           content:
@@ -64,15 +43,17 @@ paths:
                 $ref: "#/components/schemas/HttpProblem"
 components:
   schemas:
-    Any:
-      description: Opplysningens verdi. Typen avhenger av opplysningen.
-      anyOf:
-        - type: string
-        - type: number
-        - type: boolean
-        - type: integer
+    StartMigreringRequest:
+      type: object
+      properties:
+        simulering:
+          type: boolean
+          description: Om migreringen skal kjøres i simuleringsmodus.
+          default: false
+      required:
+        - simulering
 
-    MigreringGrunnlag:
+    StartMigreringResponse:
       type: object
       properties:
         sakId:
@@ -80,111 +61,25 @@ components:
         migreringId:
           type: string
           format: uuid
+        simulering:
+          type: boolean
+          description: Om migreringen skal kjøres i simuleringsmodus.
+          default: false
         initiertAv:
           type: string
         ident:
           description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
           type: string
           pattern: "^[0-9]{11}$"
-        innvilgetFraOgMed:
+        migreringsTidspunkt:
           type: string
-          format: date
-        innvilgetTilOgMed:
-          type: string
-          format: date
-        opplysninger:
-          type: array
-          items:
-            $ref: "#/components/schemas/MigreringGrunnlagOpplysning"
+          format: date-time
       required:
         - sakId
         - migreringId
         - initiertAv
         - ident
-        - innvilgetFraOgMed
-        - opplysninger
-
-    MigreringGrunnlagOpplysning:
-      type: object
-      properties:
-        navn:
-          type: string
-        verdi:
-          $ref: "#/components/schemas/MigreringGrunnlagOpplysningVerdi"
-        gyldigFraOgMed:
-          type: string
-          format: date
-        uuid:
-          type: string
-          format: uuid
-      required:
-        - navn
-        - uuid
-
-    MigreringGrunnlagOpplysningVerdi:
-      type: object
-      properties:
-        verdi:
-          $ref: "#/components/schemas/Any"
-        type:
-          type: string
-          enum:
-            - date
-            - string
-            - integer
-            - float
-            - boolean
-      required:
-        - type
-
-
-    StartMigrering:
-      type: object
-      properties:
-        sakId:
-          type: integer
-        migreringId:
-          type: string
-          format: uuid
-        initiertAv:
-          type: string
-        ident:
-          description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
-          type: string
-          pattern: "^[0-9]{11}$"
-        innvilgetFraOgMed:
-          type: string
-          format: date
-        innvilgetTilOgMed:
-          type: string
-          format: date
-        opplysninger:
-          type: array
-          items:
-            $ref: "#/components/schemas/StartMigreringOpplysning"
-      required:
-        - sakId
-        - migreringId
-        - initiertAv
-        - ident
-        - innvilgetFraOgMed
-        - opplysninger
-
-    StartMigreringOpplysning:
-      type: object
-      properties:
-        verdi:
-          $ref: "#/components/schemas/Any"
-        gyldigFraOgMed:
-          type: string
-          format: date
-        uuid:
-          type: string
-          format: uuid
-      required:
-        - verdi
-        - gyldigFraOgMed
-        - uuid
+        - simulering
 
     HttpProblem:
       type: object
