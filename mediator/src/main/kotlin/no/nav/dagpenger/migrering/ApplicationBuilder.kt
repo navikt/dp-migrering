@@ -32,7 +32,7 @@ internal class ApplicationBuilder(
     }
 
     private val dataSource = OracleDataSourceBuilder().dataSource
-    private val postgresSession = PostgresDataSourceBuilder().dbsession
+    private val postgresDataSourceBuilder = PostgresDataSourceBuilder()
 
     private val rapidsConnection: RapidsConnection =
         RapidApplication.create(
@@ -51,7 +51,7 @@ internal class ApplicationBuilder(
             val migreringMediator =
                 MigreringMediator(
                     arenaRepository = ArenaRepository(dataSource),
-                    migreringRepository = MigreringRepositoryPostgres(postgresSession),
+                    migreringRepository = MigreringRepositoryPostgres(postgresDataSourceBuilder.dbsession),
                     rapidsConnection = rapid,
                 )
             server.application.apiConfig(
@@ -75,6 +75,8 @@ internal class ApplicationBuilder(
 
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-migrering" }
+
+        postgresDataSourceBuilder.runMigration()
 
         OppdaterMenneskerMetrikk.start(ArenaStatistikkRepository(dataSource))
     }
