@@ -26,17 +26,17 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
     implementation("com.oracle.database.jdbc:ojdbc11:23.26.4.0.0")
-    implementation(libs.hikari)
     implementation(libs.kotlinquery)
     implementation(libs.konfig)
     implementation(libs.kotlin.logging)
-    implementation(libs.flyway)
     implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.33.1")
     implementation("io.opentelemetry:opentelemetry-api:1.67.0")
     implementation("io.prometheus:prometheus-metrics-core:1.10.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.2")
     implementation("org.slf4j:slf4j-api:2.0.20")
     implementation("ch.qos.logback:logback-classic:1.6.6")
+
+    implementation(libs.bundles.postgres)
 
     implementation(libs.bundles.ktor.client)
     implementation(libs.bundles.ktor.server)
@@ -47,9 +47,6 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:${libs.versions.ktor.get()}")
     implementation("io.ktor:ktor-server-metrics-micrometer:${libs.versions.ktor.get()}")
     implementation("io.ktor:ktor-serialization-jackson3:${libs.versions.ktor.get()}")
-
-    runtimeOnly("org.postgresql:postgresql:42.7.14")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:${libs.versions.flyway.get()}")
 
     testImplementation("io.kotest:kotest-assertions-core-jvm:${libs.versions.kotest.get()}")
     testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
