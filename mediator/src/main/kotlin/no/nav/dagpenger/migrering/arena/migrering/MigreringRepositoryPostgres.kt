@@ -1,9 +1,11 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
+import kotliquery.TransactionalSession
 import kotliquery.queryOf
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.db.DatabaseSession
 import no.nav.dagpenger.migrering.objectMapper
+import org.postgresql.util.PGobject
 import java.util.UUID
 
 class MigreringRepositoryPostgres(
@@ -11,7 +13,7 @@ class MigreringRepositoryPostgres(
 ) : MigreringRepository {
 //    private fun <R> session(block: (Session) -> R): R = sessionOf(dataSource.value).use(block)
 
-    override fun lagre(message: Migrering) {
+    override fun lagreMigrering(message: Migrering) {
         databaseSession.session { session ->
             session.run(
                 action =
@@ -114,34 +116,64 @@ class MigreringRepositoryPostgres(
         }
     }
 
+    override fun markereBehandlingOpprettet(
+        migreringId: UUID,
+        behandlingId: UUID,
+    ) {
+        databaseSession.session { session ->
+            session.run(
+                action =
+                    queryOf(
+                        //language=postgresql
+                        statement =
+                            """
+                            UPDATE migrering
+                            SET behandling_id = :behandling_id
+                            WHERE migrering_id = :migrering_id
+                            """.trimIndent(),
+                        paramMap =
+                            mapOf(
+                                "migrering_id" to migreringId,
+                                "behandling_id" to behandlingId,
+                            ),
+                    ).asUpdate,
+            )
+        }
+    }
+
     override fun hentManglendeOpplysningerForMigrering(
         migreringId: UUID,
         opplysninger: List<UUID>,
     ): List<MigreringOpplysning> =
         databaseSession.session { session ->
-            session.run(
-                queryOf(
-                    //language=postgresql
-                    statement =
-                        """
-                        SELECT opplysning, migrert, migrert_tidspunkt
-                        FROM migrering_opplysninger
-                        WHERE migrering_id = :migrering_id
-                        AND (
-                            opplysninger_id = ANY(:opplysninger)
-                            OR migrert IS TRUE
+            val opplysningerArray = session.connection.underlying.createArrayOf("uuid", opplysninger.toTypedArray())
+            try {
+                session.run(
+                    queryOf(
+                        //language=postgresql
+                        statement =
+                            """
+                            SELECT opplysning, migrert, migrert_tidspunkt
+                            FROM migrering_opplysninger
+                            WHERE migrering_id = :migrering_id
+                            AND (
+                                opplysninger_id = ANY(:opplysninger)
+                                OR migrert IS TRUE
+                            )
+                            """.trimIndent(),
+                        paramMap = mapOf("migrering_id" to migreringId, "opplysninger" to opplysningerArray),
+                    ).map { row ->
+                        val opplysningJson = row.string("opplysning")
+                        MigreringOpplysning(
+                            opplysning = objectMapper.readValue(opplysningJson, Opplysning::class.java),
+                            migrert = row.boolean("migrert"),
+                            migrertTidspunkt = row.localDateTimeOrNull("migrert_tidspunkt"),
                         )
-                        """.trimIndent(),
-                    paramMap = mapOf("migrering_id" to migreringId, "opplysninger" to opplysninger),
-                ).map { row ->
-                    val opplysningJson = row.string("opplysning")
-                    MigreringOpplysning(
-                        opplysning = objectMapper.readValue(opplysningJson, Opplysning::class.java),
-                        migrert = row.boolean("migrert"),
-                        migrertTidspunkt = row.localDateTimeOrNull("migrert_tidspunkt"),
-                    )
-                }.asList,
-            )
+                    }.asList,
+                )
+            } finally {
+                opplysningerArray.free()
+            }
         }
 
     override fun hentOpplysningerForMigrering(migreringId: UUID): List<MigreringOpplysning> =
@@ -166,4 +198,42 @@ class MigreringRepositoryPostgres(
                 }.asList,
             )
         }
+
+    override fun lagreMigreringHendelse(
+        migreringId: UUID,
+        meldingId: UUID,
+        meldingType: String,
+        ident: String,
+        jsonData: String,
+    ) {
+        databaseSession.session { session ->
+            session.transaction { transactionalSession: TransactionalSession ->
+                transactionalSession.run(
+                    queryOf(
+                        //language=PostgreSQL
+                        statement =
+                            """
+                            INSERT INTO migrering_hendelse
+                                (ident, melding_id, migrering_id, melding_type, data, lest_dato)
+                            VALUES
+                                (:ident, :melding_id, :migrering_id, :melding_type, :data, NOW())
+                            ON CONFLICT DO NOTHING
+                            """.trimIndent(),
+                        paramMap =
+                            mapOf(
+                                "ident" to ident,
+                                "migrering_id" to migreringId,
+                                "melding_id" to meldingId,
+                                "melding_type" to meldingType.uppercase(),
+                                "data" to
+                                    PGobject().apply {
+                                        type = "json"
+                                        value = jsonData
+                                    },
+                            ),
+                    ).asUpdate,
+                )
+            }
+        }
+    }
 }

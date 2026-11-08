@@ -80,6 +80,7 @@ class StartMigreringMottakSpec :
             sendteOpplysninger.single()["verdi"].asInt() shouldBe opplysning.verdi
             sendteOpplysninger.single()["gyldigFraOgMed"].asString() shouldBe opplysning.gyldigFraOgMed.toString()
             verify(exactly = 1) {
+                test.repository.lagreMigreringHendelse(migreringId, any(), "migrering_startet", "testident", any())
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
             }
@@ -192,6 +193,9 @@ class StartMigreringMottakSpec :
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(dagsats))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(dagsats, samordnet))
             }
+            verify(exactly = 2) {
+                test.repository.lagreMigreringHendelse(migreringId, any(), "migrering_startet", "testident", any())
+            }
 
             val dokumentasjonPath =
                 Paths
@@ -229,6 +233,7 @@ class StartMigreringMottakSpec :
 
             test.rapid.inspektør.size shouldBe 2
             verify(exactly = 1) {
+                test.repository.lagreMigreringHendelse(migreringId, any(), "migrering_startet", "testident", any())
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
             }
@@ -275,8 +280,9 @@ private class StartMigreringTest {
                 forbrukteDagerFISK = emptyList(),
                 tidsbegrensetVedtak = emptyList(),
             )
-        every { repository.lagre(any()) } just Runs
+        every { repository.lagreMigrering(any()) } just Runs
         every { repository.lagreOpplysninger(any(), any()) } just Runs
+        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any()) } just Runs
         every { repository.markereOpplysningerSomMigrert(any(), any()) } just Runs
         StartMigreringMottak(
             rapidsConnection = rapid,

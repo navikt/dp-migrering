@@ -35,7 +35,7 @@ class MigreringMediator(
                 simulering = simulering,
                 migreringsTidspunkt = migreringsTidspunkt,
             )
-        migreringRepository.lagre(migrering)
+        migreringRepository.lagreMigrering(migrering)
 
         migreringRepository.lagreOpplysninger(
             migreringId = migrering.migreringId,
@@ -47,9 +47,20 @@ class MigreringMediator(
         return migrering
     }
 
-    fun svarManglendeOpplysninger(packet: JsonMessage) {
+    fun vedManglendeOpplysninger(packet: JsonMessage) {
         val migreringId = packet["migreringId"].asString().toUUID()
         val manglendeOpplysninger = packet["manglendeOpplysninger"].asArray().toList().map { it.asString().toUUID() }
+        val meldingId = packet["@id"].asString().toUUID()
+        val meldingType = packet["@event_name"].asString()
+        val ident = packet["ident"].asString()
+
+        migreringRepository.lagreMigreringHendelse(
+            migreringId = migreringId,
+            meldingId = meldingId,
+            meldingType = meldingType,
+            ident = ident,
+            jsonData = packet.toJson(),
+        )
 
         val opplysninger =
             migreringRepository
@@ -61,6 +72,38 @@ class MigreringMediator(
         migreringRepository.markereOpplysningerSomMigrert(
             migreringId = UUID.fromString(packet["migreringId"].asString()),
             opplysninger = opplysninger,
+        )
+    }
+
+    fun vedBehandlingOpprettet(packet: JsonMessage) {
+        val migreringId = packet["behandletHendelse"]["id"].asString().toUUID()
+        val behandlingId = packet["behandlingId"].asString().toUUID()
+        val meldingId = packet["@id"].asString().toUUID()
+        val meldingType = packet["@event_name"].asString()
+        val ident = packet["ident"].asString()
+
+        migreringRepository.lagreMigreringHendelse(
+            migreringId = migreringId,
+            meldingId = meldingId,
+            meldingType = meldingType,
+            ident = ident,
+            jsonData = packet.toJson(),
+        )
+        migreringRepository.markereBehandlingOpprettet(migreringId, behandlingId)
+    }
+
+    fun vedForslagTilBehandlingsresultat(packet: JsonMessage) {
+        val migreringId = packet["behandletHendelse"]["id"].asString().toUUID()
+        val meldingId = packet["@id"].asString().toUUID()
+        val meldingType = packet["@event_name"].asString()
+        val ident = packet["ident"].asString()
+
+        migreringRepository.lagreMigreringHendelse(
+            migreringId = migreringId,
+            meldingId = meldingId,
+            meldingType = meldingType,
+            ident = ident,
+            jsonData = packet.toJson(),
         )
     }
 

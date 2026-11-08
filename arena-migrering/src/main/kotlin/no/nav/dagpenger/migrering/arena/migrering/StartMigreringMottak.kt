@@ -23,16 +23,12 @@ class StartMigreringMottak(
         River(rapidsConnection)
             .apply {
                 precondition { it.requireValue("@event_name", "migrering_startet") }
-
-// //                            "migrering_feilet",
-// //                            "behandling_opprettet",
-// //                            "behandling_avbrutt",
-// //                            "forslag_til_behandlingsresultat",
-
                 validate {
                     it.requireKey(
                         "manglendeOpplysninger",
                         "migreringId",
+                        "@id",
+                        "ident",
                     )
                 }
             }.register(this)
@@ -49,7 +45,7 @@ class StartMigreringMottak(
                 "migreringId" to packet["migreringId"].asString(),
             ) {
                 logger.info { "Mottok melding om manglende opplysninger for migrering" }
-                migreringMediator.svarManglendeOpplysninger(packet)
+                migreringMediator.vedManglendeOpplysninger(packet)
             }
         }
     }

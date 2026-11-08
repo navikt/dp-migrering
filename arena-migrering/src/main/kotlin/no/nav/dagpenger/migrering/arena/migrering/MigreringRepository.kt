@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import java.util.UUID
 
 interface MigreringRepository {
-    fun lagre(message: Migrering)
+    fun lagreMigrering(message: Migrering)
 
     fun hentMigrering(migreringId: UUID): Migrering?
 
@@ -18,10 +18,23 @@ interface MigreringRepository {
         opplysninger: List<Opplysning<*>>,
     )
 
+    fun markereBehandlingOpprettet(
+        migreringId: UUID,
+        behandlingId: UUID,
+    )
+
     fun hentManglendeOpplysningerForMigrering(
         migreringId: UUID,
         opplysninger: List<UUID>,
     ): List<MigreringOpplysning>
 
     fun hentOpplysningerForMigrering(migreringId: UUID): List<MigreringOpplysning>
+
+    fun lagreMigreringHendelse(
+        migreringId: UUID,
+        meldingId: UUID,
+        meldingType: String,
+        ident: String,
+        jsonData: String,
+    )
 }
