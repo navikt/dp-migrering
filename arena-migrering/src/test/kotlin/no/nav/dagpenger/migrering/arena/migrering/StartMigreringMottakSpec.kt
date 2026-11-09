@@ -203,7 +203,7 @@ class StartMigreringMottakSpec :
         }
 
         listOf("ingen opplysninger", "bare én etterspurt opplysning", "riktig antall, men feil UUID-er").forEach { scenario ->
-            "stopper uten å publisere eller markere opplysninger som migrert når databasen returnerer $scenario" {
+            "publiserer avbrudd uten å markere opplysninger som migrert når databasen returnerer $scenario" {
                 val test = StartMigreringTest()
                 val migreringId = test.startMigrering().migreringId
                 val dagsats = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
@@ -225,12 +225,33 @@ class StartMigreringMottakSpec :
                 every {
                     test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
                 } returns resultat
+                every {
+                    test.repository.lagreMigreringHendelse(any(), any(), "MIGRERING_AVBRUTT", any(), any(), HendelseRetning.UTGAENDE)
+                } answers {
+                    test.rapid.inspektør.size shouldBe 2
+                }
 
                 test.rapid.sendTestMessage(
                     svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), etterspurteOpplysninger),
                 )
 
-                test.rapid.inspektør.size shouldBe 1
+                test.rapid.inspektør.size shouldBe 2
+                val avbrudd = test.rapid.inspektør.message(1)
+                avbrudd["@event_name"].asString() shouldBe "migrering_avbrutt"
+                avbrudd["migreringId"].asString() shouldBe migreringId.toString()
+                avbrudd["sakId"].asInt() shouldBe 12345
+                avbrudd["ident"].asString() shouldBe "testident"
+                avbrudd["initiertAv"].asString() shouldBe "ukjent"
+                avbrudd["årsak"]["manglendeOpplysninger"]
+                    .asArray()
+                    .toList()
+                    .map { it.asString() }
+                    .toSet() shouldBe
+                    if (scenario == "ingen opplysninger") {
+                        setOf(dagsats.uuid.toString(), samordnet.uuid.toString())
+                    } else {
+                        setOf(samordnet.uuid.toString())
+                    }
                 verify(exactly = 1) {
                     test.repository.lagreMigreringHendelse(
                         migreringId,
@@ -241,10 +262,56 @@ class StartMigreringMottakSpec :
                         HendelseRetning.INNGAENDE,
                     )
                     test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
+                    test.repository.lagreMigreringHendelse(
+                        migreringId,
+                        UUID.fromString(avbrudd["@id"].asString()),
+                        "MIGRERING_AVBRUTT",
+                        "testident",
+                        avbrudd.toString(),
+                        HendelseRetning.UTGAENDE,
+                    )
                 }
                 verify(exactly = 0) {
                     test.repository.markereOpplysningerSomMigrert(any(), any())
                 }
+            }
+        }
+
+        "lagrer ikke avbrudd som sendt eller opplysninger som migrert når publisering feiler" {
+            val test = StartMigreringTest()
+            val migreringId = test.startMigrering().migreringId
+            val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
+            val json = svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning))
+            val melding = MigreringStartetMelding(JsonMessage(json, MessageProblems(json)))
+            val context = mockk<MessageContext>()
+            every {
+                test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
+            } returns emptyList()
+            every { context.publish(any<List<OutgoingMessage>>()) } answers {
+                val utgående = firstArg<List<OutgoingMessage>>().single()
+                dokumentasjonMapper.readTree(utgående.body)["@event_name"].asString() shouldBe "migrering_avbrutt"
+                emptyList<SentMessage>() to
+                    listOf(
+                        FailedMessage(
+                            0,
+                            utgående,
+                            IllegalStateException("Publisering feilet"),
+                        ),
+                    )
+            }
+            clearMocks(test.repository, answers = false)
+
+            shouldThrow<IllegalStateException> {
+                test.mediator.håndter(melding, context)
+            }
+
+            verify(exactly = 1) {
+                context.publish(any<List<OutgoingMessage>>())
+                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.INNGAENDE)
+            }
+            verify(exactly = 0) {
+                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
+                test.repository.markereOpplysningerSomMigrert(any(), any())
             }
         }
 

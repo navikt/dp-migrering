@@ -65,6 +65,22 @@ class MigreringMediator(
         val manglendeOpplysninger =
             melding.manglendeOpplysninger.toSet() - opplysninger.map { it.uuid }.toSet()
         if (manglendeOpplysninger.isNotEmpty()) {
+            MigreringAvbrutt
+                .opprett(
+                    migreringId = melding.migreringId,
+                    sakId = melding.sakId,
+                    initiertAv = "ukjent",
+                    ident = melding.ident,
+                    årsak = mapOf("manglendeOpplysninger" to manglendeOpplysninger.toList()),
+                ).also {
+                    publiserOgLagreHendelse(
+                        context = context,
+                        json = it.toJson(),
+                        migreringId = it.migreringId,
+                        meldingType = it.hendelse().type(),
+                        ident = it.ident,
+                    )
+                }
             logger.warn {
                 "Migrering ${melding.migreringId} stoppes fordi følgende opplysninger mangler i databasen: $manglendeOpplysninger"
             }

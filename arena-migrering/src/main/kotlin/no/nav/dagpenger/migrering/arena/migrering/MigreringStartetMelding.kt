@@ -14,7 +14,7 @@ internal class MigreringStartetMelding(
     }
 
     override val migreringId: UUID = packet["migreringId"].asUUID()
-    private val sakId: Int = packet["sakId"].asInt()
+    val sakId: Int = packet["sakId"].asInt()
 
     override fun hendelse(): Hendelse =
         MigreringStartetHendelse(
