@@ -46,6 +46,7 @@ class BehandlingOpprettetMottakSpec :
                     "BEHANDLING_OPPRETTET",
                     "testident",
                     any(),
+                    HendelseRetning.INNGAENDE,
                 )
                 test.repository.markereBehandlingOpprettet(test.migreringId, test.behandlingId)
             }
@@ -108,7 +109,7 @@ private class BehandlingOpprettetTest {
     val lagretHendelse = slot<String>()
 
     init {
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), capture(lagretHendelse)) } just Runs
+        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), capture(lagretHendelse), any()) } just Runs
         every { repository.markereBehandlingOpprettet(any(), any()) } just Runs
         BehandlingOpprettetMottak(
             rapidsConnection = rapid,

@@ -205,6 +205,7 @@ class MigreringRepositoryPostgres(
         meldingType: String,
         ident: String,
         jsonData: String,
+        retning: HendelseRetning,
     ) {
         databaseSession.session { session ->
             session.transaction { transactionalSession: TransactionalSession ->
@@ -214,10 +215,14 @@ class MigreringRepositoryPostgres(
                         statement =
                             """
                             INSERT INTO migrering_hendelse
-                                (ident, melding_id, migrering_id, melding_type, data, lest_dato)
+                                (ident, melding_id, migrering_id, melding_type, data, lest_dato, sent_dato)
                             VALUES
-                                (:ident, :melding_id, :migrering_id, :melding_type, :data, NOW())
-                            ON CONFLICT DO NOTHING
+                                (:ident, :melding_id, :migrering_id, :melding_type, :data,
+                                 CASE WHEN :retning = 'INNGAENDE' THEN NOW() ELSE NULL END,
+                                 CASE WHEN :retning = 'UTGAENDE' THEN NOW() ELSE NULL END)
+                            ON CONFLICT (melding_id) DO UPDATE SET
+                                lest_dato = COALESCE(migrering_hendelse.lest_dato, EXCLUDED.lest_dato),
+                                sent_dato = COALESCE(migrering_hendelse.sent_dato, EXCLUDED.sent_dato)
                             """.trimIndent(),
                         paramMap =
                             mapOf(
@@ -225,6 +230,7 @@ class MigreringRepositoryPostgres(
                                 "migrering_id" to migreringId,
                                 "melding_id" to meldingId,
                                 "melding_type" to meldingType,
+                                "retning" to retning.name,
                                 "data" to
                                     PGobject().apply {
                                         type = "json"

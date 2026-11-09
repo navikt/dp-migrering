@@ -36,5 +36,11 @@ interface MigreringRepository {
         meldingType: String,
         ident: String,
         jsonData: String,
+        retning: HendelseRetning,
     )
+}
+
+enum class HendelseRetning {
+    INNGAENDE,
+    UTGAENDE,
 }

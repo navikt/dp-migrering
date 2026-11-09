@@ -2,6 +2,8 @@ package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -50,14 +52,20 @@ class MigreringMediator(
         melding: MigreringStartetMelding,
         context: MessageContext,
     ) {
-        melding.lagreMelding(migreringRepository)
+        melding.lagreMelding(migreringRepository, HendelseRetning.INNGAENDE)
         val opplysninger =
             migreringRepository
                 .hentManglendeOpplysningerForMigrering(melding.migreringId, melding.manglendeOpplysninger)
                 .map { it.opplysning }
 
         melding.publiserManglendeOpplysninger(opplysninger) { json ->
-            context.publish(json)
+            publiserOgLagreHendelse(
+                context = context,
+                json = json,
+                migreringId = melding.migreringId,
+                meldingType = melding.hendelse().type(),
+                ident = melding.ident,
+            )
         }
 
         migreringRepository.markereOpplysningerSomMigrert(
@@ -67,16 +75,16 @@ class MigreringMediator(
     }
 
     internal fun håndter(melding: BehandlingOpprettetMelding) {
-        melding.lagreMelding(migreringRepository)
+        melding.lagreMelding(migreringRepository, HendelseRetning.INNGAENDE)
         migreringRepository.markereBehandlingOpprettet(melding.migreringId, melding.behandlingId)
     }
 
     internal fun håndter(medling: ForslagTilBehandlingsresultatMelding) {
-        medling.lagreMelding(migreringRepository)
+        medling.lagreMelding(migreringRepository, HendelseRetning.INNGAENDE)
     }
 
     private fun publiserStartMigrering(migrering: Migrering) {
-        rapidsConnection.publish(
+        val melding =
             JsonMessage
                 .newMessage(
                     "migrering_startet",
@@ -89,7 +97,36 @@ class MigreringMediator(
                         "migreringId" to migrering.migreringId.toString(),
                         "opplysninger" to emptyList<Any>(),
                     ),
-                ).toJson(),
+                )
+        publiserOgLagreHendelse(
+            context = rapidsConnection,
+            json = melding.toJson(),
+            migreringId = migrering.migreringId,
+            meldingType = "MIGRERING_STARTET",
+            ident = migrering.ident,
+        )
+    }
+
+    private fun publiserOgLagreHendelse(
+        context: MessageContext,
+        json: String,
+        migreringId: UUID,
+        meldingType: String,
+        ident: String,
+    ) {
+        val (sendte, feilede) = context.publish(listOf(OutgoingMessage(json)))
+        if (feilede.isNotEmpty()) {
+            throw IllegalStateException("Kunne ikke publisere migreringshendelse", feilede.first().error)
+        }
+        val publisertJson = sendte.single().message.body
+        val publisertMelding = JsonMessage(publisertJson, MessageProblems(publisertJson))
+        migreringRepository.lagreMigreringHendelse(
+            migreringId = migreringId,
+            meldingId = UUID.fromString(publisertMelding.id),
+            meldingType = meldingType,
+            ident = ident,
+            jsonData = publisertJson,
+            retning = HendelseRetning.UTGAENDE,
         )
     }
 
