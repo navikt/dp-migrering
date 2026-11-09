@@ -162,7 +162,10 @@ class StartMigreringMottakSpec :
 
             test.rapid.inspektør.size shouldBe 2
             val svar = test.rapid.inspektør.message(1)
-            svar["@id"].asString() shouldNotBe test.rapid.inspektør.message(0)["@id"].asString()
+            svar["@id"].asString() shouldNotBe
+                test.rapid.inspektør
+                    .message(0)["@id"]
+                    .asString()
             svar["@event_name"].asString() shouldBe "migrering_startet"
             svar["migreringId"].asString() shouldBe migreringId.toString()
             svar["sakId"].asInt() shouldBe 12345
@@ -235,6 +238,7 @@ class StartMigreringMottakSpec :
                         "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                         "testident",
                         any(),
+                        HendelseRetning.INNGAENDE,
                     )
                     test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
                 }

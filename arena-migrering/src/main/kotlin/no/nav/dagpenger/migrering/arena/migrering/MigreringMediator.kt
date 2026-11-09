@@ -30,7 +30,6 @@ class MigreringMediator(
         simulering: Boolean,
         migreringsTidspunkt: LocalDate,
     ): Migrering {
-        arenaRepository.hentIdentForSak(sakId)
         val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
 
         val migrering =

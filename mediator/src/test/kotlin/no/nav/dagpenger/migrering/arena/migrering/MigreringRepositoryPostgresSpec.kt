@@ -249,11 +249,12 @@ class MigreringRepositoryPostgresSpec :
 
                 fun tidspunkter() =
                     databaseSession.session { session ->
-                        session.run(
-                            queryOf("SELECT lest_dato, sent_dato FROM migrering_hendelse")
-                                .map { row -> row.localDateTimeOrNull("lest_dato") to row.localDateTimeOrNull("sent_dato") }
-                                .asSingle,
-                        ).shouldNotBeNull()
+                        session
+                            .run(
+                                queryOf("SELECT lest_dato, sent_dato FROM migrering_hendelse")
+                                    .map { row -> row.localDateTimeOrNull("lest_dato") to row.localDateTimeOrNull("sent_dato") }
+                                    .asSingle,
+                            ).shouldNotBeNull()
                     }
 
                 lagre(retning)
