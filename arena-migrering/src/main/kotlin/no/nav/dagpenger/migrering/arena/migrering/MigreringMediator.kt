@@ -5,6 +5,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -19,6 +20,10 @@ class MigreringMediator(
     private val migreringRepository: MigreringRepository,
     private val rapidsConnection: RapidsConnection,
 ) {
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
+
     suspend fun startMigrering(
         sakId: Int,
         initiertAv: String,
@@ -57,6 +62,15 @@ class MigreringMediator(
             migreringRepository
                 .hentManglendeOpplysningerForMigrering(melding.migreringId, melding.manglendeOpplysninger)
                 .map { it.opplysning }
+
+        val manglendeOpplysninger =
+            melding.manglendeOpplysninger.toSet() - opplysninger.map { it.uuid }.toSet()
+        if (manglendeOpplysninger.isNotEmpty()) {
+            logger.warn {
+                "Migrering ${melding.migreringId} stoppes fordi følgende opplysninger mangler i databasen: $manglendeOpplysninger"
+            }
+            return
+        }
 
         melding.publiserManglendeOpplysninger(opplysninger) { json ->
             publiserOgLagreHendelse(

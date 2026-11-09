@@ -199,6 +199,74 @@ class StartMigreringMottakSpec :
             }
         }
 
+        listOf("ingen opplysninger", "bare én etterspurt opplysning", "riktig antall, men feil UUID-er").forEach { scenario ->
+            "stopper uten å publisere eller markere opplysninger som migrert når databasen returnerer $scenario" {
+                val test = StartMigreringTest()
+                val migreringId = test.startMigrering().migreringId
+                val dagsats = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
+                val samordnet = Opplysning("Samordnet", false, null, UUID.randomUUID())
+                val tidligereMigrert =
+                    MigreringOpplysning(
+                        Opplysning("Tidligere migrert", 42, null, UUID.randomUUID()),
+                        true,
+                        LocalDateTime.of(2026, 11, 6, 8, 0),
+                    )
+                val etterspurteOpplysninger = listOf(dagsats, samordnet)
+                val funnetDagsats = MigreringOpplysning(dagsats, false, null)
+                val resultat =
+                    when (scenario) {
+                        "ingen opplysninger" -> emptyList()
+                        "bare én etterspurt opplysning" -> listOf(funnetDagsats)
+                        else -> listOf(funnetDagsats, tidligereMigrert)
+                    }
+                every {
+                    test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
+                } returns resultat
+
+                test.rapid.sendTestMessage(
+                    svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), etterspurteOpplysninger),
+                )
+
+                test.rapid.inspektør.size shouldBe 1
+                verify(exactly = 1) {
+                    test.repository.lagreMigreringHendelse(
+                        migreringId,
+                        any(),
+                        "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
+                        "testident",
+                        any(),
+                    )
+                    test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
+                }
+                verify(exactly = 0) {
+                    test.repository.markereOpplysningerSomMigrert(any(), any())
+                }
+            }
+        }
+
+        "svarer når samme etterspurte UUID forekommer flere ganger og finnes i databasen" {
+            val test = StartMigreringTest()
+            val migreringId = test.startMigrering().migreringId
+            val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
+            every {
+                test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid, opplysning.uuid))
+            } returns listOf(MigreringOpplysning(opplysning, false, null))
+
+            test.rapid.sendTestMessage(
+                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning, opplysning)),
+            )
+
+            test.rapid.inspektør.size shouldBe 2
+            test.rapid.inspektør
+                .message(1)["opplysninger"]
+                .asArray()
+                .toList()
+                .map { it["uuid"].asString() } shouldBe listOf(opplysning.uuid.toString())
+            verify(exactly = 1) {
+                test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
+            }
+        }
+
         "sender både tidligere migrerte og nye opplysninger gjennom flere svarrunder" {
             val test = StartMigreringTest()
             val migrering = test.startMigrering()
