@@ -25,7 +25,7 @@ internal class MigreringStartetMelding(
             type = if (manglendeOpplysninger.isNotEmpty()) "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER" else "MIGRERING_STARTET",
         )
 
-    internal val manglendeOpplysninger = packet["manglendeOpplysninger"].asArray().toList().map { it.asString().toUUID() }
+    internal val manglendeOpplysninger = packet["manglendeOpplysninger"].asArray().toList().map { it["uuid"].asString().toUUID() }
 
     internal fun publiserManglendeOpplysninger(
         opplysninger: List<Opplysning<*>>,

@@ -44,7 +44,10 @@ Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme 
   "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : [
-    "0194881f-9428-74d5-b160-f63a4c61a24f"
+    {
+      "navn" : "Dagsats",
+      "uuid" : "0194881f-9428-74d5-b160-f63a4c61a24f"
+    }
   ],
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",
@@ -125,7 +128,10 @@ Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samord
   "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : [
-    "0194881f-9428-74d5-b160-f63a4c61a23c"
+    {
+      "navn" : "Samordnet",
+      "uuid" : "0194881f-9428-74d5-b160-f63a4c61a23c"
+    }
   ],
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",

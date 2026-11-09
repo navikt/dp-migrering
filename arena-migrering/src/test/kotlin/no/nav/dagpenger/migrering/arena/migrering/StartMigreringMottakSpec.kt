@@ -62,7 +62,7 @@ class StartMigreringMottakSpec :
             } returns listOf(MigreringOpplysning(opplysning, false, null))
 
             test.rapid.sendTestMessage(
-                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning.uuid)),
+                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning)),
             )
 
             test.rapid.inspektør.size shouldBe 2
@@ -148,7 +148,7 @@ class StartMigreringMottakSpec :
             test.rapid.inspektør.size shouldBe 1
             verify(exactly = 0) { test.repository.hentManglendeOpplysningerForMigrering(any(), any()) }
 
-            val førsteForespørsel = svarMedManglendeOpplysninger(startMelding, listOf(dagsats.uuid))
+            val førsteForespørsel = svarMedManglendeOpplysninger(startMelding, listOf(dagsats))
             markdown.dokumenterMelding(
                 "2. Den andre tjenesten etterspør dagsats",
                 "Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme opplysningslisten.",
@@ -170,7 +170,7 @@ class StartMigreringMottakSpec :
                 .map { it["uuid"].asString() } shouldBe listOf(dagsats.uuid.toString())
 
             val andreForespørsel =
-                svarMedManglendeOpplysninger(førsteSvar, listOf(samordnet.uuid))
+                svarMedManglendeOpplysninger(førsteSvar, listOf(samordnet))
             markdown.dokumenterMelding(
                 "4. Den andre tjenesten etterspør samordning",
                 "Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samordning.",
@@ -233,7 +233,7 @@ class StartMigreringMottakSpec :
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
             } returns listOf(MigreringOpplysning(opplysning, false, null))
             test.rapid.sendTestMessage(
-                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning.uuid)),
+                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning)),
             )
             test.rapid.inspektør.size shouldBe 2
 
@@ -263,9 +263,10 @@ class StartMigreringMottakSpec :
             test.rapid.inspektør.size shouldBe 1
             clearMocks(test.repository, answers = false)
             skruAvFeatures()
+            val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
 
             test.rapid.sendTestMessage(
-                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(UUID.randomUUID())),
+                svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning)),
             )
 
             test.rapid.inspektør.size shouldBe 1
@@ -319,13 +320,23 @@ private class StartMigreringTest {
 
 private fun svarMedManglendeOpplysninger(
     melding: JsonNode,
-    manglendeOpplysninger: List<UUID>,
+    manglendeOpplysninger: List<Opplysning<*>>,
 ): String =
     dokumentasjonMapper
         .readTree(melding.toString())
         .asObject()
         .apply {
-            replace("manglendeOpplysninger", dokumentasjonMapper.valueToTree(manglendeOpplysninger.map(UUID::toString)))
+            replace(
+                "manglendeOpplysninger",
+                dokumentasjonMapper.valueToTree(
+                    manglendeOpplysninger.map { opplysning ->
+                        mapOf(
+                            "uuid" to opplysning.uuid.toString(),
+                            "navn" to opplysning.navn,
+                        )
+                    },
+                ),
+            )
         }.toString()
 
 private fun StringBuilder.dokumenterMelding(
