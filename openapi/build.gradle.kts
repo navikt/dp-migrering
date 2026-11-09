@@ -34,7 +34,7 @@ ktlint {
 }
 
 dependencies {
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.22")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.23")
 
     testImplementation(libs.bundles.kotest.assertions)
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
