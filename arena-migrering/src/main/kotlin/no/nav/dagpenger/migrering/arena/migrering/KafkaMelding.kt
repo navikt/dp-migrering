@@ -19,19 +19,16 @@ internal abstract class KafkaMelding(
 
     abstract val migreringId: UUID
 
-    abstract fun hendelse(): Hendelse
+    abstract val hendelse: Hendelse
 
-    fun lagreMelding(
-        repository: MigreringRepository,
-        retning: HendelseRetning,
-    ) {
+    fun lagreMelding(repository: MigreringRepository) {
         repository.lagreMigreringHendelse(
             migreringId = migreringId,
             meldingId = id,
-            meldingType = hendelse().type(),
+            hendelse = hendelse.navn(),
             ident = ident,
             jsonData = toJson(),
-            retning = retning,
+            opprinnelse = hendelse.opprinnelse().name,
         )
     }
 
@@ -48,4 +45,9 @@ internal abstract class KafkaMelding(
     fun JsonNode.asUUID() = this.asString().let { UUID.fromString(it) }
 
     fun toJson() = packet.toJson()
+
+    enum class Opprinnelse {
+        Intern,
+        Ekstern,
+    }
 }

@@ -54,7 +54,7 @@ internal class ApplicationBuilder(
                 MigreringMediator(
                     arenaRepository = ArenaRepository(dataSource),
                     migreringRepository = MigreringRepositoryPostgres(postgresDataSourceBuilder.dbsession),
-                    rapidsConnection = rapid,
+                    rapid = rapid,
                 )
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),

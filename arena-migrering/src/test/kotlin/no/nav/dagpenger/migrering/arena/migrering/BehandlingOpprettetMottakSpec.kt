@@ -46,7 +46,7 @@ class BehandlingOpprettetMottakSpec :
                     "BEHANDLING_OPPRETTET",
                     "testident",
                     any(),
-                    HendelseRetning.INNGAENDE,
+                    Hendelse.Opprinnelse.Ekstern.name,
                 )
                 test.repository.markereBehandlingOpprettet(test.migreringId, test.behandlingId)
             }
@@ -117,7 +117,7 @@ private class BehandlingOpprettetTest {
                 MigreringMediator(
                     arenaRepository = mockk<ArenaRepository>(),
                     migreringRepository = repository,
-                    rapidsConnection = rapid,
+                    rapid = rapid,
                 ),
         )
     }

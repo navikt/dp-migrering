@@ -64,7 +64,7 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET",
                     "testident",
                     melding.toString(),
-                    HendelseRetning.UTGAENDE,
+                    Hendelse.Opprinnelse.Intern.name,
                 )
             }
         }
@@ -88,7 +88,14 @@ class StartMigreringMottakSpec :
             }
 
             verify(exactly = 0) {
-                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
+                test.repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    Hendelse.Opprinnelse.Ekstern.name,
+                )
             }
         }
 
@@ -97,7 +104,11 @@ class StartMigreringMottakSpec :
             val migrering = test.startMigrering()
             val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
             val json = svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning))
-            val melding = MigreringStartetMelding(JsonMessage(json, MessageProblems(json)))
+            val melding =
+                MigreringStartetMelding(
+                    JsonMessage(json, MessageProblems(json)),
+                    Hendelse.Opprinnelse.Ekstern,
+                )
             val context = mockk<MessageContext>()
             every {
                 test.repository.hentManglendeOpplysningerForMigrering(migrering.migreringId, listOf(opplysning.uuid))
@@ -119,10 +130,24 @@ class StartMigreringMottakSpec :
             }
 
             verify(exactly = 1) {
-                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.INNGAENDE)
+                test.repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    Hendelse.Opprinnelse.Ekstern.name,
+                )
             }
             verify(exactly = 0) {
-                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
+                test.repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    Hendelse.Opprinnelse.Intern.name,
+                )
                 test.repository.markereOpplysningerSomMigrert(any(), any())
             }
         }
@@ -151,7 +176,14 @@ class StartMigreringMottakSpec :
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
             } returns listOf(MigreringOpplysning(opplysning, false, null))
             every {
-                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
+                test.repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    Hendelse.Opprinnelse.Intern.name,
+                )
             } answers {
                 test.rapid.inspektør.size shouldBe 2
             }
@@ -185,7 +217,7 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                     "testident",
                     any(),
-                    HendelseRetning.INNGAENDE,
+                    Hendelse.Opprinnelse.Ekstern.name,
                 )
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
@@ -197,12 +229,16 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                     "testident",
                     svar.toString(),
-                    HendelseRetning.UTGAENDE,
+                    Hendelse.Opprinnelse.Intern.name,
                 )
             }
         }
 
-        listOf("ingen opplysninger", "bare én etterspurt opplysning", "riktig antall, men feil UUID-er").forEach { scenario ->
+        listOf(
+            "ingen opplysninger",
+            "bare én etterspurt opplysning",
+            "riktig antall, men feil UUID-er",
+        ).forEach { scenario ->
             "publiserer avbrudd uten å markere opplysninger som migrert når databasen returnerer $scenario" {
                 val test = StartMigreringTest()
                 val migreringId = test.startMigrering().migreringId
@@ -223,10 +259,20 @@ class StartMigreringMottakSpec :
                         else -> listOf(funnetDagsats, tidligereMigrert)
                     }
                 every {
-                    test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
+                    test.repository.hentManglendeOpplysningerForMigrering(
+                        migreringId,
+                        listOf(dagsats.uuid, samordnet.uuid),
+                    )
                 } returns resultat
                 every {
-                    test.repository.lagreMigreringHendelse(any(), any(), "MIGRERING_AVBRUTT", any(), any(), HendelseRetning.UTGAENDE)
+                    test.repository.lagreMigreringHendelse(
+                        any(),
+                        any(),
+                        "MIGRERING_AVBRUTT",
+                        any(),
+                        any(),
+                        Hendelse.Opprinnelse.Intern.name,
+                    )
                 } answers {
                     test.rapid.inspektør.size shouldBe 2
                 }
@@ -259,16 +305,19 @@ class StartMigreringMottakSpec :
                         "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                         "testident",
                         any(),
-                        HendelseRetning.INNGAENDE,
+                        Hendelse.Opprinnelse.Ekstern.name,
                     )
-                    test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
+                    test.repository.hentManglendeOpplysningerForMigrering(
+                        migreringId,
+                        listOf(dagsats.uuid, samordnet.uuid),
+                    )
                     test.repository.lagreMigreringHendelse(
                         migreringId,
                         UUID.fromString(avbrudd["@id"].asString()),
                         "MIGRERING_AVBRUTT",
                         "testident",
                         avbrudd.toString(),
-                        HendelseRetning.UTGAENDE,
+                        Hendelse.Opprinnelse.Intern.name,
                     )
                 }
                 verify(exactly = 0) {
@@ -282,7 +331,11 @@ class StartMigreringMottakSpec :
             val migreringId = test.startMigrering().migreringId
             val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
             val json = svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning))
-            val melding = MigreringStartetMelding(JsonMessage(json, MessageProblems(json)))
+            val melding =
+                MigreringStartetMelding(
+                    JsonMessage(json, MessageProblems(json)),
+                    Hendelse.Opprinnelse.Ekstern,
+                )
             val context = mockk<MessageContext>()
             every {
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
@@ -307,10 +360,16 @@ class StartMigreringMottakSpec :
 
             verify(exactly = 1) {
                 context.publish(any<List<OutgoingMessage>>())
-                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.INNGAENDE)
+                test.repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    Hendelse.Opprinnelse.Ekstern.name,
+                )
             }
             verify(exactly = 0) {
-                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
                 test.repository.markereOpplysningerSomMigrert(any(), any())
             }
         }
@@ -320,7 +379,10 @@ class StartMigreringMottakSpec :
             val migreringId = test.startMigrering().migreringId
             val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
             every {
-                test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid, opplysning.uuid))
+                test.repository.hentManglendeOpplysningerForMigrering(
+                    migreringId,
+                    listOf(opplysning.uuid, opplysning.uuid),
+                )
             } returns listOf(MigreringOpplysning(opplysning, false, null))
 
             test.rapid.sendTestMessage(
@@ -384,10 +446,10 @@ class StartMigreringMottakSpec :
             startMelding["simulering"].asBoolean() shouldBe true
             startMelding["initiertAv"].asString() shouldBe "testbruker"
             startMelding["migreringTidspunkt"].asString() shouldBe "2026-11-06"
-            startMelding["opplysninger"].asArray().toList() shouldBe emptyList()
+            startMelding.path("opplysninger").isMissingNode shouldBe true
             markdown.dokumenterMelding(
                 "1. Migreringen starter uten opplysninger",
-                "Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket svarer ikke.",
+                "Den første migrering_startet-meldingen sendes uten opplysningsliste. Mottaket svarer ikke.",
                 startMelding,
             )
             test.rapid.sendTestMessage(startMelding.toString())
@@ -397,7 +459,7 @@ class StartMigreringMottakSpec :
             val førsteForespørsel = svarMedManglendeOpplysninger(startMelding, listOf(dagsats))
             markdown.dokumenterMelding(
                 "2. Den andre tjenesten etterspør dagsats",
-                "Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme opplysningslisten.",
+                "Tjenesten setter manglendeOpplysninger på startmeldingen, som fortsatt mangler opplysningsliste.",
                 dokumentasjonMapper.readTree(førsteForespørsel),
             )
             test.rapid.sendTestMessage(førsteForespørsel)
@@ -452,7 +514,7 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                     "testident",
                     any(),
-                    HendelseRetning.INNGAENDE,
+                    Hendelse.Opprinnelse.Ekstern.name,
                 )
             }
 
@@ -498,7 +560,7 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                     "testident",
                     any(),
-                    HendelseRetning.INNGAENDE,
+                    Hendelse.Opprinnelse.Ekstern.name,
                 )
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
@@ -531,7 +593,7 @@ private class StartMigreringTest(
         MigreringMediator(
             arenaRepository = arenaRepository,
             migreringRepository = repository,
-            rapidsConnection = rapid,
+            rapid = rapid,
         )
 
     init {

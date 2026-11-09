@@ -8,7 +8,7 @@ Den genererte migrerings-ID-en er erstattet med `<migreringId>`.
 
 ## 1. Migreringen starter uten opplysninger
 
-Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket svarer ikke.
+Den første migrering_startet-meldingen sendes uten opplysningsliste. Mottaket svarer ikke.
 
 ```json
 {
@@ -19,7 +19,6 @@ Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket sv
   "initiertAv" : "testbruker",
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",
-  "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [
@@ -34,7 +33,7 @@ Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket sv
 
 ## 2. Den andre tjenesten etterspør dagsats
 
-Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme opplysningslisten.
+Tjenesten setter manglendeOpplysninger på startmeldingen, som fortsatt mangler opplysningsliste.
 
 ```json
 {
@@ -51,7 +50,6 @@ Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme 
   ],
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",
-  "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [

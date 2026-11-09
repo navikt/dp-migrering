@@ -202,10 +202,10 @@ class MigreringRepositoryPostgres(
     override fun lagreMigreringHendelse(
         migreringId: UUID,
         meldingId: UUID,
-        meldingType: String,
+        hendelse: String,
         ident: String,
         jsonData: String,
-        retning: HendelseRetning,
+        opprinnelse: String,
     ) {
         databaseSession.session { session ->
             session.transaction { transactionalSession: TransactionalSession ->
@@ -215,22 +215,18 @@ class MigreringRepositoryPostgres(
                         statement =
                             """
                             INSERT INTO migrering_hendelse
-                                (ident, melding_id, migrering_id, melding_type, data, lest_dato, sent_dato)
+                                (ident, melding_id, migrering_id, hendelse, data, tidspunkt, opprinnelse)
                             VALUES
-                                (:ident, :melding_id, :migrering_id, :melding_type, :data,
-                                 CASE WHEN :retning = 'INNGAENDE' THEN NOW() ELSE NULL END,
-                                 CASE WHEN :retning = 'UTGAENDE' THEN NOW() ELSE NULL END)
-                            ON CONFLICT (melding_id) DO UPDATE SET
-                                lest_dato = COALESCE(migrering_hendelse.lest_dato, EXCLUDED.lest_dato),
-                                sent_dato = COALESCE(migrering_hendelse.sent_dato, EXCLUDED.sent_dato)
+                                (:ident, :melding_id, :migrering_id, :hendelse, :data, NOW(), :opprinnelse)
+                                ON CONFLICT DO NOTHING 
                             """.trimIndent(),
                         paramMap =
                             mapOf(
                                 "ident" to ident,
-                                "migrering_id" to migreringId,
                                 "melding_id" to meldingId,
-                                "melding_type" to meldingType,
-                                "retning" to retning.name,
+                                "migrering_id" to migreringId,
+                                "hendelse" to hendelse,
+                                "opprinnelse" to opprinnelse,
                                 "data" to
                                     PGobject().apply {
                                         type = "json"

@@ -12,7 +12,7 @@ internal class MigreringAvbrutt(
     }
 
     companion object {
-        fun opprett(
+        fun ny(
             migreringId: UUID,
             sakId: Int,
             initiertAv: String,
@@ -36,15 +36,10 @@ internal class MigreringAvbrutt(
 
     override val migreringId: UUID = packet["migreringId"].asString().toUUID()
     val årsak = packet["årsak"]
-
-    override fun hendelse() =
+    override val hendelse: Hendelse =
         object : Hendelse {
-            override fun type(): String = "MIGRERING_AVBRUTT"
+            override fun navn(): String = "MIGRERING_AVBRUTT"
 
-            override fun ident(): String = ident
-
-            override fun migreringId(): UUID = migreringId
-
-            override fun meldingsreferanseId(): UUID = id
+            override fun opprinnelse(): Hendelse.Opprinnelse = Hendelse.Opprinnelse.Intern
         }
 }

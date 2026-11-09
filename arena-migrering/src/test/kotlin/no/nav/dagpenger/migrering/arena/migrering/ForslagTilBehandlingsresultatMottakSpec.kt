@@ -46,7 +46,7 @@ class ForslagTilBehandlingsresultatMottakSpec :
                     "FORSLAG_TIL_BEHANDLINGSRESULTAT",
                     "testident",
                     any(),
-                    HendelseRetning.INNGAENDE,
+                    Hendelse.Opprinnelse.Ekstern.name,
                 )
             }
             val lagret = mapper.readTree(test.lagretHendelse.captured)
@@ -115,7 +115,7 @@ private class ForslagTilBehandlingsresultatTest {
                 MigreringMediator(
                     arenaRepository = mockk<ArenaRepository>(),
                     migreringRepository = repository,
-                    rapidsConnection = rapid,
+                    rapid = rapid,
                 ),
         )
     }

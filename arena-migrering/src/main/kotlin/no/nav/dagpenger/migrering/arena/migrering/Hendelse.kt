@@ -1,15 +1,12 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
-import java.util.UUID
-
 internal interface Hendelse {
-    fun type(): String
+    fun navn(): String
 
-    fun ident(): String
+    fun opprinnelse(): Opprinnelse
 
-    fun sakId(): Int? = null
-
-    fun migreringId(): UUID
-
-    fun meldingsreferanseId(): UUID
+    enum class Opprinnelse {
+        Intern,
+        Ekstern,
+    }
 }

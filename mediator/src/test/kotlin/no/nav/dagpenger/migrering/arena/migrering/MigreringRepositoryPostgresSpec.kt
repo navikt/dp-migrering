@@ -229,71 +229,69 @@ class MigreringRepositoryPostgresSpec :
             behandlinger shouldBe mapOf(migrering.migreringId to behandlingId, annenMigrering.migreringId to null)
         }
 
-        HendelseRetning.entries.forEach { retning ->
-            "setter bare tidspunkt for $retning og bevarer tidspunkt og data ved gjentatt lagring" {
+        listOf("Intern", "Ekstern").forEach { opprinnelse ->
+            "lagrer tidspunkt og opprinnelse=$opprinnelse, og bevarer raden ved gjentatt lagring" {
                 val migrering = nyMigrering()
                 val meldingId = UUID.randomUUID()
                 val jsonData = """{"antall":42}"""
                 repository.lagreMigrering(migrering)
 
-                fun lagre(retning: HendelseRetning) {
-                    repository.lagreMigreringHendelse(
-                        migrering.migreringId,
-                        meldingId,
-                        "MIGRERING_STARTET",
-                        migrering.ident,
-                        jsonData,
-                        retning,
-                    )
-                }
+                repository.lagreMigreringHendelse(
+                    migrering.migreringId,
+                    meldingId,
+                    "MIGRERING_STARTET",
+                    migrering.ident,
+                    jsonData,
+                    opprinnelse,
+                )
 
-                fun tidspunkter() =
+                val førsteRad =
                     databaseSession.session { session ->
                         session
                             .run(
-                                queryOf("SELECT lest_dato, sent_dato FROM migrering_hendelse")
-                                    .map { row -> row.localDateTimeOrNull("lest_dato") to row.localDateTimeOrNull("sent_dato") }
-                                    .asSingle,
+                                queryOf("SELECT hendelse, data, tidspunkt, opprinnelse FROM migrering_hendelse")
+                                    .map { row ->
+                                        mapOf(
+                                            "hendelse" to row.string("hendelse"),
+                                            "data" to row.string("data"),
+                                            "tidspunkt" to row.localDateTime("tidspunkt"),
+                                            "opprinnelse" to row.string("opprinnelse"),
+                                        )
+                                    }.asSingle,
                             ).shouldNotBeNull()
                     }
+                førsteRad["hendelse"] shouldBe "MIGRERING_STARTET"
+                objectMapper.readTree(førsteRad["data"] as String) shouldBe objectMapper.readTree(jsonData)
+                førsteRad["opprinnelse"] shouldBe opprinnelse
+                førsteRad["tidspunkt"].shouldNotBeNull()
 
-                lagre(retning)
-                val opprinneligeTidspunkter = tidspunkter()
-                when (retning) {
-                    HendelseRetning.INNGAENDE -> {
-                        opprinneligeTidspunkter.first.shouldNotBeNull()
-                        opprinneligeTidspunkter.second shouldBe null
+                repository.lagreMigreringHendelse(
+                    migrering.migreringId,
+                    meldingId,
+                    "MIGRERING_FULLFØRT",
+                    migrering.ident,
+                    """{"antall":43}""",
+                    if (opprinnelse == "Intern") "Ekstern" else "Intern",
+                )
+
+                val rader =
+                    databaseSession.session { session ->
+                        session
+                            .run(
+                                queryOf("SELECT hendelse, data, opprinnelse FROM migrering_hendelse")
+                                    .map { row ->
+                                        Triple(row.string("hendelse"), row.string("data"), row.string("opprinnelse"))
+                                    }.asList,
+                            )
                     }
-
-                    HendelseRetning.UTGAENDE -> {
-                        opprinneligeTidspunkter.first shouldBe null
-                        opprinneligeTidspunkter.second.shouldNotBeNull()
-                    }
-                }
-
-                lagre(retning)
-                tidspunkter() shouldBe opprinneligeTidspunkter
-
-                val motsattRetning =
-                    when (retning) {
-                        HendelseRetning.INNGAENDE -> HendelseRetning.UTGAENDE
-                        HendelseRetning.UTGAENDE -> HendelseRetning.INNGAENDE
-                    }
-                lagre(motsattRetning)
-                val beggeTidspunkter = tidspunkter()
-                beggeTidspunkter.first.shouldNotBeNull()
-                beggeTidspunkter.second.shouldNotBeNull()
-                when (retning) {
-                    HendelseRetning.INNGAENDE -> beggeTidspunkter.first shouldBe opprinneligeTidspunkter.first
-                    HendelseRetning.UTGAENDE -> beggeTidspunkter.second shouldBe opprinneligeTidspunkter.second
-                }
-
-                lagre(motsattRetning)
-                tidspunkter() shouldBe beggeTidspunkter
+                rader.size shouldBe 1
+                rader.single().first shouldBe "MIGRERING_STARTET"
+                objectMapper.readTree(rader.single().second) shouldBe objectMapper.readTree(jsonData)
+                rader.single().third shouldBe opprinnelse
             }
         }
 
-        "duplikat melding-ID i motsatt retning overskriver ikke den opprinnelige hendelsen" {
+        "duplikat melding-ID med annen opprinnelse overskriver ikke den opprinnelige hendelsen" {
             val migrering = nyMigrering()
             val meldingId = UUID.randomUUID()
             val jsonData = """{"antall":42}"""
@@ -304,7 +302,7 @@ class MigreringRepositoryPostgresSpec :
                 "MIGRERING_STARTET",
                 migrering.ident,
                 jsonData,
-                HendelseRetning.INNGAENDE,
+                "Ekstern",
             )
 
             repository.lagreMigreringHendelse(
@@ -313,15 +311,15 @@ class MigreringRepositoryPostgresSpec :
                 "migrering_fullført",
                 migrering.ident,
                 """{"antall":43}""",
-                HendelseRetning.UTGAENDE,
+                "Intern",
             )
 
             databaseSession.session { session ->
                 session
                     .run(
-                        queryOf("SELECT melding_type, data FROM migrering_hendelse")
+                        queryOf("SELECT hendelse, data FROM migrering_hendelse")
                             .map { row ->
-                                row.string("melding_type") shouldBe "MIGRERING_STARTET"
+                                row.string("hendelse") shouldBe "MIGRERING_STARTET"
                                 objectMapper.readTree(row.string("data")) shouldBe objectMapper.readTree(jsonData)
                             }.asList,
                     ).size shouldBe 1
@@ -336,7 +334,7 @@ class MigreringRepositoryPostgresSpec :
                     "migrering_startet",
                     "testident",
                     "{}",
-                    HendelseRetning.INNGAENDE,
+                    "Ekstern",
                 )
             }
 

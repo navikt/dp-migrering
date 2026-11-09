@@ -33,14 +33,9 @@ interface MigreringRepository {
     fun lagreMigreringHendelse(
         migreringId: UUID,
         meldingId: UUID,
-        meldingType: String,
+        hendelse: String,
         ident: String,
         jsonData: String,
-        retning: HendelseRetning,
+        opprinnelse: String,
     )
-}
-
-enum class HendelseRetning {
-    INNGAENDE,
-    UTGAENDE,
 }

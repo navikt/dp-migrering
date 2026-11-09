@@ -1,6 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import tools.jackson.databind.node.NullNode
@@ -8,7 +9,27 @@ import java.util.UUID
 
 internal class MigreringStartetMelding(
     private val packet: JsonMessage,
+    opprinnelse: Hendelse.Opprinnelse,
 ) : KafkaMelding(packet) {
+    companion object {
+        fun fra(migrering: Migrering): MigreringStartetMelding =
+            MigreringStartetMelding(
+                JsonMessage
+                    .newMessage(
+                        "migrering_startet",
+                        mapOf(
+                            "sakId" to migrering.sakId,
+                            "migreringTidspunkt" to migrering.migreringTidspunkt.toString(),
+                            "simulering" to migrering.simulering,
+                            "initiertAv" to migrering.initiertAv,
+                            "ident" to migrering.ident,
+                            "migreringId" to migrering.migreringId.toString(),
+                        ),
+                    ),
+                Hendelse.Opprinnelse.Intern,
+            )
+    }
+
     init {
         packet.interestedIn("sakId", "migreringId", "manglendeOpplysninger")
     }
@@ -16,22 +37,25 @@ internal class MigreringStartetMelding(
     override val migreringId: UUID = packet["migreringId"].asUUID()
     val sakId: Int = packet["sakId"].asInt()
 
-    override fun hendelse(): Hendelse =
-        MigreringStartetHendelse(
-            ident = ident,
-            sakId = sakId,
-            migreringId = migreringId,
-            meldingsreferanseId = id,
-            type = if (manglendeOpplysninger.isNotEmpty()) "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER" else "MIGRERING_STARTET",
-        )
+    override val hendelse =
+        object : Hendelse {
+            override fun navn(): String =
+                if (manglendeOpplysninger.isNotEmpty()) "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER" else "MIGRERING_STARTET"
 
-    internal val manglendeOpplysninger = packet["manglendeOpplysninger"].asArray().toList().map { it["uuid"].asString().toUUID() }
+            override fun opprinnelse(): Hendelse.Opprinnelse = opprinnelse
+        }
 
-    internal fun publiserManglendeOpplysninger(
-        opplysninger: List<Opplysning<*>>,
-        publish: (String) -> Unit,
-    ) {
-        publish(
+    internal val manglendeOpplysninger =
+        if (!packet["manglendeOpplysninger"].isMissingOrNull()) {
+            packet["manglendeOpplysninger"].asArray().toList().map {
+                it["uuid"].asString().toUUID()
+            }
+        } else {
+            emptyList()
+        }
+
+    internal fun svar(opplysninger: List<Opplysning<*>>): MigreringStartetMelding =
+        MigreringStartetMelding(
             packet
                 .also {
                     it["manglendeOpplysninger"] = NullNode.instance
@@ -44,7 +68,7 @@ internal class MigreringStartetMelding(
                                 "uuid" to opplysning.uuid.toString(),
                             )
                         }
-                }.toJson(),
+                },
+            Hendelse.Opprinnelse.Intern,
         )
-    }
 }

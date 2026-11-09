@@ -7,13 +7,11 @@ internal class BehandlingOpprettetMelding(
     packet: JsonMessage,
 ) : KafkaMelding(packet) {
     override val migreringId = packet["behandletHendelse"]["id"].asString().toUUID()
-    val behandlingId = packet["behandlingId"].asString().toUUID()
+    override val hendelse: Hendelse =
+        object : Hendelse {
+            override fun navn(): String = "BEHANDLING_OPPRETTET"
 
-    override fun hendelse() =
-        BehandlingOpprettetHendelse(
-            ident = ident,
-            migreringId = migreringId,
-            meldingsreferanseId = id,
-            type = navn.uppercase(),
-        )
+            override fun opprinnelse(): Hendelse.Opprinnelse = Hendelse.Opprinnelse.Ekstern
+        }
+    val behandlingId = packet["behandlingId"].asString().toUUID()
 }
