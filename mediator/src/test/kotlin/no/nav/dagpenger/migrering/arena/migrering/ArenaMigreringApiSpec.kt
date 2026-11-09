@@ -42,14 +42,14 @@ class ArenaMigreringApiSpec :
                         initiertAv = "Z999999",
                         opprettet = LocalDateTime.of(2026, 11, 6, 10, 0),
                         simulering = simulering,
-                        migreringsTidspunkt = LocalDate.of(2026, 11, 6),
+                        migreringTidspunkt = LocalDate.of(2026, 11, 6),
                     )
                 coEvery {
                     mediator.startMigrering(
                         sakId = migrering.sakId,
                         initiertAv = migrering.initiertAv,
                         simulering = simulering,
-                        migreringsTidspunkt = migrering.migreringsTidspunkt,
+                        migreringsTidspunkt = migrering.migreringTidspunkt,
                     )
                 } returns migrering
 
@@ -63,7 +63,7 @@ class ArenaMigreringApiSpec :
                                 """
                                 {
                                   "simulering": $simulering,
-                                  "migreringsTidspunkt": "${migrering.migreringsTidspunkt}"
+                                  "migreringsTidspunkt": "${migrering.migreringTidspunkt}"
                                 }
                                 """.trimIndent(),
                         )
@@ -83,7 +83,7 @@ class ArenaMigreringApiSpec :
                         sakId = migrering.sakId,
                         initiertAv = migrering.initiertAv,
                         simulering = simulering,
-                        migreringsTidspunkt = migrering.migreringsTidspunkt,
+                        migreringsTidspunkt = migrering.migreringTidspunkt,
                     )
                 }
             }

@@ -80,7 +80,13 @@ class StartMigreringMottakSpec :
             sendteOpplysninger.single()["verdi"].asInt() shouldBe opplysning.verdi
             sendteOpplysninger.single()["gyldigFraOgMed"].asString() shouldBe opplysning.gyldigFraOgMed.toString()
             verify(exactly = 1) {
-                test.repository.lagreMigreringHendelse(migreringId, any(), "migrering_startet", "testident", any())
+                test.repository.lagreMigreringHendelse(
+                    migreringId,
+                    any(),
+                    "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
+                    "testident",
+                    any(),
+                )
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
             }
@@ -131,7 +137,7 @@ class StartMigreringMottakSpec :
             startMelding["sakId"].asInt() shouldBe 12345
             startMelding["simulering"].asBoolean() shouldBe true
             startMelding["initiertAv"].asString() shouldBe "testbruker"
-            startMelding["migreringsTidspunkt"].asString() shouldBe "2026-11-06"
+            startMelding["migreringTidspunkt"].asString() shouldBe "2026-11-06"
             startMelding["opplysninger"].asArray().toList() shouldBe emptyList()
             markdown.dokumenterMelding(
                 "1. Migreringen starter uten opplysninger",
@@ -194,7 +200,13 @@ class StartMigreringMottakSpec :
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(dagsats, samordnet))
             }
             verify(exactly = 2) {
-                test.repository.lagreMigreringHendelse(migreringId, any(), "migrering_startet", "testident", any())
+                test.repository.lagreMigreringHendelse(
+                    migreringId,
+                    any(),
+                    "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
+                    "testident",
+                    any(),
+                )
             }
 
             val dokumentasjonPath =
@@ -233,7 +245,13 @@ class StartMigreringMottakSpec :
 
             test.rapid.inspektør.size shouldBe 2
             verify(exactly = 1) {
-                test.repository.lagreMigreringHendelse(migreringId, any(), "migrering_startet", "testident", any())
+                test.repository.lagreMigreringHendelse(
+                    migreringId,
+                    any(),
+                    "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
+                    "testident",
+                    any(),
+                )
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
             }

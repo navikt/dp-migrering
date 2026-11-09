@@ -43,7 +43,7 @@ class ForslagTilBehandlingsresultatMottakSpec :
                 test.repository.lagreMigreringHendelse(
                     test.migreringId,
                     meldingId,
-                    "forslag_til_behandlingsresultat",
+                    "FORSLAG_TIL_BEHANDLINGSRESULTAT",
                     "testident",
                     any(),
                 )

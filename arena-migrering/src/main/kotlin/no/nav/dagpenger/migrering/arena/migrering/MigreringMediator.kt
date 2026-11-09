@@ -1,14 +1,13 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
-import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
-import tools.jackson.databind.node.NullNode
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -33,7 +32,7 @@ class MigreringMediator(
                 ident = arenaRepository.hentIdentForSak(sakId),
                 initiertAv = initiertAv,
                 simulering = simulering,
-                migreringsTidspunkt = migreringsTidspunkt,
+                migreringTidspunkt = migreringsTidspunkt,
             )
         migreringRepository.lagreMigrering(migrering)
 
@@ -47,64 +46,33 @@ class MigreringMediator(
         return migrering
     }
 
-    fun vedManglendeOpplysninger(packet: JsonMessage) {
-        val migreringId = packet["migreringId"].asString().toUUID()
-        val manglendeOpplysninger = packet["manglendeOpplysninger"].asArray().toList().map { it.asString().toUUID() }
-        val meldingId = packet["@id"].asString().toUUID()
-        val meldingType = packet["@event_name"].asString()
-        val ident = packet["ident"].asString()
-
-        migreringRepository.lagreMigreringHendelse(
-            migreringId = migreringId,
-            meldingId = meldingId,
-            meldingType = meldingType,
-            ident = ident,
-            jsonData = packet.toJson(),
-        )
-
+    internal fun håndter(
+        melding: MigreringStartetMelding,
+        context: MessageContext,
+    ) {
+        melding.lagreMelding(migreringRepository)
         val opplysninger =
             migreringRepository
-                .hentManglendeOpplysningerForMigrering(migreringId, manglendeOpplysninger)
+                .hentManglendeOpplysningerForMigrering(melding.migreringId, melding.manglendeOpplysninger)
                 .map { it.opplysning }
 
-        publiserManglendeOpplysninger(packet, opplysninger)
+        melding.publiserManglendeOpplysninger(opplysninger) { json ->
+            context.publish(json)
+        }
 
         migreringRepository.markereOpplysningerSomMigrert(
-            migreringId = UUID.fromString(packet["migreringId"].asString()),
+            migreringId = melding.migreringId,
             opplysninger = opplysninger,
         )
     }
 
-    fun vedBehandlingOpprettet(packet: JsonMessage) {
-        val migreringId = packet["behandletHendelse"]["id"].asString().toUUID()
-        val behandlingId = packet["behandlingId"].asString().toUUID()
-        val meldingId = packet["@id"].asString().toUUID()
-        val meldingType = packet["@event_name"].asString()
-        val ident = packet["ident"].asString()
-
-        migreringRepository.lagreMigreringHendelse(
-            migreringId = migreringId,
-            meldingId = meldingId,
-            meldingType = meldingType,
-            ident = ident,
-            jsonData = packet.toJson(),
-        )
-        migreringRepository.markereBehandlingOpprettet(migreringId, behandlingId)
+    internal fun håndter(melding: BehandlingOpprettetMelding) {
+        melding.lagreMelding(migreringRepository)
+        migreringRepository.markereBehandlingOpprettet(melding.migreringId, melding.behandlingId)
     }
 
-    fun vedForslagTilBehandlingsresultat(packet: JsonMessage) {
-        val migreringId = packet["behandletHendelse"]["id"].asString().toUUID()
-        val meldingId = packet["@id"].asString().toUUID()
-        val meldingType = packet["@event_name"].asString()
-        val ident = packet["ident"].asString()
-
-        migreringRepository.lagreMigreringHendelse(
-            migreringId = migreringId,
-            meldingId = meldingId,
-            meldingType = meldingType,
-            ident = ident,
-            jsonData = packet.toJson(),
-        )
+    internal fun håndter(medling: ForslagTilBehandlingsresultatMelding) {
+        medling.lagreMelding(migreringRepository)
     }
 
     private fun publiserStartMigrering(migrering: Migrering) {
@@ -114,7 +82,7 @@ class MigreringMediator(
                     "migrering_startet",
                     mapOf(
                         "sakId" to migrering.sakId,
-                        "migreringsTidspunkt" to migrering.migreringsTidspunkt.toString(),
+                        "migreringTidspunkt" to migrering.migreringTidspunkt.toString(),
                         "simulering" to migrering.simulering,
                         "initiertAv" to migrering.initiertAv,
                         "ident" to migrering.ident,
@@ -122,27 +90,6 @@ class MigreringMediator(
                         "opplysninger" to emptyList<Any>(),
                     ),
                 ).toJson(),
-        )
-    }
-
-    private fun publiserManglendeOpplysninger(
-        packet: JsonMessage,
-        opplysninger: List<Opplysning<*>>,
-    ) {
-        rapidsConnection.publish(
-            packet
-                .also {
-                    it["manglendeOpplysninger"] = NullNode.instance
-                    it["opplysninger"] =
-                        opplysninger.map { opplysning ->
-                            mapOf(
-                                "navn" to opplysning.navn,
-                                "verdi" to opplysning.verdi,
-                                "gyldigFraOgMed" to opplysning.gyldigFraOgMed?.toString(),
-                                "uuid" to opplysning.uuid.toString(),
-                            )
-                        }
-                }.toJson(),
         )
     }
 

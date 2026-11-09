@@ -229,36 +229,12 @@ class MigreringRepositoryPostgresSpec :
             behandlinger shouldBe mapOf(migrering.migreringId to behandlingId, annenMigrering.migreringId to null)
         }
 
-        "lagrer migreringshendelse med alle felter og meldingstype i store bokstaver" {
-            val migrering = nyMigrering()
-            val meldingId = UUID.randomUUID()
-            val jsonData = """{"tekst":"test'\"verdi","antall":42}"""
-            repository.lagreMigrering(migrering)
-
-            repository.lagreMigreringHendelse(migrering.migreringId, meldingId, "migrering_startet", migrering.ident, jsonData)
-
-            databaseSession.session { session ->
-                session
-                    .run(
-                        queryOf("SELECT migrering_id, melding_id, melding_type, ident, data, lest_dato FROM migrering_hendelse")
-                            .map { row ->
-                                row.uuid("migrering_id") shouldBe migrering.migreringId
-                                row.uuid("melding_id") shouldBe meldingId
-                                row.string("melding_type") shouldBe "MIGRERING_STARTET"
-                                row.string("ident") shouldBe migrering.ident
-                                objectMapper.readTree(row.string("data")) shouldBe objectMapper.readTree(jsonData)
-                                row.localDateTime("lest_dato").shouldNotBeNull()
-                            }.asList,
-                    ).size shouldBe 1
-            }
-        }
-
         "duplikat melding-ID overskriver ikke den opprinnelige hendelsen" {
             val migrering = nyMigrering()
             val meldingId = UUID.randomUUID()
             val jsonData = """{"antall":42}"""
             repository.lagreMigrering(migrering)
-            repository.lagreMigreringHendelse(migrering.migreringId, meldingId, "migrering_startet", migrering.ident, jsonData)
+            repository.lagreMigreringHendelse(migrering.migreringId, meldingId, "MIGRERING_STARTET", migrering.ident, jsonData)
 
             repository.lagreMigreringHendelse(
                 migrering.migreringId,
@@ -298,5 +274,5 @@ private fun nyMigrering() =
         ident = "12345678987",
         sakId = 12345,
         initiertAv = "testbruker",
-        migreringsTidspunkt = LocalDate.of(2026, 11, 5),
+        migreringTidspunkt = LocalDate.of(2026, 11, 5),
     )

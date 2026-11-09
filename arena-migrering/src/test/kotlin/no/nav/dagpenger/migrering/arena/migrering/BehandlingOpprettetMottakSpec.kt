@@ -43,7 +43,7 @@ class BehandlingOpprettetMottakSpec :
                 test.repository.lagreMigreringHendelse(
                     test.migreringId,
                     meldingId,
-                    "behandling_opprettet",
+                    "BEHANDLING_OPPRETTET",
                     "testident",
                     any(),
                 )

@@ -11,6 +11,6 @@ data class Migrering(
     val sakId: Int,
     val initiertAv: String,
     val opprettet: LocalDateTime = LocalDateTime.now(),
-    val migreringsTidspunkt: LocalDate,
+    val migreringTidspunkt: LocalDate,
     val simulering: Boolean = false,
 )

@@ -50,7 +50,7 @@ class ForslagTilBehandlingsresultatMottak(
                 "migreringId" to packet["behandletHendelse"]["id"].asString(),
             ) {
                 logger.info { "Mottok melding om forslag til behandlingsresultat for migrering" }
-                migreringMediator.vedForslagTilBehandlingsresultat(packet)
+                migreringMediator.håndter(ForslagTilBehandlingsresultatMelding(packet))
             }
         }
     }

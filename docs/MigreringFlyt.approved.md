@@ -18,7 +18,7 @@ Den første migrering_startet-meldingen har en tom opplysningsliste. Mottaket sv
   "ident" : "testident",
   "initiertAv" : "testbruker",
   "migreringId" : "<migreringId>",
-  "migreringsTidspunkt" : "2026-11-06",
+  "migreringTidspunkt" : "2026-11-06",
   "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
@@ -47,7 +47,7 @@ Tjenesten setter manglendeOpplysninger på startmeldingen og beholder den tomme 
     "0194881f-9428-74d5-b160-f63a4c61a24f"
   ],
   "migreringId" : "<migreringId>",
-  "migreringsTidspunkt" : "2026-11-06",
+  "migreringTidspunkt" : "2026-11-06",
   "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
@@ -68,13 +68,18 @@ Mottaket henter dagsats fra repository-et, publiserer den og markerer den som mi
 ```json
 {
   "@event_name" : "migrering_startet",
+  "@forårsaket_av" : {
+    "event_name" : "<metadata>",
+    "id" : "<metadata>",
+    "opprettet" : "<metadata>"
+  },
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
   "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : null,
   "migreringId" : "<migreringId>",
-  "migreringsTidspunkt" : "2026-11-06",
+  "migreringTidspunkt" : "2026-11-06",
   "opplysninger" : [
     {
       "gyldigFraOgMed" : "2026-11-06",
@@ -86,6 +91,10 @@ Mottaket henter dagsats fra repository-et, publiserer den og markerer den som mi
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
+    },
     {
       "id" : "<metadata>",
       "time" : "<metadata>"
@@ -106,6 +115,11 @@ Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samord
 ```json
 {
   "@event_name" : "migrering_startet",
+  "@forårsaket_av" : {
+    "event_name" : "<metadata>",
+    "id" : "<metadata>",
+    "opprettet" : "<metadata>"
+  },
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
   "ident" : "testident",
@@ -114,7 +128,7 @@ Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samord
     "0194881f-9428-74d5-b160-f63a4c61a23c"
   ],
   "migreringId" : "<migreringId>",
-  "migreringsTidspunkt" : "2026-11-06",
+  "migreringTidspunkt" : "2026-11-06",
   "opplysninger" : [
     {
       "gyldigFraOgMed" : "2026-11-06",
@@ -126,6 +140,10 @@ Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samord
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
+    },
     {
       "id" : "<metadata>",
       "time" : "<metadata>"
@@ -146,13 +164,18 @@ Repository-et returnerer både tidligere migrert dagsats og etterspurt samordnin
 ```json
 {
   "@event_name" : "migrering_startet",
+  "@forårsaket_av" : {
+    "event_name" : "<metadata>",
+    "id" : "<metadata>",
+    "opprettet" : "<metadata>"
+  },
   "@id" : "<metadata>",
   "@opprettet" : "<metadata>",
   "ident" : "testident",
   "initiertAv" : "testbruker",
   "manglendeOpplysninger" : null,
   "migreringId" : "<migreringId>",
-  "migreringsTidspunkt" : "2026-11-06",
+  "migreringTidspunkt" : "2026-11-06",
   "opplysninger" : [
     {
       "gyldigFraOgMed" : "2026-11-06",
@@ -170,6 +193,14 @@ Repository-et returnerer både tidligere migrert dagsats og etterspurt samordnin
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
+    },
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
+    },
     {
       "id" : "<metadata>",
       "time" : "<metadata>"

@@ -55,7 +55,7 @@ class MigreringRepositoryPostgres(
                         sakId = row.int("sak_id"),
                         initiertAv = row.string("initiert_av"),
                         opprettet = row.localDateTime("opprettet"),
-                        migreringsTidspunkt = row.localDate("migrerings_tidspunkt"),
+                        migreringTidspunkt = row.localDate("migrerings_tidspunkt"),
                     )
                 }.asSingle,
             )
@@ -224,7 +224,7 @@ class MigreringRepositoryPostgres(
                                 "ident" to ident,
                                 "migrering_id" to migreringId,
                                 "melding_id" to meldingId,
-                                "melding_type" to meldingType.uppercase(),
+                                "melding_type" to meldingType,
                                 "data" to
                                     PGobject().apply {
                                         type = "json"
@@ -236,4 +236,10 @@ class MigreringRepositoryPostgres(
             }
         }
     }
+
+    private fun hendelsesType(hendelsesType: String): String =
+        when (hendelsesType) {
+            "migrering_startet" -> "MIGRERING_STARTET"
+            else -> hendelsesType.uppercase()
+        }
 }
