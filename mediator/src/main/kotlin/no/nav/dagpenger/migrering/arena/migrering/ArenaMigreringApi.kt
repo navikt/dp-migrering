@@ -15,6 +15,7 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.dagpenger.stpeter.plugin.StPeterPlugin
+import no.dagpenger.stpeter.plugin.objectMapper
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringRequest
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
 import no.nav.dagpenger.migrering.api.FeatureNotEnabledException
@@ -99,7 +100,7 @@ internal fun Application.arenaMigreringApi(
                                     hentInnslag = { lastEventId ->
                                         migreringMediator
                                             .hentOppdateringer(migreringId, lastEventId, limit = 10)
-                                            .map { SseInnslag(id = it.id, event = it.hendelse, data = it.data) }
+                                            .map { SseInnslag(id = it.id, event = it.hendelse, data = objectMapper.writeValueAsString(it)) }
                                     },
                                 ),
                             erAutentisert = token::isNotExpired,

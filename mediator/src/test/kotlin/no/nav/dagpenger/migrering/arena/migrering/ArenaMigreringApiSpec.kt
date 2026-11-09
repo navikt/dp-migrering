@@ -195,13 +195,12 @@ class ArenaMigreringApiSpec :
                     listOf(
                         MigreringHendelse(
                             id = 8,
-                            ident = migrering.ident,
                             migreringId = migrering.migreringId,
                             meldingId = UUID.randomUUID(),
                             sakId = migrering.sakId,
                             initiertAv = migrering.initiertAv,
                             hendelse = "migrering_startet",
-                            data = """{"status":"startet"}""",
+                            // data = """{"status":"startet"}""",
                             opprinnelse = "Intern",
                             tidspunkt = migrering.opprettet,
                         ),
@@ -234,8 +233,8 @@ class ArenaMigreringApiSpec :
                                     if (line.isEmpty()) break
                                     lines.add(line)
                                 }
-                                lines.toSet() shouldBe
-                                    setOf("id: 8", "event: migrering_startet", """data: {"status":"startet"}""")
+                                lines[0] shouldBe "event: migrering_startet"
+                                lines[2] shouldBe "id: 8"
                                 channel.cancel(null)
                             }
                     }

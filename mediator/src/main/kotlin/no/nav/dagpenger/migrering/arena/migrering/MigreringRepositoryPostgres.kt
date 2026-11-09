@@ -270,13 +270,11 @@ class MigreringRepositoryPostgres(
                     val dataJson = row.string("data")
                     MigreringHendelse(
                         id = row.long("id"),
-                        ident = row.string("ident"),
                         meldingId = row.uuid("melding_id"),
                         migreringId = row.uuid("migrering_id"),
                         hendelse = row.string("hendelse"),
                         sakId = row.int("sak_id"),
                         initiertAv = row.string("initiert_av"),
-                        data = dataJson,
                         tidspunkt = row.localDateTime("tidspunkt"),
                         opprinnelse = row.string("opprinnelse"),
                     )

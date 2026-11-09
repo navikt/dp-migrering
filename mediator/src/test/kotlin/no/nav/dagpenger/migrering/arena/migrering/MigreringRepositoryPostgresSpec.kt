@@ -363,12 +363,10 @@ class MigreringRepositoryPostgresSpec :
             førsteSide.map { it.meldingId } shouldBe meldingIder.take(2)
             førsteSide.map { it.id } shouldBe førsteSide.map { it.id }.sorted()
             førsteSide.first().apply {
-                ident shouldBe migrering.ident
                 migreringId shouldBe migrering.migreringId
                 sakId shouldBe migrering.sakId
                 initiertAv shouldBe migrering.initiertAv
                 hendelse shouldBe "hendelse_0"
-                objectMapper.readTree(data) shouldBe objectMapper.readTree("""{"nummer":0}""")
                 opprinnelse shouldBe "Intern"
             }
 
