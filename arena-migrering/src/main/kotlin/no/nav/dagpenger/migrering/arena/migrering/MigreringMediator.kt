@@ -165,4 +165,16 @@ class MigreringMediator(
             opprinnelse = melding.hendelse.opprinnelse().name,
         )
     }
+
+    fun hentMigrering(migreringId: UUID): Migrering? = migreringRepository.hentMigrering(migreringId)
+
+    fun hentOppdateringer(
+        migreringId: UUID,
+        lastEventId: Long,
+        limit: Int,
+    ): List<MigreringHendelse> {
+        require(lastEventId >= 0) { "Cursor må være 0 eller større" }
+        require(limit in 1..100) { "Limit må være mellom 1 og 100" }
+        return migreringRepository.migreringHendelser(migreringId, lastEventId, limit)
+    }
 }

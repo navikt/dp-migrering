@@ -4,6 +4,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.plugins.NotFoundException
 import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -11,14 +12,27 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import no.dagpenger.stpeter.plugin.StPeterPlugin
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringRequest
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
 import no.nav.dagpenger.migrering.api.FeatureNotEnabledException
 import no.nav.dagpenger.migrering.api.oidcToken
+import no.nav.dagpenger.migrering.api.sse.SseInnslag
+import no.nav.dagpenger.migrering.api.sse.SseKilde
+import no.nav.dagpenger.migrering.api.sse.opprettSseStream
+import no.nav.dagpenger.migrering.api.sse.sseCursorEller
+import no.nav.dagpenger.migrering.api.token
+import no.nav.dagpenger.migrering.arena.innsyn.hentEllerAvvisVedIkkeFunnet
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
+import java.util.UUID
 
-internal fun Application.arenaMigreringApi(orchestrator: MigreringMediator) {
+internal fun Application.arenaMigreringApi(
+    migreringMediator: MigreringMediator,
+    stPeter: StPeterPlugin = StPeterPlugin(),
+) {
     routing {
         route("/arena/migrering") {
             swaggerUI(path = "openapi", swaggerFile = "arena-migrering-api.yaml", {
@@ -33,7 +47,7 @@ internal fun Application.arenaMigreringApi(orchestrator: MigreringMediator) {
                     if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
                         val startMigreringRequest = call.receive<StartMigreringRequest>()
                         val migrering =
-                            orchestrator.startMigrering(
+                            migreringMediator.startMigrering(
                                 sakId = sakId,
                                 initiertAv = call.oidcToken().navIdent(),
                                 simulering = startMigreringRequest.simulering,
@@ -53,6 +67,42 @@ internal fun Application.arenaMigreringApi(orchestrator: MigreringMediator) {
                     } else {
                         throw FeatureNotEnabledException(
                             message = "Feature for å starte migrering er deaktivert",
+                        )
+                    }
+                }
+
+                get("/{migreringId}/oppdateringer") {
+                    val migreringId =
+                        try {
+                            UUID.fromString(call.parameters["migreringId"])
+                        } catch (_: IllegalArgumentException) {
+                            throw BadRequestException("Ugyldig migreringId")
+                        }
+                    val cursor = call.sseCursorEller { 0 }
+                    val migrering =
+                        withContext(Dispatchers.IO) {
+                            call.hentEllerAvvisVedIkkeFunnet {
+                                migreringMediator.hentMigrering(migreringId)
+                                    ?: throw NotFoundException("Migrering finnes ikke")
+                            }
+                        }
+                    val token = call.oidcToken()
+                    stPeter.vedTilgangTilPerson(
+                        ident = migrering.ident,
+                        token = call.token(),
+                        originRoute = "/arena/migrering/{migreringId}/oppdateringer",
+                    ) {
+                        call.opprettSseStream(
+                            kilde =
+                                SseKilde(
+                                    defaultCursor = { cursor },
+                                    hentInnslag = { lastEventId ->
+                                        migreringMediator
+                                            .hentOppdateringer(migreringId, lastEventId, limit = 10)
+                                            .map { SseInnslag(id = it.id, event = it.hendelse, data = it.data) }
+                                    },
+                                ),
+                            erAutentisert = token::isNotExpired,
                         )
                     }
                 }

@@ -24,6 +24,7 @@ internal class MigreringStartetMelding(
                             "initiertAv" to migrering.initiertAv,
                             "ident" to migrering.ident,
                             "migreringId" to migrering.migreringId.toString(),
+                            "opplysninger" to emptyList<Any>(),
                         ),
                     ),
                 Hendelse.Opprinnelse.Intern,

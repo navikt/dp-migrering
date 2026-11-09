@@ -326,6 +326,59 @@ class MigreringRepositoryPostgresSpec :
             }
         }
 
+        "henter hendelser sidevis i ID-rekkefølge og bare for valgt migrering" {
+            val migrering = nyMigrering()
+            val annenMigrering = nyMigrering()
+            repository.lagreMigrering(migrering)
+            repository.lagreMigrering(annenMigrering)
+            val meldingIder = List(3) { UUID.randomUUID() }
+            meldingIder.forEachIndexed { index, meldingId ->
+                repository.lagreMigreringHendelse(
+                    migrering.migreringId,
+                    meldingId,
+                    "hendelse_$index",
+                    migrering.ident,
+                    """{"nummer":$index}""",
+                    "Intern",
+                )
+                repository.lagreMigreringHendelse(
+                    annenMigrering.migreringId,
+                    UUID.randomUUID(),
+                    "annen_hendelse",
+                    annenMigrering.ident,
+                    "{}",
+                    "Ekstern",
+                )
+            }
+            databaseSession.session { session ->
+                session.run(
+                    queryOf(
+                        "UPDATE migrering_hendelse SET tidspunkt = NOW() + INTERVAL '1 day' WHERE melding_id = :melding_id",
+                        mapOf("melding_id" to meldingIder.first()),
+                    ).asUpdate,
+                )
+            }
+
+            val førsteSide = repository.migreringHendelser(migrering.migreringId, lastEventId = 0, limit = 2)
+            førsteSide.map { it.meldingId } shouldBe meldingIder.take(2)
+            førsteSide.map { it.id } shouldBe førsteSide.map { it.id }.sorted()
+            førsteSide.first().apply {
+                ident shouldBe migrering.ident
+                migreringId shouldBe migrering.migreringId
+                sakId shouldBe migrering.sakId
+                initiertAv shouldBe migrering.initiertAv
+                hendelse shouldBe "hendelse_0"
+                objectMapper.readTree(data) shouldBe objectMapper.readTree("""{"nummer":0}""")
+                opprinnelse shouldBe "Intern"
+            }
+
+            val sisteSide =
+                repository.migreringHendelser(migrering.migreringId, lastEventId = førsteSide.last().id, limit = 2)
+            sisteSide.map { it.meldingId } shouldBe meldingIder.takeLast(1)
+            repository.migreringHendelser(migrering.migreringId, lastEventId = sisteSide.single().id, limit = 2) shouldBe emptyList()
+            repository.migreringHendelser(UUID.randomUUID()) shouldBe emptyList()
+        }
+
         "avviser migreringshendelser for en migrering som ikke finnes" {
             shouldThrow<SQLException> {
                 repository.lagreMigreringHendelse(

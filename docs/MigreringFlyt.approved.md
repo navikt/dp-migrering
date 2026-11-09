@@ -19,6 +19,7 @@ Den første migrering_startet-meldingen sendes uten opplysningsliste. Mottaket s
   "initiertAv" : "testbruker",
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",
+  "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [
@@ -50,6 +51,7 @@ Tjenesten setter manglendeOpplysninger på startmeldingen, som fortsatt mangler 
   ],
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",
+  "opplysninger" : [ ],
   "sakId" : 12345,
   "simulering" : true,
   "system_participating_services" : [

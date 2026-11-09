@@ -9,6 +9,82 @@ servers:
   - url: https://dp-migrering.intern.dev.nav.no
     description: dev
 paths:
+  /arena/migrering/{migreringId}/oppdateringer:
+    get:
+      summary: Strømmer lagrede hendelser for én migrering
+      description: |
+        Krever saksbehandlergruppe og tilgang til personen i StPeter.
+        Hendelser sendes i stigende database-ID med hendelsesnavnet som `event`,
+        database-ID som `id` og lagret hendelses-JSON som `data`.
+        Uten cursor sendes historikken fra starten. Ved gjenoppkobling sendes bare
+        hendelser med ID større enn cursor. `Last-Event-ID` har forrang over `since`.
+        Strømmen sender `event: ping` med `data: {}` etter 20 sekunder uten hendelser.
+        Etter 15 minutter, eller før token utløper, sendes `event: close` med
+        `data: {"reason":"reauth"}`. Klienten må da hente et nytt token og koble til
+        med siste mottatte hendelses-ID. Hendelser hentes i puljer på 10, med
+        to sekunders pause når det ikke finnes nye hendelser.
+        Bruk en SSE-klient som kan sende Authorization-header.
+      tags:
+        - Arena migrering
+      security:
+        - azureAd: [ ]
+      parameters:
+        - name: migreringId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Last-Event-ID
+          in: header
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: since
+          in: query
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            default: 0
+      responses:
+        "200":
+          description: Hendelsesstrøm. Ping og close har ingen hendelses-ID.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              example: |
+                event: migrering_startet
+                data: {"status":"startet"}
+                id: 42
+
+        "400":
+          description: Ugyldig migreringId eller cursor
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+        "401":
+          description: Manglende eller ugyldig autentisering
+        "403":
+          description: Ingen tilgang til personen eller migreringen finnes ikke
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+        "429":
+          description: Grensen på 100 samtidige strømmer per applikasjonsinstans er nådd
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Antall sekunder før klienten kan prøve igjen
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
   /arena/migrering/sak/{sakId}:
     post:
       summary: Starter migrering av en sak fra Arena

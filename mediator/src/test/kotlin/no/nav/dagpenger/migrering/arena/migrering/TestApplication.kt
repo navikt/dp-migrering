@@ -14,7 +14,11 @@ import io.ktor.http.content.TextContent
 import io.ktor.serialization.jackson3.JacksonConverter
 import io.ktor.server.application.install
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.sse.SSE
 import io.ktor.server.testing.testApplication
+import no.dagpenger.stpeter.plugin.StPeterConfig
+import no.dagpenger.stpeter.plugin.StPeterPlugin
+import no.dagpenger.stpeter.plugin.test.StPeterWithOAuthMock
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.auth.AuthFactory.azure_app
 import no.nav.dagpenger.migrering.api.authenticationConfig
@@ -22,7 +26,6 @@ import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.TestApplication.testAzureAdToken
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
 import no.nav.dagpenger.migrering.objectMapper
-import no.nav.security.mock.oauth2.MockOAuth2Server
 
 class TestContext(
     val client: HttpClient,
@@ -62,8 +65,8 @@ object TestApplication {
     internal const val CLIENT_ID = "dp-arena-innsyn"
     internal const val SAKSBEHANDLER_GRUPPE = "dagpenger-saksbehandler"
 
-    internal val mockOAuth2Server: MockOAuth2Server by lazy {
-        MockOAuth2Server().also { server ->
+    internal val mockOAuth2Server: StPeterWithOAuthMock by lazy {
+        StPeterWithOAuthMock().also { server ->
             server.start()
         }
     }
@@ -74,7 +77,7 @@ object TestApplication {
                     Configuration.Grupper.saksbehandler.name to "dagpenger-saksbehandler",
                     // Configuration.Maskintilgang.navn.name to oppsett,
                     azure_app.client_id.name to CLIENT_ID,
-                    azure_app.well_known_url.name to "${mockOAuth2Server.wellKnownUrl(AZUREAD_ISSUER_ID)}",
+                    azure_app.well_known_url.name to "${mockOAuth2Server.config()["AZURE_APP_WELL_KNOWN_URL"]}",
                 ),
             ),
         )
@@ -92,10 +95,11 @@ object TestApplication {
                         "NAVident" to navIdent,
                         "groups" to ADGrupper,
                     ),
-            ).serialize()
+            )
 
     internal fun withMockAuthServerAndTestApplication(
         migreringMediator: MigreringMediator,
+        stPeter: StPeterPlugin = StPeterPlugin(config = StPeterConfig(mockOAuth2Server.config())),
         test: suspend TestContext.() -> Unit,
     ) {
         testApplication {
@@ -106,8 +110,12 @@ object TestApplication {
                 install(StatusPages) {
                     statusPagesConfig()
                 }
+                install(SSE)
                 authenticationConfig(authFactory)
-                arenaMigreringApi(orchestrator = migreringMediator)
+                arenaMigreringApi(
+                    migreringMediator = migreringMediator,
+                    stPeter = stPeter,
+                )
             }
 
             val testClient =

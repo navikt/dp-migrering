@@ -38,4 +38,10 @@ interface MigreringRepository {
         jsonData: String,
         opprinnelse: String,
     )
+
+    fun migreringHendelser(
+        migreringId: UUID,
+        lastEventId: Long = 0,
+        limit: Int = 10,
+    ): List<MigreringHendelse>
 }

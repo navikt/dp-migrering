@@ -35,7 +35,7 @@ import javax.sql.DataSource
  * men skjuler NotFoundException bak samme TilgangAvvistException-form som en reell avvisning gir.
  */
 
-private inline fun <T> ApplicationCall.hentEllerAvvisVedIkkeFunnet(hent: () -> T): T =
+internal inline fun <T> ApplicationCall.hentEllerAvvisVedIkkeFunnet(hent: () -> T): T =
     try {
         hent()
     } catch (_: NotFoundException) {

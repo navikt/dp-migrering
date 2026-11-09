@@ -446,7 +446,7 @@ class StartMigreringMottakSpec :
             startMelding["simulering"].asBoolean() shouldBe true
             startMelding["initiertAv"].asString() shouldBe "testbruker"
             startMelding["migreringTidspunkt"].asString() shouldBe "2026-11-06"
-            startMelding.path("opplysninger").isMissingNode shouldBe true
+            startMelding.path("opplysninger").isEmpty shouldBe true
             markdown.dokumenterMelding(
                 "1. Migreringen starter uten opplysninger",
                 "Den første migrering_startet-meldingen sendes uten opplysningsliste. Mottaket svarer ikke.",

@@ -209,6 +209,13 @@ class MigreringRepositoryPostgres(
     ) {
         databaseSession.session { session ->
             session.transaction { transactionalSession: TransactionalSession ->
+                // Lås før sekvens-ID tildeles, slik at samtidige skriv for samme migrering committes i ID-rekkefølge.
+                transactionalSession.run(
+                    queryOf(
+                        "SELECT migrering_id FROM migrering WHERE migrering_id = :migrering_id FOR UPDATE",
+                        mapOf("migrering_id" to migreringId),
+                    ).map { it.uuid("migrering_id") }.asSingle,
+                )
                 transactionalSession.run(
                     queryOf(
                         //language=PostgreSQL
@@ -239,9 +246,41 @@ class MigreringRepositoryPostgres(
         }
     }
 
-    private fun hendelsesType(hendelsesType: String): String =
-        when (hendelsesType) {
-            "migrering_startet" -> "MIGRERING_STARTET"
-            else -> hendelsesType.uppercase()
+    override fun migreringHendelser(
+        migreringId: UUID,
+        lastEventId: Long,
+        limit: Int,
+    ): List<MigreringHendelse> =
+        databaseSession.session { session ->
+            session.run(
+                queryOf(
+                    //language=PostgreSQL
+                    statement =
+                        """
+                        SELECT h.id, h.ident, h.melding_id, h.migrering_id, h.hendelse, h.data, h.tidspunkt, h.opprinnelse,
+                               m.sak_id, m.initiert_av
+                        FROM migrering_hendelse h
+                        JOIN migrering m ON m.migrering_id = h.migrering_id
+                        WHERE h.migrering_id = :migrering_id AND h.id > :last_event_id
+                        ORDER BY h.id ASC
+                        LIMIT :limit
+                        """.trimIndent(),
+                    paramMap = mapOf("migrering_id" to migreringId, "last_event_id" to lastEventId, "limit" to limit),
+                ).map { row ->
+                    val dataJson = row.string("data")
+                    MigreringHendelse(
+                        id = row.long("id"),
+                        ident = row.string("ident"),
+                        meldingId = row.uuid("melding_id"),
+                        migreringId = row.uuid("migrering_id"),
+                        hendelse = row.string("hendelse"),
+                        sakId = row.int("sak_id"),
+                        initiertAv = row.string("initiert_av"),
+                        data = dataJson,
+                        tidspunkt = row.localDateTime("tidspunkt"),
+                        opprinnelse = row.string("opprinnelse"),
+                    )
+                }.asList,
+            )
         }
 }
