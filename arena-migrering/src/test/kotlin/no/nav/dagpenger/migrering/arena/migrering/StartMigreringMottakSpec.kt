@@ -1,15 +1,25 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
+import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.FailedMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.SentMessage
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.Called
 import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
+import io.mockk.verifyOrder
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
@@ -37,6 +47,86 @@ class StartMigreringMottakSpec :
             skruAvFeatures()
         }
 
+        "lagrer startmeldingen som utgående etter publisering med samme melding-ID og data" {
+            val rapid = spyk(TestRapid())
+            val test = StartMigreringTest(rapid)
+
+            val migrering = test.startMigrering()
+
+            rapid.inspektør.size shouldBe 1
+            val melding = rapid.inspektør.message(0)
+            val meldingId = UUID.fromString(melding["@id"].asString())
+            verifyOrder {
+                rapid.publish(any<List<OutgoingMessage>>())
+                test.repository.lagreMigreringHendelse(
+                    migrering.migreringId,
+                    meldingId,
+                    "MIGRERING_STARTET",
+                    "testident",
+                    melding.toString(),
+                    HendelseRetning.UTGAENDE,
+                )
+            }
+        }
+
+        "lagrer ikke startmeldingen som sendt når publisering feiler" {
+            val rapid = spyk(TestRapid())
+            val test = StartMigreringTest(rapid)
+            every { rapid.publish(any<List<OutgoingMessage>>()) } answers {
+                emptyList<SentMessage>() to
+                    listOf(
+                        FailedMessage(
+                            0,
+                            firstArg<List<OutgoingMessage>>().single(),
+                            IllegalStateException("Publisering feilet"),
+                        ),
+                    )
+            }
+
+            shouldThrow<IllegalStateException> {
+                test.startMigrering()
+            }
+
+            verify(exactly = 0) {
+                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
+            }
+        }
+
+        "lagrer ikke svar som sendt eller opplysninger som migrert når publisering feiler" {
+            val test = StartMigreringTest()
+            val migrering = test.startMigrering()
+            val opplysning = Opplysning("Dagsats", 1500, null, UUID.randomUUID())
+            val json = svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning))
+            val melding = MigreringStartetMelding(JsonMessage(json, MessageProblems(json)))
+            val context = mockk<MessageContext>()
+            every {
+                test.repository.hentManglendeOpplysningerForMigrering(migrering.migreringId, listOf(opplysning.uuid))
+            } returns listOf(MigreringOpplysning(opplysning, false, null))
+            every { context.publish(any<List<OutgoingMessage>>()) } answers {
+                emptyList<SentMessage>() to
+                    listOf(
+                        FailedMessage(
+                            0,
+                            firstArg<List<OutgoingMessage>>().single(),
+                            IllegalStateException("Publisering feilet"),
+                        ),
+                    )
+            }
+            clearMocks(test.repository, answers = false)
+
+            shouldThrow<IllegalStateException> {
+                test.mediator.håndter(melding, context)
+            }
+
+            verify(exactly = 1) {
+                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.INNGAENDE)
+            }
+            verify(exactly = 0) {
+                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
+                test.repository.markereOpplysningerSomMigrert(any(), any())
+            }
+        }
+
         "ignorerer den første migrering_startet-meldingen uten manglendeOpplysninger" {
             val test = StartMigreringTest()
             test.startMigrering()
@@ -60,6 +150,11 @@ class StartMigreringMottakSpec :
             every {
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
             } returns listOf(MigreringOpplysning(opplysning, false, null))
+            every {
+                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), HendelseRetning.UTGAENDE)
+            } answers {
+                test.rapid.inspektør.size shouldBe 2
+            }
 
             test.rapid.sendTestMessage(
                 svarMedManglendeOpplysninger(test.rapid.inspektør.message(0), listOf(opplysning)),
@@ -67,6 +162,10 @@ class StartMigreringMottakSpec :
 
             test.rapid.inspektør.size shouldBe 2
             val svar = test.rapid.inspektør.message(1)
+            svar["@id"].asString() shouldNotBe
+                test.rapid.inspektør
+                    .message(0)["@id"]
+                    .asString()
             svar["@event_name"].asString() shouldBe "migrering_startet"
             svar["migreringId"].asString() shouldBe migreringId.toString()
             svar["sakId"].asInt() shouldBe 12345
@@ -86,9 +185,20 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                     "testident",
                     any(),
+                    HendelseRetning.INNGAENDE,
                 )
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
+            }
+            verify(exactly = 1) {
+                test.repository.lagreMigreringHendelse(
+                    migreringId,
+                    UUID.fromString(svar["@id"].asString()),
+                    "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
+                    "testident",
+                    svar.toString(),
+                    HendelseRetning.UTGAENDE,
+                )
             }
         }
 
@@ -128,6 +238,7 @@ class StartMigreringMottakSpec :
                         "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                         "testident",
                         any(),
+                        HendelseRetning.INNGAENDE,
                     )
                     test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(dagsats.uuid, samordnet.uuid))
                 }
@@ -274,6 +385,7 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                     "testident",
                     any(),
+                    HendelseRetning.INNGAENDE,
                 )
             }
 
@@ -319,6 +431,7 @@ class StartMigreringMottakSpec :
                     "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER",
                     "testident",
                     any(),
+                    HendelseRetning.INNGAENDE,
                 )
                 test.repository.hentManglendeOpplysningerForMigrering(migreringId, listOf(opplysning.uuid))
                 test.repository.markereOpplysningerSomMigrert(migreringId, listOf(opplysning))
@@ -342,11 +455,12 @@ class StartMigreringMottakSpec :
         }
     })
 
-private class StartMigreringTest {
-    val rapid = TestRapid()
+private class StartMigreringTest(
+    val rapid: TestRapid = TestRapid(),
+) {
     private val arenaRepository = mockk<ArenaRepository>()
     val repository = mockk<MigreringRepository>()
-    private val mediator =
+    val mediator =
         MigreringMediator(
             arenaRepository = arenaRepository,
             migreringRepository = repository,
@@ -369,7 +483,7 @@ private class StartMigreringTest {
             )
         every { repository.lagreMigrering(any()) } just Runs
         every { repository.lagreOpplysninger(any(), any()) } just Runs
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any()) } just Runs
+        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any()) } just Runs
         every { repository.markereOpplysningerSomMigrert(any(), any()) } just Runs
         StartMigreringMottak(
             rapidsConnection = rapid,

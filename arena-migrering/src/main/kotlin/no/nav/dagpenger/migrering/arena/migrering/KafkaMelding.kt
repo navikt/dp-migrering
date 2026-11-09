@@ -21,13 +21,17 @@ internal abstract class KafkaMelding(
 
     abstract fun hendelse(): Hendelse
 
-    fun lagreMelding(repository: MigreringRepository) {
+    fun lagreMelding(
+        repository: MigreringRepository,
+        retning: HendelseRetning,
+    ) {
         repository.lagreMigreringHendelse(
             migreringId = migreringId,
             meldingId = id,
             meldingType = hendelse().type(),
             ident = ident,
             jsonData = toJson(),
+            retning = retning,
         )
     }
 

@@ -46,6 +46,7 @@ class ForslagTilBehandlingsresultatMottakSpec :
                     "FORSLAG_TIL_BEHANDLINGSRESULTAT",
                     "testident",
                     any(),
+                    HendelseRetning.INNGAENDE,
                 )
             }
             val lagret = mapper.readTree(test.lagretHendelse.captured)
@@ -107,7 +108,7 @@ private class ForslagTilBehandlingsresultatTest {
     val lagretHendelse = slot<String>()
 
     init {
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), capture(lagretHendelse)) } just Runs
+        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), capture(lagretHendelse), any()) } just Runs
         ForslagTilBehandlingsresultatMottak(
             rapidsConnection = rapid,
             migreringMediator =

@@ -229,12 +229,83 @@ class MigreringRepositoryPostgresSpec :
             behandlinger shouldBe mapOf(migrering.migreringId to behandlingId, annenMigrering.migreringId to null)
         }
 
-        "duplikat melding-ID overskriver ikke den opprinnelige hendelsen" {
+        HendelseRetning.entries.forEach { retning ->
+            "setter bare tidspunkt for $retning og bevarer tidspunkt og data ved gjentatt lagring" {
+                val migrering = nyMigrering()
+                val meldingId = UUID.randomUUID()
+                val jsonData = """{"antall":42}"""
+                repository.lagreMigrering(migrering)
+
+                fun lagre(retning: HendelseRetning) {
+                    repository.lagreMigreringHendelse(
+                        migrering.migreringId,
+                        meldingId,
+                        "MIGRERING_STARTET",
+                        migrering.ident,
+                        jsonData,
+                        retning,
+                    )
+                }
+
+                fun tidspunkter() =
+                    databaseSession.session { session ->
+                        session
+                            .run(
+                                queryOf("SELECT lest_dato, sent_dato FROM migrering_hendelse")
+                                    .map { row -> row.localDateTimeOrNull("lest_dato") to row.localDateTimeOrNull("sent_dato") }
+                                    .asSingle,
+                            ).shouldNotBeNull()
+                    }
+
+                lagre(retning)
+                val opprinneligeTidspunkter = tidspunkter()
+                when (retning) {
+                    HendelseRetning.INNGAENDE -> {
+                        opprinneligeTidspunkter.first.shouldNotBeNull()
+                        opprinneligeTidspunkter.second shouldBe null
+                    }
+
+                    HendelseRetning.UTGAENDE -> {
+                        opprinneligeTidspunkter.first shouldBe null
+                        opprinneligeTidspunkter.second.shouldNotBeNull()
+                    }
+                }
+
+                lagre(retning)
+                tidspunkter() shouldBe opprinneligeTidspunkter
+
+                val motsattRetning =
+                    when (retning) {
+                        HendelseRetning.INNGAENDE -> HendelseRetning.UTGAENDE
+                        HendelseRetning.UTGAENDE -> HendelseRetning.INNGAENDE
+                    }
+                lagre(motsattRetning)
+                val beggeTidspunkter = tidspunkter()
+                beggeTidspunkter.first.shouldNotBeNull()
+                beggeTidspunkter.second.shouldNotBeNull()
+                when (retning) {
+                    HendelseRetning.INNGAENDE -> beggeTidspunkter.first shouldBe opprinneligeTidspunkter.first
+                    HendelseRetning.UTGAENDE -> beggeTidspunkter.second shouldBe opprinneligeTidspunkter.second
+                }
+
+                lagre(motsattRetning)
+                tidspunkter() shouldBe beggeTidspunkter
+            }
+        }
+
+        "duplikat melding-ID i motsatt retning overskriver ikke den opprinnelige hendelsen" {
             val migrering = nyMigrering()
             val meldingId = UUID.randomUUID()
             val jsonData = """{"antall":42}"""
             repository.lagreMigrering(migrering)
-            repository.lagreMigreringHendelse(migrering.migreringId, meldingId, "MIGRERING_STARTET", migrering.ident, jsonData)
+            repository.lagreMigreringHendelse(
+                migrering.migreringId,
+                meldingId,
+                "MIGRERING_STARTET",
+                migrering.ident,
+                jsonData,
+                HendelseRetning.INNGAENDE,
+            )
 
             repository.lagreMigreringHendelse(
                 migrering.migreringId,
@@ -242,6 +313,7 @@ class MigreringRepositoryPostgresSpec :
                 "migrering_fullført",
                 migrering.ident,
                 """{"antall":43}""",
+                HendelseRetning.UTGAENDE,
             )
 
             databaseSession.session { session ->
@@ -258,7 +330,14 @@ class MigreringRepositoryPostgresSpec :
 
         "avviser migreringshendelser for en migrering som ikke finnes" {
             shouldThrow<SQLException> {
-                repository.lagreMigreringHendelse(UUID.randomUUID(), UUID.randomUUID(), "migrering_startet", "testident", "{}")
+                repository.lagreMigreringHendelse(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    "migrering_startet",
+                    "testident",
+                    "{}",
+                    HendelseRetning.INNGAENDE,
+                )
             }
 
             databaseSession.session { session ->
