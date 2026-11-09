@@ -43,7 +43,7 @@ class MigreringRepositoryPostgres(
                     //language=postgresql
                     statement =
                         """
-                        SELECT migrering_id, ident, sak_id, initiert_av, opprettet, migrerings_tidspunkt
+                        SELECT migrering_id, ident, sak_id, initiert_av, opprettet, migrering_tidspunkt
                         FROM migrering
                         WHERE migrering_id = :migrering_id
                         """.trimIndent(),
@@ -55,7 +55,7 @@ class MigreringRepositoryPostgres(
                         sakId = row.int("sak_id"),
                         initiertAv = row.string("initiert_av"),
                         opprettet = row.localDateTime("opprettet"),
-                        migreringTidspunkt = row.localDate("migrerings_tidspunkt"),
+                        migreringTidspunkt = row.localDate("migrering_tidspunkt"),
                     )
                 }.asSingle,
             )
@@ -73,14 +73,14 @@ class MigreringRepositoryPostgres(
                             //language=postgresql
                             statement =
                                 """
-                                INSERT INTO migrering_opplysninger (migrering_id, opplysninger_id, opplysning)
-                                VALUES (:migrering_id, :opplysninger_id, CAST(:opplysning AS jsonb))
-                                ON CONFLICT (migrering_id, opplysninger_id) DO UPDATE SET opplysning = CAST(:opplysning AS jsonb)
+                                INSERT INTO migrering_opplysninger (migrering_id, opplysning_id, opplysning)
+                                VALUES (:migrering_id, :opplysning_id, CAST(:opplysning AS jsonb))
+                                ON CONFLICT (migrering_id, opplysning_id) DO UPDATE SET opplysning = CAST(:opplysning AS jsonb)
                                 """.trimIndent(),
                             paramMap =
                                 mapOf(
                                     "migrering_id" to migreringId,
-                                    "opplysninger_id" to opplysning.uuid,
+                                    "opplysning_id" to opplysning.uuid,
                                     "opplysning" to objectMapper.writeValueAsString(opplysning),
                                 ),
                         ).asUpdate,
@@ -103,12 +103,12 @@ class MigreringRepositoryPostgres(
                                 """
                                 UPDATE migrering_opplysninger
                                 SET migrert = true, migrert_tidspunkt = NOW()
-                                WHERE migrering_id = :migrering_id AND opplysninger_id = :opplysninger_id
+                                WHERE migrering_id = :migrering_id AND opplysning_id = :opplysning_id
                                 """.trimIndent(),
                             paramMap =
                                 mapOf(
                                     "migrering_id" to migreringId,
-                                    "opplysninger_id" to opplysning.uuid,
+                                    "opplysning_id" to opplysning.uuid,
                                 ),
                         ).asUpdate,
                 )
@@ -157,7 +157,7 @@ class MigreringRepositoryPostgres(
                             FROM migrering_opplysninger
                             WHERE migrering_id = :migrering_id
                             AND (
-                                opplysninger_id = ANY(:opplysninger)
+                                opplysning_id = ANY(:opplysninger)
                                 OR migrert IS TRUE
                             )
                             """.trimIndent(),
