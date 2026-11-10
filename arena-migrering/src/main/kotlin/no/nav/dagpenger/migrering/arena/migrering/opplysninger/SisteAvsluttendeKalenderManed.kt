@@ -6,6 +6,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
+// Arena: vedtakfakta INTP1SLUTT
 class SisteAvsluttendeKalenderManed : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true

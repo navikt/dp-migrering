@@ -2,6 +2,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import java.time.LocalDate
 
+// Arena: person fodselsdato
 class Fodselsdato : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true

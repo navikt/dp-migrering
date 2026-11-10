@@ -1,5 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
+// Arena: vedtakfakta TARBTID
 class KravTilProsentvisTapAvArbeidstid : OpplysningProdusent<Double> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true

@@ -3,8 +3,9 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
+// Arena: rettighetsgruppe DAGP
 class HarLopendeRettPaDagpenger : OpplysningProdusent<Boolean> {
-    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
     override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("01990a09-0eab-7957-b88f-14484a50e194")

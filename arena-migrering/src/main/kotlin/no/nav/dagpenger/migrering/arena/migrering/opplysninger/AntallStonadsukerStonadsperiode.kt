@@ -6,8 +6,8 @@ import java.util.UUID
 
 // QA OK
 
-class AntallStonadsuker : OpplysningProdusent<Int> {
-    override val rolle = OpplysningProdusent.Rolle.Fakta
+class AntallStonadsukerStonadsperiode : OpplysningProdusent<Int> {
+    override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val opplysningsType: Class<Int> = Int::class.java
 

@@ -2,6 +2,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 
+// Arena: rettighetkode LONN
 class ForskutterteLonnsgarantimidlerIFormAvDagpenger : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true

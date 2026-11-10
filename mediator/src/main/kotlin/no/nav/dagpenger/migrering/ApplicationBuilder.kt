@@ -20,7 +20,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMottak
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallBarnSomGirRettTilBarnetillegg
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallStonadsdager
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallStonadsuker
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.AntallStonadsukerStonadsperiode
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagpengegrunnlag
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.DagsatsMedBarnetilleggEtterSamordningOg90Regel
@@ -100,7 +100,7 @@ internal class ApplicationBuilder(
                                 Dagsats(),
                                 OppfyllerKravRegistrertArbeidssoker(),
                                 Fodselsdato(),
-                                AntallStonadsuker(),
+                                AntallStonadsukerStonadsperiode(),
                                 AntallStonadsdager(),
                                 AntallBarnSomGirRettTilBarnetillegg(),
                                 FastsattArbeidstidPerUkeForTap(),

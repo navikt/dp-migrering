@@ -5,7 +5,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class AntallDagerMedTidsbegrensetBortfall : OpplysningProdusent<Int> {
-    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
     override val opplysningsType: Class<Int> = Int::class.java
 

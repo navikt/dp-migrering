@@ -4,7 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-// QA OK
+// QA Ikke OK
 
 class AntallUkerMedSanksjon : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
