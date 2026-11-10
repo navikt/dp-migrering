@@ -8,7 +8,6 @@ import java.util.UUID
 class SoknadId : OpplysningProdusent<String> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<String> = String::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -23,6 +22,5 @@ class SoknadId : OpplysningProdusent<String> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

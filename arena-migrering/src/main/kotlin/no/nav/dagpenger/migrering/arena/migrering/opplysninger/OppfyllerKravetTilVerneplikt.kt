@@ -6,7 +6,6 @@ import java.util.UUID
 class OppfyllerKravetTilVerneplikt : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("01948d43-e218-76f1-b29b-7e604241d98a")
     override val opplysningsNavn: String = "Oppfyller kravet til verneplikt"
 

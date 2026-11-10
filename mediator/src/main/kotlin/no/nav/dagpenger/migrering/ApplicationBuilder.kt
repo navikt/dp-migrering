@@ -21,7 +21,6 @@ import no.nav.dagpenger.migrering.arena.migrering.ForslagTilBehandlingsresultatM
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepositoryPostgres
 import no.nav.dagpenger.migrering.arena.migrering.StartMigreringMottak
-
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import no.nav.dagpenger.migrering.db.PostgresDataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
@@ -60,7 +59,6 @@ internal class ApplicationBuilder(
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),
                 dataSource = dataSource,
-
                 migreringMediator = migreringMediator,
             )
             StartMigreringMottak(

@@ -8,7 +8,6 @@ import java.util.UUID
 class NyVirksomhet : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}

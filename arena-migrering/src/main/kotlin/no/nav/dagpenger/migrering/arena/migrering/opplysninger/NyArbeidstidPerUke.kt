@@ -8,7 +8,6 @@ import java.util.UUID
 class NyArbeidstidPerUke : OpplysningProdusent<Double> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Double> = Double::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -23,6 +22,5 @@ class NyArbeidstidPerUke : OpplysningProdusent<Double> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

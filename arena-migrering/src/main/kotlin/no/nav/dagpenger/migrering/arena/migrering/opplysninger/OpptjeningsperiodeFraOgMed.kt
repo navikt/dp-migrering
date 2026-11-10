@@ -7,7 +7,6 @@ import java.util.UUID
 class OpptjeningsperiodeFraOgMed : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<LocalDate> = LocalDate::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-9413-77ce-92ec-d29700f04247")
     override val opplysningsNavn: String = "OpptjeningsperiodeFraOgMed"
 

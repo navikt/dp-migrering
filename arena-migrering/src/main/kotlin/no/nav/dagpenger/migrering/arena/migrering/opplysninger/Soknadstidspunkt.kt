@@ -9,7 +9,6 @@ import java.util.UUID
 class Soknadstidspunkt : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<LocalDate> = LocalDate::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -24,6 +23,5 @@ class Soknadstidspunkt : OpplysningProdusent<LocalDate> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

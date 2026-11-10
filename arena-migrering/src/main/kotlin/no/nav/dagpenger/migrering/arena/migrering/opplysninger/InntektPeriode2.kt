@@ -8,7 +8,6 @@ import java.util.UUID
 class InntektPeriode2 : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val opplysningsType: Class<Int> = Int::class.java
 
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")

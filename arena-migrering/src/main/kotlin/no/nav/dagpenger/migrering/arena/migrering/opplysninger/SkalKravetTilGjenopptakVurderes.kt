@@ -6,7 +6,6 @@ import java.util.UUID
 class SkalKravetTilGjenopptakVurderes : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("019d0068-8037-7d91-bfff-de88f9e87fd3")
     override val opplysningsNavn: String = "Skal kravet til gjenopptak vurderes"
 

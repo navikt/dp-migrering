@@ -9,7 +9,6 @@ import java.util.UUID
 class AntallStonadsukerStonadsperiode : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val opplysningsType: Class<Int> = Int::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -31,7 +30,6 @@ class AntallStonadsukerStonadsperiode : OpplysningProdusent<Int> {
             verdi = fakta?.verdi?.toInt(),
             gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 }

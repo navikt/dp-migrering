@@ -8,7 +8,6 @@ import java.util.UUID
 class AntallDagerMedSanksjonSomErForbrukt : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Int> = Int::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}

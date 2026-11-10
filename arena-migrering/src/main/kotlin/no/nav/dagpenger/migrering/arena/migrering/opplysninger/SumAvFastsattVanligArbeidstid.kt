@@ -8,7 +8,6 @@ import java.util.UUID
 class SumAvFastsattVanligArbeidstid : OpplysningProdusent<Double> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Double> = Double::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -23,6 +22,5 @@ class SumAvFastsattVanligArbeidstid : OpplysningProdusent<Double> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

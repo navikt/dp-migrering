@@ -9,7 +9,6 @@ import java.util.UUID
 class DatoEksportSkalGjeldeFra : OpplysningProdusent<Date> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Date> = Date::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}

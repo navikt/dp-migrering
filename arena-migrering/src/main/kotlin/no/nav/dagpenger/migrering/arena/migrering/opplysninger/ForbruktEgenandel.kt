@@ -7,7 +7,6 @@ import java.util.UUID
 class ForbruktEgenandel : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Int> = Int::class.java
     override val opplysningsId: UUID = UUID.fromString("01973a27-d8b3-7ffd-a81a-a3826963b079")
     override val opplysningsNavn: String = "Forbrukt egenandel"
 
