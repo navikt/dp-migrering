@@ -83,7 +83,7 @@
 |0194881f-9410-7481-b263-4606fdd10cad|Utbetalt inntekt periode 1|-|Resultat|true|
 |0194881f-9410-7481-b263-4606fdd10cae|Utbetalt inntekt periode 2|-|Resultat|true|
 |0194881f-9410-7481-b263-4606fdd10caf|Utbetalt inntekt periode 3|-|Resultat|true|
-|0194881f-9413-77ce-92ec-d29700f04244|Inntektsopplysninger|-|Resultat|false|
+|0194881f-9413-77ce-92ec-d29700f04244|Inntektsopplysninger|-|Resultat|true|
 |0194881f-9441-7d1b-a06a-6727543a141e|Kan jobbe heltid og deltid|-|Fakta|false|
 |0194881f-9442-707b-a6ee-e96c06877bd9|Kan jobbe i hele Norge|-|Fakta|false|
 |0194881f-9442-707b-a6ee-e96c06877bdc|Kan ta alle typer arbeid|-|Fakta|false|

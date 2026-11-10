@@ -6,6 +6,8 @@ import kotliquery.Row
 import kotliquery.Session
 import kotliquery.queryOf
 import kotliquery.sessionOf
+import no.nav.dagpenger.inntekt.v1.Inntekt
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import javax.sql.DataSource
 
 class ArenaRepository(
@@ -253,6 +255,7 @@ class ArenaRepository(
             forbrukteDagerDP = hentAntallForbrukteDagerDP(sakId),
             forbrukteDagerPERM = hentAntallForbrukteDagerPERM(sakId),
             forbrukteDagerFISK = hentAntallForbrukteDagerFISK(sakId),
+            inntekt = hentInntekt(sakId),
         )
 
     fun hentIdentForSak(sakId: Int): String {
@@ -269,5 +272,76 @@ class ArenaRepository(
             row.string("fodselsnr")
         }.firstOrNull()?.let { return it }
         throw IllegalStateException("Fant ikke ident for sakId: $sakId")
+    }
+
+    fun hentInntekt(sakId: Int): Inntekt? {
+        // language=oracle
+        return select(
+            """
+            SELECT JSON_OBJECT('inntekt'  VALUE 
+                     JSON_OBJECT( 'inntekstId'      VALUE ( SELECT vedtakverdi
+                                                            FROM   vedtakfakta
+                                                            WHERE  vedtak_id = vedt.vedtak_id
+                                                            AND    vedtakfaktakode = 'DDIDINNTGR' ) 
+                                , 'inntektsListe'   VALUE (SELECT JSON_ARRAYAGG( 
+                                                                    JSON_OBJECT( 'årMåned' VALUE aar_mnd
+                                                                               , 'klassifiserteInntekter' VALUE 
+                                                                                   JSON_OBJECT( 'beløp'   VALUE TO_NUMBER(belop, '999999999.99')
+                                                                                              , 'inntektKlasse' VALUE 'DAGPENGER' )
+                                                                               , 'harAvvik' VALUE NULL ) )
+                                                           FROM   ( SELECT intp.vedtakverdi aar_mnd, belo.vedtakverdi belop
+                                                                    FROM   vedtakfakta intp
+                                                                    JOIN   vedtakfakta belo ON belo.vedtak_id = intp.vedtak_id 
+                                                                                           AND belo.vedtakfaktakode = 'INTTREDS'
+                                                                    WHERE  intp.vedtak_id = vedt.vedtak_id
+                                                                    AND    intp.vedtakfaktakode = 'INTP3SLUTT'
+                                                                    UNION ALL
+                                                                    SELECT intp.vedtakverdi aar_mnd, belo.vedtakverdi belop
+                                                                    FROM   vedtakfakta intp
+                                                                    JOIN   vedtakfakta belo ON belo.vedtak_id = intp.vedtak_id 
+                                                                                           AND belo.vedtakfaktakode = 'INTNESTS'
+                                                                    WHERE  intp.vedtak_id = vedt.vedtak_id
+                                                                    AND    intp.vedtakfaktakode = 'INTP2SLUTT'
+                                                                    UNION ALL
+                                                                    SELECT intp.vedtakverdi aar_mnd, belo.vedtakverdi belop
+                                                                    FROM   vedtakfakta intp
+                                                                    JOIN   vedtakfakta belo ON belo.vedtak_id = intp.vedtak_id 
+                                                                                           AND belo.vedtakfaktakode = 'INTSISTE'
+                                                                    WHERE  intp.vedtak_id = vedt.vedtak_id
+                                                                    AND    intp.vedtakfaktakode = 'INTP1SLUTT' ) ) 
+                                , 'manueltRedigert'               VALUE CASE ( SELECT vedtakverdi
+                                                                                 FROM   vedtakfakta
+                                                                                 WHERE  vedtak_id = vedt.vedtak_id
+                                                                                 AND    vedtakfaktakode = '' )
+                                                                            WHEN 'J' THEN 'true' ELSE 'false'
+                                                                          END FORMAT JSON
+                               , 'begrunnelseManueltRedigert'     VALUE ( SELECT begr.vedtakverdi
+                                                                          FROM   vedtakfakta begr
+                                                                          JOIN   vedtakfakta mreg ON mreg.vedtak_id = begr.vedtak_id AND mreg.vedtakfaktakode = 'MANREGINNT'
+                                                                          WHERE  begr.vedtak_id = vedt.vedtak_id
+                                                                          AND    begr.vedtakfaktakode = 'BERBESKR'
+                                                                          AND    mreg.vedtakverdi = 'J' )
+                               , 'sisteAvsluttendeKalenderMåned'  VALUE ( SELECT vedtakverdi
+                                                                          FROM   vedtakfakta
+                                                                          WHERE  vedtak_id = vedt.vedtak_id
+                                                                          AND    vedtakfaktakode = 'INTP1SLUTT' )
+                               , 'hentetTidspunkt'                VALUE ( SELECT reg_dato
+                                                                          FROM   vedtakfakta
+                                                                          WHERE  vedtak_id = vedt.vedtak_id
+                                                                          AND    vedtakfaktakode = 'DDIDINNTGR' ) ) ) as inntekt
+            FROM  vedtak vedt
+            WHERE vedt.sak_id = :sakId
+            AND   vedt.rettighetkode in ('DAGO','PERM','FISK','LONN')
+            AND   vedt.vedtaktypekode IN ('O','E','G')
+            AND   vedt.vedtakstatuskode = 'IVERK'
+            AND   vedt.utfallkode = 'JA'
+            AND   vedt.fra_dato <= nvl(vedt.til_dato, vedt.fra_dato)
+            AND   NVL( vedt.til_dato, SYSDATE ) >= SYSDATE;
+
+            """.trimIndent(),
+            mapOf("sakId" to sakId),
+        ) { row ->
+            jacksonObjectMapper().readValue(row.string("inntekt"), Inntekt::class.java)
+        }.firstOrNull()
     }
 }

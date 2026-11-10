@@ -1,5 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
+import no.nav.dagpenger.inntekt.v1.Inntekt
 import java.time.LocalDate
 
 data class ArenaSakMigrering(
@@ -12,6 +13,7 @@ data class ArenaSakMigrering(
     val forbrukteDagerPERM: List<ArenaForbrukteDagerMigrering>,
     val forbrukteDagerFISK: List<ArenaForbrukteDagerMigrering>,
     val tidsbegrensetVedtak: List<ArenaTidsbegrensetVedtakMigrering>,
+    val inntekt: Inntekt?,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,
