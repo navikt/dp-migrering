@@ -7,7 +7,7 @@ import java.util.UUID
 // Arena: rettighetkode DAGO
 class HarRettTilOrdinæreDagpengerGjennomArbeidsforhold : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
 
     companion object {
         val logger = KotlinLogging.logger {}
