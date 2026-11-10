@@ -279,7 +279,7 @@ class ArenaRepository(
         return select(
             """
             SELECT JSON_OBJECT('inntekt'  VALUE 
-                     JSON_OBJECT( 'inntekstId'      VALUE ( SELECT vedtakverdi
+                     JSON_OBJECT( 'inntektsId'      VALUE ( SELECT vedtakverdi
                                                             FROM   vedtakfakta
                                                             WHERE  vedtak_id = vedt.vedtak_id
                                                             AND    vedtakfaktakode = 'DDIDINNTGR' ) 
