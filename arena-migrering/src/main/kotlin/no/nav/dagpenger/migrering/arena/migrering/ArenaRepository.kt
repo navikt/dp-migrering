@@ -336,8 +336,7 @@ class ArenaRepository(
             AND   vedt.vedtakstatuskode = 'IVERK'
             AND   vedt.utfallkode = 'JA'
             AND   vedt.fra_dato <= nvl(vedt.til_dato, vedt.fra_dato)
-            AND   NVL( vedt.til_dato, SYSDATE ) >= SYSDATE;
-
+            AND   NVL( vedt.til_dato, SYSDATE ) >= SYSDATE
             """.trimIndent(),
             mapOf("sakId" to sakId),
         ) { row ->
