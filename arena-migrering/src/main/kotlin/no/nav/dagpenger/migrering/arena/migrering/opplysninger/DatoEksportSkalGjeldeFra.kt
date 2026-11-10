@@ -5,10 +5,10 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.Date
 import java.util.UUID
 
+// Arena: Dato samme som med perm migreringsdato?
 class DatoEksportSkalGjeldeFra : OpplysningProdusent<Date> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Date> = Date::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}

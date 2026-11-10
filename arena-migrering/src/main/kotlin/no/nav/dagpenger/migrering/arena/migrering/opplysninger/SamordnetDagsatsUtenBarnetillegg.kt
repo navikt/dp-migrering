@@ -4,9 +4,8 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class SamordnetDagsatsUtenBarnetillegg : OpplysningProdusent<Double> {
-    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val opplysningsType: Class<Double> = Double::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-9434-79e8-a64d-1a23cc5d86eb")
     override val opplysningsNavn: String = "Samordnet dagsats uten barnetillegg"
 

@@ -26,21 +26,20 @@ class OpplysningDokumentasjon : StringSpec() {
             markdown.appendLine(
                 """
                 >#### Opplysninger
-                >|UUID|Navn|Datatype|Arena kilde|Rolle|Aktiv|
-                >|---|---|---|---|---|---|
+                >|UUID|Navn|Arena kilde|Rolle|Aktiv|
+                >|---|---|---|---|---|
                 """.trimMargin(">"),
             )
 
             Opplysninger.produsenter.forEach { produsent ->
                 val id = produsent.opplysningsId
                 val navn = produsent.opplysningsNavn
-                val opplysningsType = produsent.opplysningsType.simpleName
                 val rolle = produsent.rolle.name
                 val aktiv = produsent.aktiv
 
                 markdown.appendLine(
                     """
-                        >|$id|$navn|$opplysningsType|-|$rolle|$aktiv|
+                        >|$id|$navn|-|$rolle|$aktiv|
                         """.trimMargin(">").trimIndent(),
                 )
             }

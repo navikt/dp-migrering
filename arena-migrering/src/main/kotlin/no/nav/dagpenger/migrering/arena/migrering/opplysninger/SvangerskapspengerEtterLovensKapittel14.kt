@@ -3,10 +3,10 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
+// Arena: bvilkaar IFFODSP
 class SvangerskapspengerEtterLovensKapittel14 : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-9433-70e9-a85b-c246150c45d3")
     override val opplysningsNavn: String = "Svangerskapspenger etter lovens kapittel 14"
 

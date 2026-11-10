@@ -3,10 +3,10 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
+// Arena: vedtakfakta GODKJUTDAN
 class OppfyllerKravTilUtdanningEllerOpplaering : OpplysningProdusent<Boolean> {
-    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-9445-734c-a7ee-045edf29b52d")
     override val opplysningsNavn: String = "Oppfyller krav til utdanning eller opplæring"
 

@@ -11,7 +11,6 @@ interface OpplysningProdusent<T : Any> {
 
     val opplysningsId: UUID
     val opplysningsNavn: String
-    val opplysningsType: Class<T>
     val aktiv: Boolean
     val rolle: Rolle
     val pakrevd: Boolean
@@ -27,6 +26,4 @@ interface OpplysningProdusent<T : Any> {
     fun vedManglendeOpplysning() {
         logger.info { "Fant ikke opplysning: $opplysningsNavn ($opplysningsId)" }
     }
-
-    fun type(): Class<T> = opplysningsType
 }

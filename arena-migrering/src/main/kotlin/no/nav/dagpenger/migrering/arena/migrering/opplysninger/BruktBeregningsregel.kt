@@ -4,10 +4,10 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
+// Arena: ? vedtakfakta BERREGEL
 class BruktBeregningsregel : OpplysningProdusent<String> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<String> = String::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}

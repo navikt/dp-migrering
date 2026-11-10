@@ -5,10 +5,10 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Ikke mappet
+// Arena: vilkår MEDLFOLKT
 class MedlemAvFolketrygden : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
 
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")

@@ -4,9 +4,8 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 class SkalSamordnesMedYtelserUtenforFolketrygden : OpplysningProdusent<Boolean> {
-    override val rolle = OpplysningProdusent.Rolle.Fakta
+    override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
     override val opplysningsId: UUID = UUID.fromString("0194881f-942f-7bde-ab16-68ffd19e9a2d")
     override val opplysningsNavn: String = "Skal samordnes med ytelser utenfor folketrygden"
 

@@ -2,10 +2,10 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import java.time.LocalDate
 
+// Arena: person fodselsdato
 class Fodselsdato : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val opplysningsType: Class<LocalDate> = LocalDate::class.java
     override val opplysningsId: java.util.UUID = java.util.UUID.fromString("0194881f-940b-76ff-acf5-ba7bcb367233")
     override val opplysningsNavn: String = "Fødselsdato"
 

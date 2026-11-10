@@ -5,10 +5,10 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // TODO Endre fra OppholdINorge? Hva med grensearbeidere, asylsøkere mm
+// Arena: spør noen voksne vilkår INORGE evt freg i Norge personforhold
 class BostedslandErNorge : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
-    override val opplysningsType: Class<Boolean> = Boolean::class.java
 
     companion object {
         val logger = KotlinLogging.logger {}
