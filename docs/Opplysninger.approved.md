@@ -75,7 +75,7 @@
 |01990a09-0eab-7957-b88f-14484a50e194|Har løpende rett på dagpenger|-|Resultat|false|
 |019a81bf-50e1-7f1d-b23b-f30265b16042|Har meldt seg i tide|-|Resultat|false|
 |01956ab8-126c-7636-803e-a5d87eda2015|Har meldt seg via meldekort|-|Resultat|false|
-|0194881f-9444-7a73-a458-0af81c034d85|Har rett til ordinære dagpenger gjennom arbeidsforhold|-|Fakta|false|
+|0194881f-9444-7a73-a458-0af81c034d85|Har rett til ordinære dagpenger gjennom arbeidsforhold|-|Fakta|true|
 |0194881f-9445-734c-a7ee-045edf29b524|Har svart ja på spørsmål om utdanning eller opplæring|-|Fakta|false|
 |0194881f-9445-734c-a7ee-045edf29b525|Har svart nei på spørsmål om utdanning eller opplæring|-|Fakta|false|
 |019bc5f8-8af4-73c7-8b15-6feecd7810d2|Holder tilbake opplysninger som er viktige for rettigheter eller plikter etter denne loven|-|Fakta|false|
