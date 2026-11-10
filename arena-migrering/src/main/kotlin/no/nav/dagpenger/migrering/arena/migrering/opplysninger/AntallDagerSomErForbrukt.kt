@@ -23,6 +23,5 @@ class AntallDagerSomErForbrukt : OpplysningProdusent<Int> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

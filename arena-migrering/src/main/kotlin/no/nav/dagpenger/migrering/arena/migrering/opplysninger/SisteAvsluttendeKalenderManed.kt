@@ -26,7 +26,6 @@ class SisteAvsluttendeKalenderManed : OpplysningProdusent<LocalDate> {
             verdi = verdi(vedtakfakta?.verdi),
             gyldigFraOgMed = vedtakfakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

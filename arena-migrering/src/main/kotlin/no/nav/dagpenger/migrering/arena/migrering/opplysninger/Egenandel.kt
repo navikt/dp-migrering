@@ -22,7 +22,6 @@ class Egenandel : OpplysningProdusent<Int> {
             verdi = opplysning?.verdi?.toInt(),
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 }

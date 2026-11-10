@@ -1,0 +1,3 @@
+ALTER TABLE migrering
+    ADD COLUMN migrerings_tidspunkt DATE NOT NULL DEFAULT CURRENT_DATE;
+

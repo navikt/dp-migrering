@@ -20,7 +20,6 @@ class KravTilProsentvisTapAvArbeidstid : OpplysningProdusent<Double> {
             verdi = opplysning?.verdi?.toDouble(),
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 }

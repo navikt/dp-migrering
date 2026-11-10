@@ -26,17 +26,18 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
     implementation("com.oracle.database.jdbc:ojdbc11:23.26.4.0.0")
-    implementation(libs.hikari)
-    implementation(libs.kotlinquery)
+    // implementation(libs.kotlinquery)
     implementation(libs.konfig)
     implementation(libs.kotlin.logging)
-    implementation(libs.flyway)
     implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.33.1")
-    implementation("io.opentelemetry:opentelemetry-api:1.67.0")
+    implementation("io.opentelemetry:opentelemetry-api:1.68.0")
     implementation("io.prometheus:prometheus-metrics-core:1.10.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.17.2")
     implementation("org.slf4j:slf4j-api:2.0.20")
     implementation("ch.qos.logback:logback-classic:1.6.6")
+    implementation("io.ktor:ktor-server-sse:${libs.versions.ktor.get()}")
+
+    implementation(libs.bundles.postgres)
 
     implementation(libs.bundles.ktor.client)
     implementation(libs.bundles.ktor.server)
@@ -58,10 +59,19 @@ dependencies {
     testImplementation("com.approvaltests:approvaltests:31.0.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
+//    testImplementation("org.testcontainers:postgresql:1.21.4")
+    testImplementation(libs.bundles.postgres.test)
     testImplementation("com.h2database:h2:2.5.252")
     testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.22-12.56.24558e302c36")
 }
 
 application {
     mainClass.set("no.nav.dagpenger.migrering.AppKt")
+}
+
+tasks.shadowJar {
+    filesMatching("META-INF/services/**") {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+    mergeServiceFiles()
 }

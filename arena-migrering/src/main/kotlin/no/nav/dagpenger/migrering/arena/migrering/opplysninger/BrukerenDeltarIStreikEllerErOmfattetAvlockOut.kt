@@ -30,7 +30,6 @@ class BrukerenDeltarIStreikEllerErOmfattetAvlockOut : OpplysningProdusent<Boolea
             verdi = verdi(fakta?.verdi),
             gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

@@ -176,4 +176,5 @@ object Opplysninger {
             VilligTilABytteYrke(),
             VurderRettFraOgMed(),
         )
+    val aktiveProdusenter: List<OpplysningProdusent<*>> = produsenter.filter { it.aktiv }
 }

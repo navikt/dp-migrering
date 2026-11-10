@@ -17,6 +17,5 @@ class OppleringspengerEtterLovensKapittel9 : OpplysningProdusent<Boolean> {
             verdi = null,
             gyldigFraOgMed = null,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
 }

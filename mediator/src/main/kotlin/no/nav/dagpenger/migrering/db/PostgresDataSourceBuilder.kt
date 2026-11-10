@@ -13,7 +13,7 @@ import kotlin.time.Duration.Companion.seconds
 
 private const val DB_USERNAME_KEY = "DB_USERNAME"
 private const val DB_PASSWORD_KEY = "DB_PASSWORD"
-private const val DB_URL_KEY = "DB_URL"
+private const val DB_URL_KEY = "DB_JDBC_URL"
 
 // Understands how to create a data source from environment variables
 internal class PostgresDataSourceBuilder {
@@ -69,6 +69,7 @@ internal class PostgresDataSourceBuilder {
                 .configure()
                 .connectRetries(10)
                 .dataSource(it)
+                .locations("classpath:flyway/migrering")
                 .load()
                 .migrate()
         }

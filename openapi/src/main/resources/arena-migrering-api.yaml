@@ -9,32 +9,83 @@ servers:
   - url: https://dp-migrering.intern.dev.nav.no
     description: dev
 paths:
-  /arena/migrering/sak/{sakId}:
+  /arena/migrering/{migreringId}/oppdateringer:
     get:
-      summary: Henter datagrunnlag for migrering av en sak fra Arena
-      parameters:
-        - name: sakId
-          in: path
-          required: true
-          schema:
-            type: string
+      summary: Strømmer lagrede hendelser for én migrering
+      description: |
+        Krever saksbehandlergruppe og tilgang til personen i StPeter.
+        Hendelser sendes i stigende database-ID med hendelsesnavnet som `event`,
+        database-ID som `id` og lagret hendelses-JSON som `data`.
+        Uten cursor sendes historikken fra starten. Ved gjenoppkobling sendes bare
+        hendelser med ID større enn cursor. `Last-Event-ID` har forrang over `since`.
+        Strømmen sender `event: ping` med `data: {}` etter 20 sekunder uten hendelser.
+        Etter 15 minutter, eller før token utløper, sendes `event: close` med
+        `data: {"reason":"reauth"}`. Klienten må da hente et nytt token og koble til
+        med siste mottatte hendelses-ID. Hendelser hentes i puljer på 10, med
+        to sekunders pause når det ikke finnes nye hendelser.
+        Bruk en SSE-klient som kan sende Authorization-header.
       tags:
         - Arena migrering
       security:
         - azureAd: [ ]
+      parameters:
+        - name: migreringId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Last-Event-ID
+          in: header
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: since
+          in: query
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            default: 0
       responses:
         "200":
-          description: OK
+          description: Hendelsesstrøm. Ping og close har ingen hendelses-ID.
           content:
-            application/json:
+            text/event-stream:
               schema:
-                $ref: "#/components/schemas/MigreringGrunnlag"
-        default:
-          description: Feil ved henting av datagrunnlag for migrering
+                type: string
+              example: |
+                event: migrering_startet
+                data: {"status":"startet"}
+                id: 42
+
+        "400":
+          description: Ugyldig migreringId eller cursor
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/HttpProblem"
+        "401":
+          description: Manglende eller ugyldig autentisering
+        "403":
+          description: Ingen tilgang til personen eller migreringen finnes ikke
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+        "429":
+          description: Grensen på 100 samtidige strømmer per applikasjonsinstans er nådd
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Antall sekunder før klienten kan prøve igjen
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+  /arena/migrering/sak/{sakId}:
     post:
       summary: Starter migrering av en sak fra Arena
       parameters:
@@ -52,10 +103,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/StartMigrering"
+              $ref: "#/components/schemas/StartMigreringRequest"
       responses:
-        "202":
-          description: Accepted
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StartMigreringResponse"
         default:
           description: Feil ved start av migrering
           content:
@@ -64,15 +119,22 @@ paths:
                 $ref: "#/components/schemas/HttpProblem"
 components:
   schemas:
-    Any:
-      description: Opplysningens verdi. Typen avhenger av opplysningen.
-      anyOf:
-        - type: string
-        - type: number
-        - type: boolean
-        - type: integer
+    StartMigreringRequest:
+      type: object
+      properties:
+        migreringsTidspunkt:
+          type: string
+          format: date
+          description: Dato for når migreringen skal kjøres.
+        simulering:
+          type: boolean
+          description: Om migreringen skal kjøres i simuleringsmodus.
+          default: false
+      required:
+        - simulering
+        - migreringsTidspunkt
 
-    MigreringGrunnlag:
+    StartMigreringResponse:
       type: object
       properties:
         sakId:
@@ -80,111 +142,25 @@ components:
         migreringId:
           type: string
           format: uuid
+        simulering:
+          type: boolean
+          description: Om migreringen skal kjøres i simuleringsmodus.
+          default: false
         initiertAv:
           type: string
         ident:
           description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
           type: string
           pattern: "^[0-9]{11}$"
-        innvilgetFraOgMed:
+        migreringsTidspunkt:
           type: string
-          format: date
-        innvilgetTilOgMed:
-          type: string
-          format: date
-        opplysninger:
-          type: array
-          items:
-            $ref: "#/components/schemas/MigreringGrunnlagOpplysning"
+          format: date-time
       required:
         - sakId
         - migreringId
         - initiertAv
         - ident
-        - innvilgetFraOgMed
-        - opplysninger
-
-    MigreringGrunnlagOpplysning:
-      type: object
-      properties:
-        navn:
-          type: string
-        verdi:
-          $ref: "#/components/schemas/MigreringGrunnlagOpplysningVerdi"
-        gyldigFraOgMed:
-          type: string
-          format: date
-        uuid:
-          type: string
-          format: uuid
-      required:
-        - navn
-        - uuid
-
-    MigreringGrunnlagOpplysningVerdi:
-      type: object
-      properties:
-        verdi:
-          $ref: "#/components/schemas/Any"
-        type:
-          type: string
-          enum:
-            - date
-            - string
-            - integer
-            - float
-            - boolean
-      required:
-        - type
-
-
-    StartMigrering:
-      type: object
-      properties:
-        sakId:
-          type: integer
-        migreringId:
-          type: string
-          format: uuid
-        initiertAv:
-          type: string
-        ident:
-          description: Fødselsnummer eller D-nummer til en person. Må være 11 siffer.
-          type: string
-          pattern: "^[0-9]{11}$"
-        innvilgetFraOgMed:
-          type: string
-          format: date
-        innvilgetTilOgMed:
-          type: string
-          format: date
-        opplysninger:
-          type: array
-          items:
-            $ref: "#/components/schemas/StartMigreringOpplysning"
-      required:
-        - sakId
-        - migreringId
-        - initiertAv
-        - ident
-        - innvilgetFraOgMed
-        - opplysninger
-
-    StartMigreringOpplysning:
-      type: object
-      properties:
-        verdi:
-          $ref: "#/components/schemas/Any"
-        gyldigFraOgMed:
-          type: string
-          format: date
-        uuid:
-          type: string
-          format: uuid
-      required:
-        - verdi
-        - gyldigFraOgMed
-        - uuid
+        - simulering
 
     HttpProblem:
       type: object

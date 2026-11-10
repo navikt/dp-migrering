@@ -22,7 +22,6 @@ class OppfyllerKravetTilVerneplikt : OpplysningProdusent<Boolean> {
             verdi = verdi(opplysning?.verdi),
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 

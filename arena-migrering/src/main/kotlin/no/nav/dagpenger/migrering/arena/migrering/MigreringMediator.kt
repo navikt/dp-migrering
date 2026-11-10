@@ -1,62 +1,121 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagDTO
-import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningDTO
-import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningVerdiDTO
-import no.nav.dagpenger.arena.migrering.api.models.MigreringGrunnlagOpplysningVerdiDTOTypeDTO
-import no.nav.dagpenger.arena.migrering.api.models.StartMigreringDTO
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningProdusent
-import no.nav.dagpenger.uuid.UUIDv7
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.node.ObjectNode
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
 class MigreringMediator(
-    private val produsenter: List<OpplysningProdusent<*>>,
-    private val repository: ArenaRepository,
-    private val rapidsConnection: RapidsConnection,
-    private val objectMapper: ObjectMapper,
+    private val arenaRepository: ArenaRepository,
+    private val migreringRepository: MigreringRepository,
+    private val rapid: RapidsConnection,
 ) {
-    suspend fun hentMigreringGrunnlag(
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
+
+    suspend fun startMigrering(
         sakId: Int,
         initiertAv: String,
-    ): MigreringGrunnlagDTO {
+        simulering: Boolean,
+        migreringsTidspunkt: LocalDate,
+    ): Migrering {
         val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
 
-        return MigreringGrunnlagDTO(
-            migreringId = UUIDv7.ny(),
-            sakId = sakId,
-            initiertAv = initiertAv,
-            ident = repository.hentIdentForSak(sakId),
-            opplysninger =
-                opplysninger.map {
-                    MigreringGrunnlagOpplysningDTO(
-                        navn = it.navn,
-                        verdi =
-                            MigreringGrunnlagOpplysningVerdiDTO(
-                                verdi = it.verdi,
-                                type = it.toVerdiDTOType(),
-                            ),
-                        gyldigFraOgMed = it.gyldigFraOgMed,
-                        uuid = it.uuid,
-                    )
-                },
-            innvilgetFraOgMed = LocalDate.now(),
-            innvilgetTilOgMed = null,
+        val migrering =
+            Migrering(
+                sakId = sakId,
+                ident = arenaRepository.hentIdentForSak(sakId),
+                initiertAv = initiertAv,
+                simulering = simulering,
+                migreringTidspunkt = migreringsTidspunkt,
+            )
+        migreringRepository.lagreMigrering(migrering)
+
+        migreringRepository.lagreOpplysninger(
+            migreringId = migrering.migreringId,
+            opplysninger = opplysninger,
+        )
+
+        val melding = MigreringStartetMelding.fra(migrering)
+        publiserOgLagreMelding(
+            context = rapid,
+            melding = melding,
+        )
+
+        return migrering
+    }
+
+    internal fun håndter(
+        melding: MigreringStartetMelding,
+        context: MessageContext,
+    ) {
+        melding.lagreMelding(migreringRepository)
+        val opplysninger =
+            migreringRepository
+                .hentManglendeOpplysningerForMigrering(melding.migreringId, melding.manglendeOpplysninger)
+                .map { it.opplysning }
+
+        val manglendeOpplysninger =
+            melding.manglendeOpplysninger.toSet() - opplysninger.map { it.uuid }.toSet()
+        if (manglendeOpplysninger.isNotEmpty()) {
+            MigreringAvbrutt
+                .ny(
+                    migreringId = melding.migreringId,
+                    sakId = melding.sakId,
+                    initiertAv = "ukjent",
+                    ident = melding.ident,
+                    årsak = mapOf("manglendeOpplysninger" to manglendeOpplysninger.toList()),
+                ).also {
+                    håndter(it, context)
+                }
+
+            return
+        }
+
+        val svar = melding.svar(opplysninger)
+        publiserOgLagreMelding(
+            context = context,
+            melding = svar,
+            hendelse = melding.hendelse.navn(),
+        )
+
+        migreringRepository.markereOpplysningerSomMigrert(
+            migreringId = melding.migreringId,
+            opplysninger = opplysninger,
         )
     }
 
-    fun startMigrering(startMigreringDTO: StartMigreringDTO) {
-        rapidsConnection.publish(toJsonMessage("migrering_startet", startMigreringDTO).toJson())
+    internal fun håndter(
+        melding: MigreringAvbrutt,
+        context: MessageContext,
+    ) {
+        logger.warn {
+            "Migrering ${melding.migreringId} stoppes fordi følgende opplysninger mangler i databasen: ${melding.årsak}"
+        }
+        publiserOgLagreMelding(
+            context = context,
+            melding = melding,
+        )
+    }
+
+    internal fun håndter(melding: BehandlingOpprettetMelding) {
+        melding.lagreMelding(migreringRepository)
+        migreringRepository.markereBehandlingOpprettet(melding.migreringId, melding.behandlingId)
+    }
+
+    internal fun håndter(medling: ForslagTilBehandlingsresultatMelding) {
+        medling.lagreMelding(migreringRepository)
     }
 
     private suspend fun hentOpplysningerForSak(
@@ -64,9 +123,9 @@ class MigreringMediator(
         initiertAv: String,
     ): List<Opplysning<*>> =
         coroutineScope {
-            val sakTilMigrering = repository.hentSakTilMigrering(sakId)
+            val sakTilMigrering = arenaRepository.hentSakTilMigrering(sakId)
             val deferredOpplysninger =
-                produsenter.map { produsent ->
+                aktiveProdusenter.map { produsent ->
                     async {
                         try {
                             produsent.produser(
@@ -86,56 +145,36 @@ class MigreringMediator(
             deferredOpplysninger.awaitAll()
         }
 
-    fun toJsonMessage(
-        eventName: String,
-        dto: Any,
-    ): JsonMessage {
-        val node = objectMapper.valueToTree<ObjectNode>(dto)
-        node.put("@event_name", eventName)
-        val json = objectMapper.writeValueAsString(node)
-        return JsonMessage(json, MessageProblems(json))
+    private fun publiserOgLagreMelding(
+        context: MessageContext,
+        melding: KafkaMelding,
+        hendelse: String = melding.hendelse.navn(),
+    ) {
+        val (sendte, feilede) = context.publish(listOf(OutgoingMessage(melding.toJson())))
+        if (feilede.isNotEmpty()) {
+            throw IllegalStateException("Kunne ikke publisere migreringshendelse", feilede.first().error)
+        }
+        val publisertJson = sendte.single().message.body
+        val publisertMelding = JsonMessage(publisertJson, MessageProblems(publisertJson))
+        migreringRepository.lagreMigreringHendelse(
+            migreringId = melding.migreringId,
+            meldingId = UUID.fromString(publisertMelding.id),
+            hendelse = hendelse,
+            ident = melding.ident,
+            jsonData = publisertJson,
+            opprinnelse = melding.hendelse.opprinnelse().name,
+        )
+    }
+
+    fun hentMigrering(migreringId: UUID): Migrering? = migreringRepository.hentMigrering(migreringId)
+
+    fun hentOppdateringer(
+        migreringId: UUID,
+        lastEventId: Long,
+        limit: Int,
+    ): List<MigreringHendelse> {
+        require(lastEventId >= 0) { "Cursor må være 0 eller større" }
+        require(limit in 1..100) { "Limit må være mellom 1 og 100" }
+        return migreringRepository.migreringHendelser(migreringId, lastEventId, limit)
     }
 }
-
-fun Opplysning<*>.toVerdiDTOType(): MigreringGrunnlagOpplysningVerdiDTOTypeDTO =
-    when (type) {
-        String::class -> {
-            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.STRING
-        }
-
-        Byte::class, Short::class, Int::class, Long::class -> {
-            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.INTEGER
-        }
-
-        Float::class, Double::class, java.math.BigDecimal::class -> {
-            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.FLOAT
-        }
-
-        Boolean::class -> {
-            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.BOOLEAN
-        }
-
-        LocalDate::class -> {
-            MigreringGrunnlagOpplysningVerdiDTOTypeDTO.DATE
-        }
-
-        else -> {
-            error("Ustøttet verditype for opplysning '$navn': $type")
-        }
-    }
-
-// fun JsonMessage.toStartMigreringResponse(): StartMigreringResponse {
-//    val opplysninger = this["opplysninger"].asArray().toList().map { it.toOpplysningResponse() }
-//
-//    return StartMigreringResponse(
-//        opplysninger = opplysninger,
-//    )
-// }
-//
-// private fun JsonNode.toOpplysningResponse(): OpplysningResponse =
-//    OpplysningResponse(
-//        navn = this["navn"].asString(),
-//        verdi = this["verdi"].asText(),
-//        gyldigFraOgMed = this["gyldigFraOgMed"]?.asText()?.let { LocalDate.parse(it) },
-//        uuid = this["uuid"].asString(),
-//    )

@@ -30,7 +30,6 @@ class AntallDagerMedSanksjon : OpplysningProdusent<Int> {
             verdi = verdi(fakta?.verdi),
             gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
-            type = opplysningsType.kotlin,
         )
     }
 
