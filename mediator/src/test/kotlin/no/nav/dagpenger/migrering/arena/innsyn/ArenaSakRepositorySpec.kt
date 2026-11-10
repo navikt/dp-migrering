@@ -4,17 +4,14 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.beNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNot
-import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
 
 class ArenaSakRepositorySpec :
     StringSpec({
 
-        val h2DataSourceBuilder = H2DataSourceBuilder()
-        h2DataSourceBuilder.runMigration()
-
         val arenaSakRepository =
             ArenaSakRepository(
-                dataSource = h2DataSourceBuilder.dataSource,
+                dataSource = oracleDataSource(),
             )
 
         "kan hente en Arena sak på sakId" {

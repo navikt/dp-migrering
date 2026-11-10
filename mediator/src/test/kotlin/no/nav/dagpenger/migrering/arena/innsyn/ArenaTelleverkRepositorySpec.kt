@@ -2,15 +2,12 @@ package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
 
 class ArenaTelleverkRepositorySpec :
     StringSpec({
 
-        val h2DataSourceBuilder = H2DataSourceBuilder()
-        h2DataSourceBuilder.runMigration()
-
-        val arenaTelleverkRepository = ArenaTelleverkRepository(h2DataSourceBuilder.dataSource)
+        val arenaTelleverkRepository = ArenaTelleverkRepository(oracleDataSource())
 
         "kan hente telleverk for person" {
             val telleverkForPerson = arenaTelleverkRepository.hentTelleverkForPerson(PersonId(id = 2321609))

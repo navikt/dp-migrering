@@ -24,7 +24,7 @@ import no.nav.dagpenger.migrering.api.auth.AuthFactory.azure_app
 import no.nav.dagpenger.migrering.api.authenticationConfig
 import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.innsyn.TestApplication.testAzureAdToken
-import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
 import no.nav.dagpenger.migrering.objectMapper
 
@@ -114,16 +114,17 @@ object TestApplication {
             ),
         )
 
-    private val h2DataSourceBuilder = H2DataSourceBuilder()
+//    private val h2DataSourceBuilder = H2DataSourceBuilder()
 
     init {
-        h2DataSourceBuilder.runMigration()
+//        h2DataSourceBuilder.runMigration()
     }
 
     val api: Application.() -> Unit = {
         authenticationConfig(authFactory)
         arenaInnsynApi(
-            h2DataSourceBuilder.dataSource,
+            oracleDataSource(),
+//            h2DataSourceBuilder.dataSource,
             StPeterPlugin(config = StPeterConfig(stPeterWithOAuthMockServer.config())),
         )
     }

@@ -587,18 +587,18 @@ class StartMigreringMottakSpec :
 private class StartMigreringTest(
     val rapid: TestRapid = TestRapid(),
 ) {
-    private val arenaRepository = mockk<ArenaRepository>()
+    private val arenaMigreringRepository = mockk<ArenaMigreringRepository>()
     val repository = mockk<MigreringRepository>()
     val mediator =
         MigreringMediator(
-            arenaRepository = arenaRepository,
+            arenaMigreringRepository = arenaMigreringRepository,
             migreringRepository = repository,
             rapid = rapid,
         )
 
     init {
-        every { arenaRepository.hentIdentForSak(12345) } returns "testident"
-        every { arenaRepository.hentSakTilMigrering(12345) } returns
+        every { arenaMigreringRepository.hentIdentForSak(12345) } returns "testident"
+        every { arenaMigreringRepository.hentSakTilMigrering(12345) } returns
             ArenaSakMigrering(
                 vilkaarsVurderinger = emptyList(),
                 vedtakfakta = emptyList(),

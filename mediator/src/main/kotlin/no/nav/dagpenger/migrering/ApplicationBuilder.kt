@@ -15,7 +15,7 @@ import no.dagpenger.OppdaterMenneskerMetrikk
 import no.nav.dagpenger.migrering.api.apiConfig
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.statusPagesConfig
-import no.nav.dagpenger.migrering.arena.migrering.ArenaRepository
+import no.nav.dagpenger.migrering.arena.migrering.ArenaMigreringOracleRepository
 import no.nav.dagpenger.migrering.arena.migrering.BehandlingOpprettetMottak
 import no.nav.dagpenger.migrering.arena.migrering.ForslagTilBehandlingsresultatMottak
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
@@ -52,7 +52,7 @@ internal class ApplicationBuilder(
         ) { server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>, rapid: KafkaRapid ->
             val migreringMediator =
                 MigreringMediator(
-                    arenaRepository = ArenaRepository(dataSource),
+                    arenaMigreringRepository = ArenaMigreringOracleRepository(dataSource),
                     migreringRepository = MigreringRepositoryPostgres(postgresDataSourceBuilder.dbsession),
                     rapid = rapid,
                 )

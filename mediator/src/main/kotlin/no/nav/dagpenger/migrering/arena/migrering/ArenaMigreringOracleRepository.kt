@@ -2,31 +2,14 @@
 
 package no.nav.dagpenger.migrering.arena.migrering
 
-import kotliquery.Row
-import kotliquery.Session
-import kotliquery.queryOf
-import kotliquery.sessionOf
 import no.nav.dagpenger.inntekt.v1.Inntekt
-import tools.jackson.module.kotlin.jacksonObjectMapper
+import no.nav.dagpenger.migrering.objectMapper
 import javax.sql.DataSource
 
-class ArenaRepository(
-    val dataSource: Lazy<DataSource>,
-) {
-    private fun <R> session(block: (Session) -> R): R = sessionOf(dataSource.value).use(block)
-
-    fun <T> select(
-        sql: String,
-        params: Map<String, Any> = emptyMap(),
-        extractor: (Row) -> T,
-    ): List<T> =
-        session { session ->
-            session.run(
-                queryOf(sql, params).map(extractor).asList,
-            )
-        }
-
-    fun hentVedtakfakta(sakId: Int): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> =
+class ArenaMigreringOracleRepository(
+    override val dataSource: Lazy<DataSource>,
+) : ArenaMigreringRepository {
+    override fun hentVedtakfakta(sakId: Int): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> =
         select(
             // language=oracle
             """
@@ -58,7 +41,7 @@ class ArenaRepository(
             )
         }
 
-    fun hentVilkaarvurdering(sakId: Int): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
+    override fun hentVilkaarvurdering(sakId: Int): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
         val select =
             select(
                 // language=oracle
@@ -91,7 +74,7 @@ class ArenaRepository(
         return select
     }
 
-    fun hentPersonInfo(sakId: Int): List<ArenaSakMigrering.ArenaPersonMigrering> {
+    override fun hentPersonInfo(sakId: Int): List<ArenaSakMigrering.ArenaPersonMigrering> {
         val select =
             select(
                 // language=oracle
@@ -125,7 +108,7 @@ class ArenaRepository(
         return select
     }
 
-    fun hentFodselsdatoPerson(sakId: Int): List<ArenaSakMigrering.ArenaPersonFodselsdatoMigrering> {
+    override fun hentFodselsdatoPerson(sakId: Int): List<ArenaSakMigrering.ArenaPersonFodselsdatoMigrering> {
         val select =
             select(
                 // language=oracle
@@ -150,7 +133,7 @@ class ArenaRepository(
         return select
     }
 
-    fun hentRettighetkode(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering> {
+    override fun hentRettighetkode(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering> {
         val select =
             select(
                 // language=oracle
@@ -181,7 +164,7 @@ class ArenaRepository(
         return select
     }
 
-    fun hentAntallForbrukteDagerDP(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+    override fun hentAntallForbrukteDagerDP(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
         val select =
             select(
                 // language=oracle
@@ -202,7 +185,7 @@ class ArenaRepository(
         return select
     }
 
-    fun hentAntallForbrukteDagerFISK(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+    override fun hentAntallForbrukteDagerFISK(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
         val select =
             select(
                 // language=oracle
@@ -223,7 +206,7 @@ class ArenaRepository(
         return select
     }
 
-    fun hentAntallForbrukteDagerPERM(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
+    override fun hentAntallForbrukteDagerPERM(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
         val select =
             select(
                 // language=oracle
@@ -244,21 +227,7 @@ class ArenaRepository(
         return select
     }
 
-    fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
-        ArenaSakMigrering(
-            vilkaarsVurderinger = hentVilkaarvurdering(sakId),
-            vedtakfakta = hentVedtakfakta(sakId),
-            personopplysninger = hentPersonInfo(sakId),
-            personFodselsdatoMigrering = hentFodselsdatoPerson(sakId),
-            tidsbegrensetVedtak = emptyList(),
-            rettighetstype = hentRettighetkode(sakId),
-            forbrukteDagerDP = hentAntallForbrukteDagerDP(sakId),
-            forbrukteDagerPERM = hentAntallForbrukteDagerPERM(sakId),
-            forbrukteDagerFISK = hentAntallForbrukteDagerFISK(sakId),
-            inntekt = hentInntekt(sakId),
-        )
-
-    fun hentIdentForSak(sakId: Int): String {
+    override fun hentIdentForSak(sakId: Int): String {
         select(
             // language=oracle
             """
@@ -274,11 +243,12 @@ class ArenaRepository(
         throw IllegalStateException("Fant ikke ident for sakId: $sakId")
     }
 
-    fun hentInntekt(sakId: Int): Inntekt? {
+    override fun hentInntekt(sakId: Int): Inntekt? {
+        // Kolon i datoformatet må siteres for å unngå navngitte Kotliquery-parametere.
         // language=oracle
         return select(
             """
-            SELECT JSON_OBJECT('inntekt'  VALUE 
+            SELECT 
                      JSON_OBJECT( 'inntektsId'      VALUE ( SELECT vedtakverdi
                                                             FROM   vedtakfakta
                                                             WHERE  vedtak_id = vedt.vedtak_id
@@ -286,9 +256,11 @@ class ArenaRepository(
                                 , 'inntektsListe'   VALUE (SELECT JSON_ARRAYAGG( 
                                                                     JSON_OBJECT( 'årMåned' VALUE aar_mnd
                                                                                , 'klassifiserteInntekter' VALUE 
-                                                                                   JSON_OBJECT( 'beløp'   VALUE TO_NUMBER(belop, '999999999.99')
-                                                                                              , 'inntektKlasse' VALUE 'DAGPENGER' )
-                                                                               , 'harAvvik' VALUE NULL ) )
+                                                                                   JSON_ARRAY(
+                                                                                       JSON_OBJECT( 'beløp'   VALUE TO_NUMBER(belop, '999999999.99')
+                                                                                                  , 'inntektKlasse' VALUE 'DAGPENGER' ) )
+                                                                               , 'harAvvik' VALUE NULL NULL ON NULL )
+                                                                    ORDER BY aar_mnd )
                                                            FROM   ( SELECT intp.vedtakverdi aar_mnd, belo.vedtakverdi belop
                                                                     FROM   vedtakfakta intp
                                                                     JOIN   vedtakfakta belo ON belo.vedtak_id = intp.vedtak_id 
@@ -312,7 +284,7 @@ class ArenaRepository(
                                 , 'manueltRedigert'               VALUE CASE ( SELECT vedtakverdi
                                                                                  FROM   vedtakfakta
                                                                                  WHERE  vedtak_id = vedt.vedtak_id
-                                                                                 AND    vedtakfaktakode = '' )
+                                                                                 AND    vedtakfaktakode = 'MANREGINNT' )
                                                                             WHEN 'J' THEN 'true' ELSE 'false'
                                                                           END FORMAT JSON
                                , 'begrunnelseManueltRedigert'     VALUE ( SELECT begr.vedtakverdi
@@ -325,10 +297,11 @@ class ArenaRepository(
                                                                           FROM   vedtakfakta
                                                                           WHERE  vedtak_id = vedt.vedtak_id
                                                                           AND    vedtakfaktakode = 'INTP1SLUTT' )
-                               , 'hentetTidspunkt'                VALUE ( SELECT reg_dato
+                               , 'hentetTidspunkt'                VALUE ( SELECT TO_CHAR(reg_dato, 'YYYY-MM-DD"T"HH24":"MI":"SS')
                                                                           FROM   vedtakfakta
                                                                           WHERE  vedtak_id = vedt.vedtak_id
-                                                                          AND    vedtakfaktakode = 'DDIDINNTGR' ) ) ) as inntekt
+                                                                          AND    vedtakfaktakode = 'DDIDINNTGR' )
+                               NULL ON NULL ) as inntekt
             FROM  vedtak vedt
             WHERE vedt.sak_id = :sakId
             AND   vedt.rettighetkode in ('DAGO','PERM','FISK','LONN')
@@ -340,7 +313,7 @@ class ArenaRepository(
             """.trimIndent(),
             mapOf("sakId" to sakId),
         ) { row ->
-            jacksonObjectMapper().readValue(row.string("inntekt"), Inntekt::class.java)
-        }.firstOrNull()
+            row.string("inntekt")
+        }.firstOrNull()?.let { return objectMapper.readValue(it, Inntekt::class.java) }
     }
 }

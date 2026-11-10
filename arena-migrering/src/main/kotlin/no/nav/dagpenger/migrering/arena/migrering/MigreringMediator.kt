@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 class MigreringMediator(
-    private val arenaRepository: ArenaRepository,
+    private val arenaMigreringRepository: ArenaMigreringRepository,
     private val migreringRepository: MigreringRepository,
     private val rapid: RapidsConnection,
 ) {
@@ -35,7 +35,7 @@ class MigreringMediator(
         val migrering =
             Migrering(
                 sakId = sakId,
-                ident = arenaRepository.hentIdentForSak(sakId),
+                ident = arenaMigreringRepository.hentIdentForSak(sakId),
                 initiertAv = initiertAv,
                 simulering = simulering,
                 migreringTidspunkt = migreringsTidspunkt,
@@ -123,7 +123,7 @@ class MigreringMediator(
         initiertAv: String,
     ): List<Opplysning<*>> =
         coroutineScope {
-            val sakTilMigrering = arenaRepository.hentSakTilMigrering(sakId)
+            val sakTilMigrering = arenaMigreringRepository.hentSakTilMigrering(sakId)
             val deferredOpplysninger =
                 aktiveProdusenter.map { produsent ->
                     async {

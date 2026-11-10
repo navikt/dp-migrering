@@ -115,7 +115,7 @@ private class BehandlingOpprettetTest {
             rapidsConnection = rapid,
             migreringMediator =
                 MigreringMediator(
-                    arenaRepository = mockk<ArenaRepository>(),
+                    arenaMigreringRepository = mockk<ArenaMigreringRepository>(),
                     migreringRepository = repository,
                     rapid = rapid,
                 ),

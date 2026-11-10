@@ -2,16 +2,13 @@ package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
 import java.time.LocalDate
 
 class ArenaPosteringRepositorySpec :
     StringSpec({
 
-        val h2DataSourceBuilder = H2DataSourceBuilder()
-        h2DataSourceBuilder.runMigration()
-
-        val arenaPosteringRepository = ArenaPosteringRepository(h2DataSourceBuilder.dataSource)
+        val arenaPosteringRepository = ArenaPosteringRepository(oracleDataSource())
 
         "kan hente siste utbetalingsdato for person" {
 

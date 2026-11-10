@@ -2,17 +2,14 @@ package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
 
 class ArenaVedtakFaktaRepositorySpec :
     StringSpec({
 
-        val h2DataSourceBuilder = H2DataSourceBuilder()
-        h2DataSourceBuilder.runMigration()
-
         val vedtakFaktaRepository =
             ArenaVedtakFaktaRepository(
-                dataSource = h2DataSourceBuilder.dataSource,
+                oracleDataSource(),
             )
         "kan hente fakta for vedtak" {
 

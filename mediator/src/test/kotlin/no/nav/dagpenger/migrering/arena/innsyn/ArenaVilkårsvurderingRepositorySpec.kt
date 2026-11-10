@@ -2,17 +2,14 @@ package no.nav.dagpenger.migrering.arena.innsyn
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
 
 class ArenaVilkårsvurderingRepositorySpec :
     StringSpec({
 
-        val h2DataSourceBuilder = H2DataSourceBuilder()
-        h2DataSourceBuilder.runMigration()
-
         val vilkårsvurderingRepository =
             ArenaVilkårsvurderingRepository(
-                dataSource = h2DataSourceBuilder.dataSource,
+                oracleDataSource(),
             )
         "kan hente vilkårsvurdering for vedtaksIder" {
 

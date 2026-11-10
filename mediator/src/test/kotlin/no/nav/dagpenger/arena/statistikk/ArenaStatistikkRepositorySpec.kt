@@ -3,15 +3,12 @@ package no.nav.dagpenger.arena.statistikk
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import no.dagpenger.ArenaStatistikkRepository
-import no.nav.dagpenger.migrering.db.H2DataSourceBuilder
+import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
 
 class ArenaStatistikkRepositorySpec :
     StringSpec({
 
-        val h2DataSourceBuilder = H2DataSourceBuilder()
-        h2DataSourceBuilder.runMigration()
-
-        val arenaStatistikkRepository = ArenaStatistikkRepository(h2DataSourceBuilder.dataSource)
+        val arenaStatistikkRepository = ArenaStatistikkRepository(oracleDataSource())
 
         "kan telle antall mennesker per rettighetstatus" {
             val antallDagpengepersoner = arenaStatistikkRepository.tellMenneskerPerRettighetstatus()
