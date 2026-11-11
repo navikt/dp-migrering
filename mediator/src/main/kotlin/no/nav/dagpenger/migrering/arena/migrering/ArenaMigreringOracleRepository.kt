@@ -143,7 +143,7 @@ class ArenaMigreringOracleRepository(
                      , mod_dato
                 FROM   vedtak vedt
                 WHERE  vedt.sak_id = :sakId
-                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN','DEKS')
                 AND    vedt.utfallkode = 'JA'
                 AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
                 AND    vedt.vedtaktypekode IN ('O','E','G','S')

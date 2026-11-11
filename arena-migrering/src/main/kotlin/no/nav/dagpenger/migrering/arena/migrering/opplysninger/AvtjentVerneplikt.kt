@@ -16,11 +16,32 @@ class AvtjentVerneplikt : OpplysningProdusent<Boolean> {
     override val opplysningsId: UUID = UUID.fromString("01948d3c-4bea-7802-9d18-5342a5e2be99")
     override val opplysningsNavn: String = "Avtjent verneplikt"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
+        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "VERNP3AV12" }
+
+        if (vedtakfakta == null) {
+            vedManglendeOpplysning()
+        }
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = verdi(vedtakfakta?.verdi),
+            gyldigFraOgMed = vedtakfakta?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
+
+    private fun verdi(verdi: String?): Boolean? =
+        when (verdi) {
+            "J" -> {
+                true
+            }
+
+            "N" -> {
+                false
+            }
+
+            else -> {
+                null
+            }
+        }
 }

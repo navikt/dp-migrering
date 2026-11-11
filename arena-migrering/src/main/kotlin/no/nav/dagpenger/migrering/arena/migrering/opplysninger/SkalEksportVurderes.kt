@@ -10,11 +10,24 @@ class SkalEksportVurderes : OpplysningProdusent<Boolean> {
     override val opplysningsId: UUID = UUID.fromString("019f608d-f9c5-7ccc-a6f3-c53531d1f00c")
     override val opplysningsNavn: String = "Skal eksport vurderes"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
+        val opplysning = kontekst.sakTilMigrering.rettighetstype.firstOrNull { rettighetstype -> rettighetstype.kode == "RETTIGHETKODE" }
+
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = verdi(opplysning?.verdi),
+            gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
+
+    private fun verdi(verdi: String?): Boolean? =
+        when (verdi) {
+            "DEKS" -> {
+                true
+            }
+            else -> {
+                true
+            }
+        }
 }

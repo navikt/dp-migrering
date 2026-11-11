@@ -30,7 +30,7 @@ class MigreringMediator(
         simulering: Boolean,
         migreringsTidspunkt: LocalDate,
     ): Migrering {
-        val opplysninger = hentOpplysningerForSak(sakId, initiertAv)
+        val opplysninger = hentOpplysningerForSak(sakId, initiertAv, migreringsTidspunkt.atStartOfDay())
 
         val migrering =
             Migrering(
@@ -121,6 +121,7 @@ class MigreringMediator(
     private suspend fun hentOpplysningerForSak(
         sakId: Int,
         initiertAv: String,
+        migreringTidspunkt: LocalDateTime,
     ): List<Opplysning<*>> =
         coroutineScope {
             val sakTilMigrering = arenaMigreringRepository.hentSakTilMigrering(sakId)
@@ -133,7 +134,7 @@ class MigreringMediator(
                                     sakTilMigrering = sakTilMigrering,
                                     migreringsId = UUID.randomUUID(),
                                     initiertAv = initiertAv,
-                                    opprettetTidspunkt = LocalDateTime.now(),
+                                    opprettetTidspunkt = migreringTidspunkt,
                                 ),
                             )
                         } catch (e: Exception) {

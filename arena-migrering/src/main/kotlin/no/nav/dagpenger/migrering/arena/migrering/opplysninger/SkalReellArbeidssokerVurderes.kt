@@ -7,7 +7,7 @@ import java.util.UUID
 // Arena: TRUE
 class SkalReellArbeidssokerVurderes : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -17,11 +17,12 @@ class SkalReellArbeidssokerVurderes : OpplysningProdusent<Boolean> {
     override val opplysningsNavn: String = "Skal reell arbeidssøker vurderes"
 
 // Forventer at den skal være true ? Feil ordlyd
+    // Denne skal alltid være true i Arena.
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = true,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

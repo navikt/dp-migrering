@@ -16,6 +16,8 @@ class SkalEtableringVurderes : OpplysningProdusent<Boolean> {
     override val opplysningsId: UUID = UUID.fromString("01a0c316-a2e9-7088-acb1-da5596bd0055")
     override val opplysningsNavn: String = "Skal etablering vurderes"
 
+// Bare lagt til midlertidig FALSE
+    // IKKE OK!
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
