@@ -248,19 +248,16 @@ class ArenaMigreringOracleRepository(
         // language=oracle
         return select(
             """
-            SELECT 
-                     JSON_OBJECT( 'inntektsId'      VALUE ( SELECT vedtakverdi
+            SELECT JSON_OBJECT( 'inntektsId'      VALUE ( SELECT vedtakverdi
                                                             FROM   vedtakfakta
                                                             WHERE  vedtak_id = vedt.vedtak_id
                                                             AND    vedtakfaktakode = 'DDIDINNTGR' ) 
                                 , 'inntektsListe'   VALUE (SELECT JSON_ARRAYAGG( 
                                                                     JSON_OBJECT( 'årMåned' VALUE aar_mnd
-                                                                               , 'klassifiserteInntekter' VALUE 
-                                                                                   JSON_ARRAY(
-                                                                                       JSON_OBJECT( 'beløp'   VALUE TO_NUMBER(belop, '999999999.99')
-                                                                                                  , 'inntektKlasse' VALUE 'DAGPENGER' ) )
-                                                                               , 'harAvvik' VALUE NULL NULL ON NULL )
-                                                                    ORDER BY aar_mnd )
+                                                                               , 'klassifiserteInntekter' VALUE JSON_ARRAY(
+                                                                                   JSON_OBJECT( 'beløp'   VALUE TO_NUMBER(belop, '999999999.99')
+                                                                                              , 'inntektKlasse' VALUE 'DAGPENGER' ))
+                                                                               , 'harAvvik' VALUE NULL ) )
                                                            FROM   ( SELECT intp.vedtakverdi aar_mnd, belo.vedtakverdi belop
                                                                     FROM   vedtakfakta intp
                                                                     JOIN   vedtakfakta belo ON belo.vedtak_id = intp.vedtak_id 
@@ -297,11 +294,10 @@ class ArenaMigreringOracleRepository(
                                                                           FROM   vedtakfakta
                                                                           WHERE  vedtak_id = vedt.vedtak_id
                                                                           AND    vedtakfaktakode = 'INTP1SLUTT' )
-                               , 'hentetTidspunkt'                VALUE ( SELECT TO_CHAR(reg_dato, 'YYYY-MM-DD"T"HH24":"MI":"SS')
+                               , 'hentetTidspunkt'                VALUE ( SELECT reg_dato
                                                                           FROM   vedtakfakta
                                                                           WHERE  vedtak_id = vedt.vedtak_id
-                                                                          AND    vedtakfaktakode = 'DDIDINNTGR' )
-                               NULL ON NULL ) as inntekt
+                                                                          AND    vedtakfaktakode = 'DDIDINNTGR' ) )  as inntekt
             FROM  vedtak vedt
             WHERE vedt.sak_id = :sakId
             AND   vedt.rettighetkode in ('DAGO','PERM','FISK','LONN')
