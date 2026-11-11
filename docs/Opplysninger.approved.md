@@ -38,7 +38,7 @@
 |019f6091-6e9a-782e-8d21-0a20ff720910|Bruker er registrert i vertsland|-|Fakta|false|
 |0194881f-9447-7e36-a569-3e9f42bff9f6|Bruker er utestengt fra dagpenger|-|Fakta|false|
 |019f26ec-f7e4-791a-af42-6cb632466cfa|Bruker oppgir selvforskyldt arbeidsløshet|-|Fakta|false|
-|019f608e-807e-758c-80ff-58e95f429f5a|Bruker skal ha eksport av dagpenger til EØS-land|-|Fakta|false|
+|019f608e-807e-758c-80ff-58e95f429f5a|Bruker skal ha eksport av dagpenger til EØS-land|-|Fakta|true|
 |0194881f-9410-7481-b263-4606fdd10cba|Brukt beregningsregel|-|Resultat|false|
 |0194881f-9413-77ce-92ec-d29700f04245|Brutto arbeidsinntekt|-|Fakta|false|
 |0194881f-9410-7481-b263-4606fdd10cbd|Dagpengegrunnlag for bruker|-|Resultat|true|
@@ -141,7 +141,7 @@
 |0194881f-9433-70e9-a85b-c246150c45ce|Pleiepenger etter lovens kapittel 9|-|Fakta|false|
 |0194881f-91d1-7df2-ba1d-4533f37fcc76|Prøvingsdato|-|Resultat|false|
 |0194881f-9442-707b-a6ee-e96c06877be2|Reell arbeidssøker|-|Resultat|false|
-|0194881f-9442-707b-a6ee-e96c06877be0|Registrert som arbeidssøker|-|Fakta|false|
+|0194881f-9442-707b-a6ee-e96c06877be0|Registrert som arbeidssøker|-|Fakta|true|
 |0194881f-9444-7a73-a458-0af81c034d8b|Rettighetstype|-|Resultat|false|
 |0194881f-9428-74d5-b160-f63a4c61a250|Er samordning utført|-|Resultat|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86eb|Samordnet dagsats uten barnetillegg|-|Resultat|true|
@@ -154,7 +154,7 @@
 |01980cf4-9010-7bcf-b578-ca5a825d64ef|Skal kravet til verneplikt vurderes|-|Resultat|false|
 |0194881f-9444-7a73-a458-0af81c034d86|Skal permittering vurderes|-|Fakta|true|
 |0194881f-9444-7a73-a458-0af81c034d88|Skal permittert fra fiskeindustrien vurderes|-|Fakta|true|
-|0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|-|Resultat|false|
+|0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|-|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a2d|Skal samordnes med ytelser utenfor folketrygden|-|Resultat|false|
 |0194881f-91d1-7df2-ba1d-4533f37fcc77|søknadId|-|Fakta|false|
 |0194881f-91d1-7df2-ba1d-4533f37fcc73|Søknadsdato|-|Fakta|false|
