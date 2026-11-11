@@ -61,7 +61,7 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("org.testcontainers:testcontainers-oracle-free:2.0.5")
     testImplementation(libs.bundles.postgres.test)
-    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.10.22-12.56.24558e302c36")
+    testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.11.05-06.44.ff72fc784de0")
     testRuntimeOnly("org.flywaydb:flyway-database-oracle:13.12.1")
 }
 
