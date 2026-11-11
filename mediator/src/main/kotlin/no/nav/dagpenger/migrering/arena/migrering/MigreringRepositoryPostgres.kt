@@ -246,6 +246,37 @@ class MigreringRepositoryPostgres(
         }
     }
 
+    override fun hentMigreringHendels(id: Long): MigreringHendelse? =
+        databaseSession.session { session ->
+            session.run(
+                queryOf(
+                    //language=PostgreSQL
+                    statement =
+                        """
+                        SELECT h.id, h.ident, h.melding_id, h.migrering_id, h.hendelse, h.data, h.tidspunkt, h.opprinnelse,
+                               m.sak_id, m.initiert_av
+                        FROM migrering_hendelse h
+                        JOIN migrering m ON m.migrering_id = h.migrering_id
+                        WHERE h.id = :id
+                        """.trimIndent(),
+                    paramMap = mapOf("id" to id),
+                ).map { row ->
+                    MigreringHendelse(
+                        id = row.long("id"),
+                        meldingId = row.uuid("melding_id"),
+                        migreringId = row.uuid("migrering_id"),
+                        hendelse = row.string("hendelse"),
+                        sakId = row.int("sak_id"),
+                        initiertAv = row.string("initiert_av"),
+                        tidspunkt = row.localDateTime("tidspunkt"),
+                        opprinnelse = row.string("opprinnelse"),
+                        data = row.string("data"),
+                        ident = row.string("ident"),
+                    )
+                }.asSingle,
+            )
+        }
+
     override fun migreringHendelser(
         migreringId: UUID,
         lastEventId: Long,
@@ -267,7 +298,6 @@ class MigreringRepositoryPostgres(
                         """.trimIndent(),
                     paramMap = mapOf("migrering_id" to migreringId, "last_event_id" to lastEventId, "limit" to limit),
                 ).map { row ->
-                    val dataJson = row.string("data")
                     MigreringHendelse(
                         id = row.long("id"),
                         meldingId = row.uuid("melding_id"),
@@ -277,6 +307,8 @@ class MigreringRepositoryPostgres(
                         initiertAv = row.string("initiert_av"),
                         tidspunkt = row.localDateTime("tidspunkt"),
                         opprinnelse = row.string("opprinnelse"),
+                        data = row.string("data"),
+                        ident = row.string("ident"),
                     )
                 }.asList,
             )

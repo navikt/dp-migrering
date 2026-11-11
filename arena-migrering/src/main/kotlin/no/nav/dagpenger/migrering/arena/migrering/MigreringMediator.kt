@@ -178,4 +178,6 @@ class MigreringMediator(
         require(limit in 1..100) { "Limit må være mellom 1 og 100" }
         return migreringRepository.migreringHendelser(migreringId, lastEventId, limit)
     }
+
+    fun hentMigreringHendelse(hendelseId: Long): MigreringHendelse? = migreringRepository.hentMigreringHendels(hendelseId)
 }

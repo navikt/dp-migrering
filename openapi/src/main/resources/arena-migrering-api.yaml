@@ -9,6 +9,44 @@ servers:
   - url: https://dp-migrering.intern.dev.nav.no
     description: dev
 paths:
+  /arena/migrering/hendelse/{hendelseId}:
+    get:
+      summary: Henter en lagret hendelse for én migrering
+      description: |
+        Krever saksbehandlergruppe og tilgang til personen i StPeter.
+      tags:
+        - Arena migrering
+      security:
+        - azureAd: [ ]
+      parameters:
+        - name: hendelseId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: Hendelsen ble funnet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MigreringHendelseResponse"
+        "400":
+          description: Ugyldig HendelseId
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+        "401":
+          description: Manglende eller ugyldig autentisering
+        "403":
+          description: Ingen tilgang til personen eller hendelsen finnes ikke
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
   /arena/migrering/{migreringId}/oppdateringer:
     get:
       summary: Strømmer lagrede hendelser for én migrering
@@ -119,6 +157,36 @@ paths:
                 $ref: "#/components/schemas/HttpProblem"
 components:
   schemas:
+    MigreringHendelseResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        sakId:
+          type: integer
+        meldingId:
+          type: string
+          format: uuid
+        initiertAv:
+          type: string
+        hendelse:
+          type: string
+        data:
+          type: string
+        opprinnelse:
+          type: string
+        tidspunkt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - sakId
+        - initiertAv
+        - hendelse
+        - data
+        - opprinnelse
+        - tidspunkt
     StartMigreringRequest:
       type: object
       properties:

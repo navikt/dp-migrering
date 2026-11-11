@@ -24,7 +24,7 @@ import kotlin.time.TimeSource
 
 internal data class SseInnslag(
     val id: Long,
-    val event: String,
+    val event: String = "message",
     val data: String,
 )
 

@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.dagpenger.stpeter.plugin.StPeterPlugin
 import no.dagpenger.stpeter.plugin.objectMapper
+import no.nav.dagpenger.arena.migrering.api.models.MigreringHendelseResponse
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringRequest
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
 import no.nav.dagpenger.migrering.api.FeatureNotEnabledException
@@ -99,11 +100,61 @@ internal fun Application.arenaMigreringApi(
                                     defaultCursor = { cursor },
                                     hentInnslag = { lastEventId ->
                                         migreringMediator
-                                            .hentOppdateringer(migreringId, lastEventId, limit = 10)
-                                            .map { SseInnslag(id = it.id, event = it.hendelse, data = objectMapper.writeValueAsString(it)) }
+                                            .hentOppdateringer(migreringId, lastEventId, limit = 1)
+                                            .map {
+                                                SseInnslag(
+                                                    id = it.id,
+                                                    data =
+                                                        objectMapper.writeValueAsString(
+                                                            mapOf(
+                                                                "id" to it.id,
+                                                                "hendelse" to it.hendelse,
+                                                                "tidspunkt" to it.tidspunkt,
+                                                                "opprinnelse" to it.opprinnelse,
+                                                            ),
+                                                        ),
+                                                )
+                                            }
                                     },
                                 ),
                             erAutentisert = token::isNotExpired,
+                        )
+                    }
+                }
+                get("/hendelse/{hendelseId}") {
+                    val hendelseId =
+                        try {
+                            call.parameters["hendelseId"]?.toLong()
+                        } catch (_: NumberFormatException) {
+                            throw BadRequestException("Ugyldig hendelseId")
+                        }
+                            ?: throw BadRequestException("HendelseId mangler")
+
+                    val migreringHendelse =
+                        withContext(Dispatchers.IO) {
+                            call.hentEllerAvvisVedIkkeFunnet {
+                                migreringMediator.hentMigreringHendelse(hendelseId)
+                                    ?: throw NotFoundException("Migrering hendelse finnes ikke")
+                            }
+                        }
+
+                    stPeter.vedTilgangTilPerson(
+                        ident = migreringHendelse.ident,
+                        token = call.token(),
+                        originRoute = "/arena/migrering/hendelse/{hendelseId}",
+                    ) {
+                        call.respond(
+                            HttpStatusCode.OK,
+                            MigreringHendelseResponse(
+                                id = migreringHendelse.id,
+                                meldingId = migreringHendelse.meldingId,
+                                sakId = migreringHendelse.sakId,
+                                hendelse = migreringHendelse.hendelse,
+                                tidspunkt = migreringHendelse.tidspunkt,
+                                opprinnelse = migreringHendelse.opprinnelse,
+                                data = migreringHendelse.data,
+                                initiertAv = migreringHendelse.initiertAv,
+                            ),
                         )
                     }
                 }

@@ -19,6 +19,7 @@ import io.mockk.verify
 import kotlinx.coroutines.withTimeout
 import no.dagpenger.stpeter.plugin.StPeterPlugin
 import no.dagpenger.stpeter.plugin.TilgangAvvistException
+import no.nav.dagpenger.arena.migrering.api.models.MigreringHendelseResponse
 import no.nav.dagpenger.arena.migrering.api.models.StartMigreringResponse
 import no.nav.dagpenger.migrering.arena.migrering.TestApplication.withMockAuthServerAndTestApplication
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
@@ -191,7 +192,7 @@ class ArenaMigreringApiSpec :
                 val migrering = sseMigrering()
                 val cursor = lastEventId?.toLong() ?: 0L
                 every { mediator.hentMigrering(migrering.migreringId) } returns migrering
-                every { mediator.hentOppdateringer(migrering.migreringId, cursor, 10) } returns
+                every { mediator.hentOppdateringer(migrering.migreringId, cursor, 1) } returns
                     listOf(
                         MigreringHendelse(
                             id = 8,
@@ -200,12 +201,13 @@ class ArenaMigreringApiSpec :
                             sakId = migrering.sakId,
                             initiertAv = migrering.initiertAv,
                             hendelse = "migrering_startet",
-                            // data = """{"status":"startet"}""",
+                            data = """{"status":"startet"}""",
                             opprinnelse = "Intern",
                             tidspunkt = migrering.opprettet,
+                            ident = migrering.ident,
                         ),
                     )
-                every { mediator.hentOppdateringer(migrering.migreringId, 8, 10) } returns emptyList()
+                every { mediator.hentOppdateringer(migrering.migreringId, 8, 1) } returns emptyList()
                 coEvery { stPeter.vedTilgangTilPerson(any(), any(), any(), any()) } coAnswers {
                     @Suppress("UNCHECKED_CAST")
                     (invocation.args[3] as suspend () -> Unit).invoke()
@@ -233,14 +235,66 @@ class ArenaMigreringApiSpec :
                                     if (line.isEmpty()) break
                                     lines.add(line)
                                 }
-                                lines[0] shouldBe "event: migrering_startet"
+                                lines[0] shouldBe "event: message"
                                 lines[2] shouldBe "id: 8"
                                 channel.cancel(null)
                             }
                     }
                 }
-                verify(exactly = 1) { mediator.hentOppdateringer(migrering.migreringId, cursor, 10) }
+                verify(exactly = 1) { mediator.hentOppdateringer(migrering.migreringId, cursor, 1) }
             }
+        }
+
+        "henter migreringhendelse etter tilgangssjekk" {
+            val mediator = mockk<MigreringMediator>()
+            val stPeter = mockk<StPeterPlugin>()
+            val migreringHendelse = migreringHendelse()
+            every { mediator.hentMigreringHendelse(migreringHendelse.id) } returns migreringHendelse
+            coEvery { stPeter.vedTilgangTilPerson(any(), any(), any(), any()) } coAnswers {
+                @Suppress("UNCHECKED_CAST")
+                (invocation.args[3] as suspend () -> Unit).invoke()
+            }
+
+            withMockAuthServerAndTestApplication(mediator, stPeter) {
+                val response = autentisert(endepunkt = "/arena/migrering/hendelse/${migreringHendelse.id}")
+
+                response.status shouldBe HttpStatusCode.OK
+                val body = response.body<MigreringHendelseResponse>()
+                body.id shouldBe migreringHendelse.id
+                body.meldingId shouldBe migreringHendelse.meldingId
+                body.sakId shouldBe migreringHendelse.sakId
+                body.hendelse shouldBe migreringHendelse.hendelse
+                body.tidspunkt shouldBe migreringHendelse.tidspunkt
+                body.opprinnelse shouldBe migreringHendelse.opprinnelse
+                body.data shouldBe migreringHendelse.data
+                body.initiertAv shouldBe migreringHendelse.initiertAv
+            }
+
+            verify(exactly = 1) { mediator.hentMigreringHendelse(migreringHendelse.id) }
+        }
+
+        "avviser ugyldig hendelseId" {
+            val mediator = mockk<MigreringMediator>()
+
+            withMockAuthServerAndTestApplication(mediator) {
+                autentisert(endepunkt = "/arena/migrering/hendelse/ugyldig")
+                    .status shouldBe HttpStatusCode.BadRequest
+            }
+
+            verify { mediator wasNot Called }
+        }
+
+        "ukjent hendelse gir samme avvisning som manglende persontilgang" {
+            val mediator = mockk<MigreringMediator>()
+            val hendelseId = 123L
+            every { mediator.hentMigreringHendelse(hendelseId) } returns null
+
+            withMockAuthServerAndTestApplication(mediator) {
+                autentisert(endepunkt = "/arena/migrering/hendelse/$hendelseId")
+                    .status shouldBe HttpStatusCode.Forbidden
+            }
+
+            verify(exactly = 1) { mediator.hentMigreringHendelse(hendelseId) }
         }
     })
 
@@ -250,4 +304,18 @@ private fun sseMigrering() =
         sakId = 12345,
         initiertAv = "Z999999",
         migreringTidspunkt = LocalDate.of(2026, 11, 6),
+    )
+
+private fun migreringHendelse() =
+    MigreringHendelse(
+        id = 8,
+        ident = "12345678901",
+        migreringId = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a24e"),
+        meldingId = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a24f"),
+        sakId = 12345,
+        initiertAv = "Z999999",
+        hendelse = "migrering_startet",
+        data = """{"status":"startet"}""",
+        opprinnelse = "Intern",
+        tidspunkt = LocalDateTime.of(2026, 11, 6, 10, 0),
     )

@@ -59,6 +59,32 @@ class MigreringRepositoryPostgresSpec :
             }
         }
 
+        "kan hente migreringhendelse for gitt id" {
+            val migrering = nyMigrering()
+            val meldingId = UUID.randomUUID()
+            val jsonData = """{"antall":42}"""
+            repository.lagreMigrering(migrering)
+            repository.lagreMigreringHendelse(
+                migrering.migreringId,
+                meldingId,
+                "MIGRERING_STARTET",
+                migrering.ident,
+                jsonData,
+                "Ekstern",
+            )
+
+            val hentetHendelse = repository.hentMigreringHendels(1L)
+            hentetHendelse.shouldNotBeNull()
+            hentetHendelse.id shouldBe 1L
+            hentetHendelse.meldingId shouldBe meldingId
+            hentetHendelse.migreringId shouldBe migrering.migreringId
+            hentetHendelse.sakId shouldBe migrering.sakId
+            hentetHendelse.initiertAv shouldBe migrering.initiertAv
+            hentetHendelse.hendelse shouldBe "MIGRERING_STARTET"
+            hentetHendelse.opprinnelse shouldBe "Ekstern"
+            objectMapper.readTree(hentetHendelse.data) shouldBe objectMapper.readTree(jsonData)
+        }
+
         "lagrer migrering med alle felter i Postgres" {
             val migrering = nyMigrering()
 

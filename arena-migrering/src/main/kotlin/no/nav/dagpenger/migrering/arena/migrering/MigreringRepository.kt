@@ -39,6 +39,8 @@ interface MigreringRepository {
         opprinnelse: String,
     )
 
+    fun hentMigreringHendels(id: Long): MigreringHendelse?
+
     fun migreringHendelser(
         migreringId: UUID,
         lastEventId: Long = 0,
