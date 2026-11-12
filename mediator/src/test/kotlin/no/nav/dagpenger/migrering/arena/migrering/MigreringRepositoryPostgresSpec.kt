@@ -97,6 +97,7 @@ class MigreringRepositoryPostgresSpec :
             hentetMigrering.sakId shouldBe migrering.sakId
             hentetMigrering.initiertAv shouldBe migrering.initiertAv
             hentetMigrering.opprettet.shouldNotBeNull()
+            hentetMigrering.simulering shouldBe migrering.simulering
         }
 
         "lagrer opplysninger som JSONB med migreringsstatus" {
@@ -164,7 +165,8 @@ class MigreringRepositoryPostgresSpec :
 
             repository.markereOpplysningerSomMigrert(migrering.migreringId, listOf(valgt))
 
-            val hentet = repository.hentOpplysningerForMigrering(migrering.migreringId).associateBy { it.opplysning.uuid }
+            val hentet =
+                repository.hentOpplysningerForMigrering(migrering.migreringId).associateBy { it.opplysning.uuid }
             hentet.size shouldBe 2
             hentet.getValue(valgt.uuid).migrert shouldBe true
             hentet.getValue(valgt.uuid).migrertTidspunkt.shouldNotBeNull()
@@ -194,7 +196,10 @@ class MigreringRepositoryPostgresSpec :
             val ikkeEtterspurt = Opplysning("Ikke etterspurt", 4, null, UUID.randomUUID())
             repository.lagreMigrering(migrering)
             repository.lagreMigrering(annenMigrering)
-            repository.lagreOpplysninger(migrering.migreringId, listOf(migrert, etterspurt, ogsåEtterspurt, ikkeEtterspurt))
+            repository.lagreOpplysninger(
+                migrering.migreringId,
+                listOf(migrert, etterspurt, ogsåEtterspurt, ikkeEtterspurt),
+            )
             repository.lagreOpplysninger(annenMigrering.migreringId, listOf(etterspurt, ikkeEtterspurt))
             repository.markereOpplysningerSomMigrert(migrering.migreringId, listOf(migrert))
             repository.markereOpplysningerSomMigrert(annenMigrering.migreringId, listOf(ikkeEtterspurt))
@@ -230,7 +235,10 @@ class MigreringRepositoryPostgresSpec :
         }
 
         "henter ingen manglende opplysninger for en ukjent migrering" {
-            repository.hentManglendeOpplysningerForMigrering(UUID.randomUUID(), listOf(UUID.randomUUID())) shouldBe emptyList()
+            repository.hentManglendeOpplysningerForMigrering(
+                UUID.randomUUID(),
+                listOf(UUID.randomUUID()),
+            ) shouldBe emptyList()
             repository.hentManglendeOpplysningerForMigrering(UUID.randomUUID(), emptyList()) shouldBe emptyList()
         }
 
@@ -399,7 +407,11 @@ class MigreringRepositoryPostgresSpec :
             val sisteSide =
                 repository.migreringHendelser(migrering.migreringId, lastEventId = førsteSide.last().id, limit = 2)
             sisteSide.map { it.meldingId } shouldBe meldingIder.takeLast(1)
-            repository.migreringHendelser(migrering.migreringId, lastEventId = sisteSide.single().id, limit = 2) shouldBe emptyList()
+            repository.migreringHendelser(
+                migrering.migreringId,
+                lastEventId = sisteSide.single().id,
+                limit = 2,
+            ) shouldBe emptyList()
             repository.migreringHendelser(UUID.randomUUID()) shouldBe emptyList()
         }
 
@@ -429,4 +441,5 @@ private fun nyMigrering() =
         sakId = 12345,
         initiertAv = "testbruker",
         migreringTidspunkt = LocalDate.of(2026, 11, 5),
+        simulering = true,
     )

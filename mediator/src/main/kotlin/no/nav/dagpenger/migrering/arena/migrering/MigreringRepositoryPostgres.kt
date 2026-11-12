@@ -21,8 +21,8 @@ class MigreringRepositoryPostgres(
                         //language=postgresql
                         statement =
                             """
-                            INSERT INTO migrering (migrering_id, ident, sak_id, initiert_av)
-                            VALUES (:migrering_id, :ident, :sak_id, :initiert_av)
+                            INSERT INTO migrering (migrering_id, ident, sak_id, initiert_av, simulering)
+                            VALUES (:migrering_id, :ident, :sak_id, :initiert_av, :simulering)
                             """.trimIndent(),
                         paramMap =
                             mapOf(
@@ -30,6 +30,7 @@ class MigreringRepositoryPostgres(
                                 "ident" to message.ident,
                                 "sak_id" to message.sakId,
                                 "initiert_av" to message.initiertAv,
+                                "simulering" to message.simulering,
                             ),
                     ).asUpdate,
             )
@@ -50,7 +51,8 @@ class MigreringRepositoryPostgres(
                                m.opprettet,
                                m.migrering_tidspunkt,
                                h.hendelse AS siste_hendelse,
-                               h.tidspunkt AS siste_hendelse_tidspunkt
+                               h.tidspunkt AS siste_hendelse_tidspunkt,
+                               m.simulering
                         FROM migrering m
                         LEFT JOIN LATERAL (
                             SELECT hendelse, tidspunkt
@@ -71,6 +73,7 @@ class MigreringRepositoryPostgres(
                         opprettet = row.localDateTime("opprettet"),
                         migreringTidspunkt = row.localDate("migrering_tidspunkt"),
                         status = row.stringOrNull("siste_hendelse") ?: "Ukjent",
+                        simulering = row.boolean("simulering"),
                     )
                 }.asSingle,
             )
@@ -343,7 +346,8 @@ class MigreringRepositoryPostgres(
                                m.opprettet,
                                m.migrering_tidspunkt,
                                h.hendelse AS siste_hendelse,
-                               h.tidspunkt AS siste_hendelse_tidspunkt
+                               h.tidspunkt AS siste_hendelse_tidspunkt,
+                               m.simulering
                         FROM migrering m
                                  LEFT JOIN LATERAL (
                             SELECT hendelse, tidspunkt
@@ -365,6 +369,7 @@ class MigreringRepositoryPostgres(
                         opprettet = row.localDateTime("opprettet"),
                         migreringTidspunkt = row.localDate("migrering_tidspunkt"),
                         status = row.stringOrNull("siste_hendelse") ?: "Ukjent",
+                        simulering = row.boolean("simulering"),
                     )
                 }.asList,
             )
