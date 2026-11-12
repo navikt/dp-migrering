@@ -70,6 +70,7 @@ class MigreringRepositoryPostgres(
                         initiertAv = row.string("initiert_av"),
                         opprettet = row.localDateTime("opprettet"),
                         migreringTidspunkt = row.localDate("migrering_tidspunkt"),
+                        status = row.stringOrNull("siste_hendelse") ?: "Ukjent",
                     )
                 }.asSingle,
             )
