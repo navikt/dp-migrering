@@ -63,7 +63,8 @@ internal fun Application.arenaMigreringApi(
                                 simulering = migrering.simulering,
                                 initiertAv = migrering.initiertAv,
                                 ident = migrering.ident,
-                                migreringsTidspunkt = migrering.opprettet,
+                                migreringsTidspunkt = migrering.migreringTidspunkt,
+                                opprettetTidspunkt = migrering.opprettet,
                             ),
                         )
                     } else {
@@ -155,6 +156,40 @@ internal fun Application.arenaMigreringApi(
                                 data = migreringHendelse.data,
                                 initiertAv = migreringHendelse.initiertAv,
                             ),
+                        )
+                    }
+                }
+
+                get("/sak/{sakId}") {
+                    val sakId = call.parameters["sakId"]?.toInt() ?: throw BadRequestException("SakId mangler")
+
+                    val migreringer =
+                        withContext(Dispatchers.IO) {
+                            migreringMediator.hentMigreringerForSak(sakId)
+                        }
+
+                    if (migreringer.isEmpty()) {
+                        throw NotFoundException("Ingen migreringer funnet for sak $sakId")
+                    }
+
+                    stPeter.vedTilgangTilPerson(
+                        ident = migreringer.first().ident,
+                        token = call.token(),
+                        originRoute = "/arena/migrering/sak/{sakId}",
+                    ) {
+                        call.respond(
+                            HttpStatusCode.OK,
+                            migreringer.map {
+                                StartMigreringResponse(
+                                    migreringId = it.migreringId,
+                                    sakId = it.sakId,
+                                    ident = it.ident,
+                                    initiertAv = it.initiertAv,
+                                    simulering = it.simulering,
+                                    migreringsTidspunkt = it.migreringTidspunkt,
+                                    opprettetTidspunkt = it.opprettet,
+                                )
+                            },
                         )
                     }
                 }

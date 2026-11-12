@@ -180,4 +180,6 @@ class MigreringMediator(
     }
 
     fun hentMigreringHendelse(hendelseId: Long): MigreringHendelse? = migreringRepository.hentMigreringHendels(hendelseId)
+
+    fun hentMigreringerForSak(sakId: Int): List<Migrering> = migreringRepository.hentMigreringerForSak(sakId)
 }

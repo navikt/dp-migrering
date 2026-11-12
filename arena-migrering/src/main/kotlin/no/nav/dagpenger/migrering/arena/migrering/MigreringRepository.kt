@@ -46,4 +46,6 @@ interface MigreringRepository {
         lastEventId: Long = 0,
         limit: Int = 10,
     ): List<MigreringHendelse>
+
+    fun hentMigreringerForSak(sakId: Int): List<Migrering>
 }

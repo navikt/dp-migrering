@@ -313,4 +313,30 @@ class MigreringRepositoryPostgres(
                 }.asList,
             )
         }
+
+    override fun hentMigreringerForSak(sakId: Int): List<Migrering> =
+        databaseSession.session { session ->
+            session.run(
+                queryOf(
+                    //language=PostgreSQL
+                    statement =
+                        """
+                        SELECT migrering_id, ident, sak_id, initiert_av, opprettet, migrering_tidspunkt
+                        FROM migrering
+                        WHERE sak_id = :sak_id
+                        ORDER BY opprettet DESC
+                        """.trimIndent(),
+                    paramMap = mapOf("sak_id" to sakId),
+                ).map { row ->
+                    Migrering(
+                        migreringId = row.uuid("migrering_id"),
+                        ident = row.string("ident"),
+                        sakId = row.int("sak_id"),
+                        initiertAv = row.string("initiert_av"),
+                        opprettet = row.localDateTime("opprettet"),
+                        migreringTidspunkt = row.localDate("migrering_tidspunkt"),
+                    )
+                }.asList,
+            )
+        }
 }
