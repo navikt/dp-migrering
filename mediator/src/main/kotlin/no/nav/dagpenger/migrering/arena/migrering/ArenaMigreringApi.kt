@@ -203,7 +203,8 @@ internal fun Application.arenaMigreringApi(
                         }
 
                     if (migreringer.isEmpty()) {
-                        throw NotFoundException("Ingen migreringer funnet for sak $sakId")
+                        call.respond(HttpStatusCode.OK, emptyList<StartMigreringResponse>())
+                        return@get
                     }
 
                     stPeter.vedTilgangTilPerson(

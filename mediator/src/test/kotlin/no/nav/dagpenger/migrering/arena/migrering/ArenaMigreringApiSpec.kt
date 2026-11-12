@@ -329,15 +329,16 @@ class ArenaMigreringApiSpec :
             }
         }
 
-        "sak uten migreringer gir ikke funnet" {
+        "sak uten migreringer gir tom liste" {
             val mediator = mockk<MigreringMediator>()
             val stPeter = mockk<StPeterPlugin>()
             val sakId = 15603478
             every { mediator.hentMigreringerForSak(sakId) } returns emptyList()
 
             withMockAuthServerAndTestApplication(mediator, stPeter) {
-                autentisert(endepunkt = "/arena/migrering/sak/$sakId")
-                    .status shouldBe HttpStatusCode.NotFound
+                val response = autentisert(endepunkt = "/arena/migrering/sak/$sakId")
+                response.status shouldBe HttpStatusCode.OK
+                response.body<List<StartMigreringResponse>>() shouldBe emptyList()
             }
 
             verify(exactly = 1) { mediator.hentMigreringerForSak(sakId) }
