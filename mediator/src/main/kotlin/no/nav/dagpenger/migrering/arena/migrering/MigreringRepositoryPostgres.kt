@@ -43,9 +43,23 @@ class MigreringRepositoryPostgres(
                     //language=postgresql
                     statement =
                         """
-                        SELECT migrering_id, ident, sak_id, initiert_av, opprettet, migrering_tidspunkt
-                        FROM migrering
-                        WHERE migrering_id = :migrering_id
+                                        SELECT m.migrering_id,
+                               m.ident,
+                               m.sak_id,
+                               m.initiert_av,
+                               m.opprettet,
+                               m.migrering_tidspunkt,
+                               h.hendelse AS siste_hendelse,
+                               h.tidspunkt AS siste_hendelse_tidspunkt
+                        FROM migrering m
+                        LEFT JOIN LATERAL (
+                            SELECT hendelse, tidspunkt
+                            FROM migrering_hendelse
+                            WHERE migrering_id = m.migrering_id
+                            ORDER BY id DESC
+                            LIMIT 1
+                        ) h ON TRUE
+                        WHERE m.migrering_id = :migrering_id
                         """.trimIndent(),
                     paramMap = mapOf("migrering_id" to migreringId),
                 ).map { row ->
