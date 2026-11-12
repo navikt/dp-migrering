@@ -123,6 +123,43 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/HttpProblem"
+  /arena/migrering/{migreringId}:
+    get:
+      summary: Henter en migrering
+      description: |
+        Krever saksbehandlergruppe og tilgang til personen i StPeter.
+      tags:
+        - Arena migrering
+      security:
+        - azureAd: [ ]
+      parameters:
+        - name: migreringId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Migreringen ble funnet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StartMigreringResponse"
+        "400":
+          description: Ugyldig migreringId
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
+        "401":
+          description: Manglende eller ugyldig autentisering
+        "403":
+          description: Ingen tilgang til personen eller migreringen finnes ikke
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/HttpProblem"
   /arena/migrering/sak/{sakId}:
     get:
       summary: Henter alle migreringer for en sak
@@ -263,6 +300,8 @@ components:
         opprettetTidspunkt:
           type: string
           format: date-time
+        status:
+          type: string
       required:
         - sakId
         - migreringId

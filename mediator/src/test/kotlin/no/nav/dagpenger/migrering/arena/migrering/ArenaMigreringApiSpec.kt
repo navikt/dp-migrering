@@ -135,6 +135,136 @@ class ArenaMigreringApiSpec :
             verify { mediator wasNot Called }
         }
 
+        "henter migrering med status etter tilgangssjekk" {
+            val mediator = mockk<MigreringMediator>()
+            val stPeter = mockk<StPeterPlugin>()
+            val migrering =
+                Migrering(
+                    migreringId = UUID.fromString("0194881f-9428-74d5-b160-f63a4c61a24e"),
+                    ident = "12345678901",
+                    sakId = 15603478,
+                    initiertAv = "Z999999",
+                    opprettet = LocalDateTime.of(2026, 11, 6, 10, 0),
+                    migreringTidspunkt = LocalDate.of(2026, 11, 7),
+                    simulering = true,
+                    status = "migrering_startet",
+                )
+            every { mediator.hentMigrering(migrering.migreringId) } returns migrering
+            coEvery {
+                stPeter.vedTilgangTilPerson(
+                    ident = migrering.ident,
+                    token = any(),
+                    originRoute = "/arena/migrering/{migreringId}",
+                    any(),
+                )
+            } coAnswers {
+                arg<suspend () -> Unit>(3).invoke()
+            }
+
+            withMockAuthServerAndTestApplication(mediator, stPeter) {
+                val response = autentisert(endepunkt = "/arena/migrering/${migrering.migreringId}")
+
+                response.status shouldBe HttpStatusCode.OK
+                val body = response.body<StartMigreringResponse>()
+                body.migreringId shouldBe migrering.migreringId
+                body.sakId shouldBe migrering.sakId
+                body.ident shouldBe migrering.ident
+                body.initiertAv shouldBe migrering.initiertAv
+                body.simulering shouldBe migrering.simulering
+                body.migreringsTidspunkt shouldBe migrering.migreringTidspunkt
+                body.opprettetTidspunkt shouldBe migrering.opprettet
+                body.status shouldBe migrering.status
+            }
+
+            verify(exactly = 1) { mediator.hentMigrering(migrering.migreringId) }
+            coVerify(exactly = 1) {
+                stPeter.vedTilgangTilPerson(
+                    ident = migrering.ident,
+                    token = any(),
+                    originRoute = "/arena/migrering/{migreringId}",
+                    any(),
+                )
+            }
+        }
+
+        "avviser ugyldig migreringId" {
+            val mediator = mockk<MigreringMediator>()
+            val stPeter = mockk<StPeterPlugin>()
+
+            withMockAuthServerAndTestApplication(mediator, stPeter) {
+                autentisert(endepunkt = "/arena/migrering/ugyldig")
+                    .status shouldBe HttpStatusCode.BadRequest
+            }
+
+            verify { mediator wasNot Called }
+            verify { stPeter wasNot Called }
+        }
+
+        "skal ikke hente migrering uten autentisering" {
+            val mediator = mockk<MigreringMediator>()
+            val stPeter = mockk<StPeterPlugin>()
+
+            withMockAuthServerAndTestApplication(mediator, stPeter) {
+                uautentisert(endepunkt = "/arena/migrering/${UUID.randomUUID()}")
+                    .status shouldBe HttpStatusCode.Unauthorized
+            }
+
+            verify { mediator wasNot Called }
+            verify { stPeter wasNot Called }
+        }
+
+        "ukjent migrering gir samme avvisning som manglende persontilgang ved henting" {
+            val mediator = mockk<MigreringMediator>()
+            val stPeter = mockk<StPeterPlugin>()
+            val migreringId = UUID.randomUUID()
+            every { mediator.hentMigrering(migreringId) } returns null
+
+            withMockAuthServerAndTestApplication(mediator, stPeter) {
+                autentisert(endepunkt = "/arena/migrering/$migreringId")
+                    .status shouldBe HttpStatusCode.Forbidden
+            }
+
+            verify(exactly = 1) { mediator.hentMigrering(migreringId) }
+            verify { stPeter wasNot Called }
+        }
+
+        "manglende persontilgang avviser henting av migrering" {
+            val mediator = mockk<MigreringMediator>()
+            val stPeter = mockk<StPeterPlugin>()
+            val migrering = sseMigrering()
+            every { mediator.hentMigrering(migrering.migreringId) } returns migrering
+            coEvery {
+                stPeter.vedTilgangTilPerson(
+                    ident = migrering.ident,
+                    token = any(),
+                    originRoute = "/arena/migrering/{migreringId}",
+                    any(),
+                )
+            } throws
+                TilgangAvvistException(
+                    title = "Ingen tilgang",
+                    status = HttpStatusCode.Forbidden,
+                    type = URI("urn:error:forbidden"),
+                    detail = "Ingen tilgang til ressursen",
+                    instance = URI("/arena/migrering/${migrering.migreringId}"),
+                )
+
+            withMockAuthServerAndTestApplication(mediator, stPeter) {
+                autentisert(endepunkt = "/arena/migrering/${migrering.migreringId}")
+                    .status shouldBe HttpStatusCode.Forbidden
+            }
+
+            verify(exactly = 1) { mediator.hentMigrering(migrering.migreringId) }
+            coVerify(exactly = 1) {
+                stPeter.vedTilgangTilPerson(
+                    ident = migrering.ident,
+                    token = any(),
+                    originRoute = "/arena/migrering/{migreringId}",
+                    any(),
+                )
+            }
+        }
+
         "henter alle migreringer for sak etter tilgangssjekk" {
             val mediator = mockk<MigreringMediator>()
             val stPeter = mockk<StPeterPlugin>()

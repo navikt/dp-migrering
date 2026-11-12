@@ -73,7 +73,41 @@ internal fun Application.arenaMigreringApi(
                         )
                     }
                 }
+                get("/{migreringId}") {
+                    val migreringId =
+                        try {
+                            UUID.fromString(call.parameters["migreringId"])
+                        } catch (_: IllegalArgumentException) {
+                            throw BadRequestException("Ugyldig migreringId")
+                        }
+                    val migrering =
+                        withContext(Dispatchers.IO) {
+                            call.hentEllerAvvisVedIkkeFunnet {
+                                migreringMediator.hentMigrering(migreringId)
+                                    ?: throw NotFoundException("Migrering finnes ikke")
+                            }
+                        }
 
+                    stPeter.vedTilgangTilPerson(
+                        ident = migrering.ident,
+                        token = call.token(),
+                        originRoute = "/arena/migrering/{migreringId}",
+                    ) {
+                        call.respond(
+                            HttpStatusCode.OK,
+                            StartMigreringResponse(
+                                sakId = migrering.sakId,
+                                migreringId = migrering.migreringId,
+                                simulering = migrering.simulering,
+                                initiertAv = migrering.initiertAv,
+                                ident = migrering.ident,
+                                migreringsTidspunkt = migrering.migreringTidspunkt,
+                                opprettetTidspunkt = migrering.opprettet,
+                                status = migrering.status,
+                            ),
+                        )
+                    }
+                }
                 get("/{migreringId}/oppdateringer") {
                     val migreringId =
                         try {
