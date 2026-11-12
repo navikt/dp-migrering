@@ -80,7 +80,6 @@ Mottaket henter dagsats fra repository-et, publiserer den og markerer den som mi
   "@opprettet" : "<metadata>",
   "ident" : "testident",
   "initiertAv" : "testbruker",
-  "manglendeOpplysninger" : null,
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",
   "opplysninger" : [
@@ -105,9 +104,13 @@ Mottaket henter dagsats fra repository-et, publiserer den og markerer den som mi
     {
       "id" : "<metadata>",
       "time" : "<metadata>"
+    },
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
     }
   ],
-  "system_read_count" : 1
+  "system_read_count" : 2
 }
 ```
 
@@ -157,9 +160,13 @@ Svaret inneholder dagsatsen tjenesten allerede har mottatt, og etterspør samord
     {
       "id" : "<metadata>",
       "time" : "<metadata>"
+    },
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
     }
   ],
-  "system_read_count" : 1
+  "system_read_count" : 2
 }
 ```
 
@@ -179,7 +186,6 @@ Repository-et returnerer både tidligere migrert dagsats og etterspurt samordnin
   "@opprettet" : "<metadata>",
   "ident" : "testident",
   "initiertAv" : "testbruker",
-  "manglendeOpplysninger" : null,
   "migreringId" : "<migreringId>",
   "migreringTidspunkt" : "2026-11-06",
   "opplysninger" : [
@@ -218,9 +224,17 @@ Repository-et returnerer både tidligere migrert dagsats og etterspurt samordnin
     {
       "id" : "<metadata>",
       "time" : "<metadata>"
+    },
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
+    },
+    {
+      "id" : "<metadata>",
+      "time" : "<metadata>"
     }
   ],
-  "system_read_count" : 2
+  "system_read_count" : 4
 }
 ```
 

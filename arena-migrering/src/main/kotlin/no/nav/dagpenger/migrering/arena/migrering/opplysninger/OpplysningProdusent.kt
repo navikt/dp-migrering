@@ -16,6 +16,9 @@ interface OpplysningProdusent<T : Any> {
     val pakrevd: Boolean
         get() = true
 
+    val status: Status
+        get() = Status.Alfa
+
     enum class Rolle {
         Fakta,
         Resultat,
@@ -25,5 +28,11 @@ interface OpplysningProdusent<T : Any> {
 
     fun vedManglendeOpplysning() {
         logger.info { "Fant ikke opplysning: $opplysningsNavn ($opplysningsId)" }
+    }
+
+    enum class Status {
+        Dummy,
+        Alfa,
+        Verifisert,
     }
 }

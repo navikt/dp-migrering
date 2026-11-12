@@ -203,7 +203,7 @@ class StartMigreringMottakSpec :
             svar["sakId"].asInt() shouldBe 12345
             svar["simulering"].asBoolean() shouldBe true
             svar["initiertAv"].asString() shouldBe "testbruker"
-            svar["manglendeOpplysninger"].isNull shouldBe true
+            svar.has("manglendeOpplysninger") shouldBe false
             val sendteOpplysninger = svar["opplysninger"].asArray().toList()
             sendteOpplysninger.size shouldBe 1
             sendteOpplysninger.single()["uuid"].asString() shouldBe opplysning.uuid.toString()
@@ -471,7 +471,7 @@ class StartMigreringMottakSpec :
                 førsteSvar,
             )
             førsteSvar["migreringId"].asString() shouldBe migreringId.toString()
-            førsteSvar["manglendeOpplysninger"].isNull shouldBe true
+            førsteSvar.has("manglendeOpplysninger") shouldBe false
             førsteSvar["opplysninger"]
                 .asArray()
                 .toList()
@@ -495,7 +495,7 @@ class StartMigreringMottakSpec :
                 svar,
             )
             svar["migreringId"].asString() shouldBe migreringId.toString()
-            svar["manglendeOpplysninger"].isNull shouldBe true
+            svar.has("manglendeOpplysninger") shouldBe false
             val sendteOpplysninger = svar["opplysninger"].asArray().toList()
             sendteOpplysninger.map { it["uuid"].asString() } shouldBe
                 listOf(dagsats.uuid.toString(), samordnet.uuid.toString())

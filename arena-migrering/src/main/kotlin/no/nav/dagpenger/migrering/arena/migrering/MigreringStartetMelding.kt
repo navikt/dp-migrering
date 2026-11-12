@@ -4,7 +4,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
-import tools.jackson.databind.node.NullNode
+import tools.jackson.databind.json.JsonMapper
 import java.util.UUID
 
 internal class MigreringStartetMelding(
@@ -12,6 +12,8 @@ internal class MigreringStartetMelding(
     opprinnelse: Hendelse.Opprinnelse,
 ) : KafkaMelding(packet) {
     companion object {
+        private val mapper = JsonMapper.builder().build()
+
         fun fra(migrering: Migrering): MigreringStartetMelding =
             MigreringStartetMelding(
                 JsonMessage
@@ -57,9 +59,14 @@ internal class MigreringStartetMelding(
 
     internal fun svar(opplysninger: List<Opplysning<*>>): MigreringStartetMelding =
         MigreringStartetMelding(
-            packet
-                .also {
-                    it["manglendeOpplysninger"] = NullNode.instance
+            JsonMessage
+                .newMessage(
+                    mapper
+                        .readTree(packet.toJson())
+                        .properties()
+                        .filterNot { it.key == "manglendeOpplysninger" }
+                        .associate { it.key to it.value },
+                ).also {
                     it["opplysninger"] =
                         opplysninger.map { opplysning ->
                             mapOf(
