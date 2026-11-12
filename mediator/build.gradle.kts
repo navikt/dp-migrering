@@ -19,7 +19,7 @@ dependencies {
     implementation(project(path = ":uuid-v7"))
 
     implementation(libs.bundles.jackson)
-    implementation("no.nav.dagpenger:stpeter-plugin:2026.11.05-06.44.ff72fc784de0")
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.11.11-14.08.cc755d392004")
     implementation(libs.rapids.and.rivers)
 
     implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
