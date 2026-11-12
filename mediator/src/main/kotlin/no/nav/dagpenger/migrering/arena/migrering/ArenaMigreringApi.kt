@@ -222,6 +222,7 @@ internal fun Application.arenaMigreringApi(
                                     simulering = it.simulering,
                                     migreringsTidspunkt = it.migreringTidspunkt,
                                     opprettetTidspunkt = it.opprettet,
+                                    status = it.status,
                                 )
                             },
                         )
