@@ -11,8 +11,8 @@
 |e8e28792-0ad4-4419-9cda-b166036e0fd9|Antall dager med sanksjon som er forbrukt|-|Resultat|false|
 |76d9c243-228b-4359-9550-1ebbb7ba5cb5|Antall dager med sanksjon som gjenstår|-|Resultat|false|
 |019df7d6-5156-7785-a6fd-54f5af1244be|Antall dager med tidsbegrenset bortfall|-|Resultat|false|
-|01992934-66e4-7606-bdd3-c6c9dd420ffd|Antall dager som er forbrukt|-|Resultat|false|
-|01992956-e349-76b1-8f68-c9d481df3a32|Antall dager som gjenstår|-|Resultat|false|
+|01992934-66e4-7606-bdd3-c6c9dd420ffd|Antall dager som er forbrukt|-|Resultat|true|
+|01992956-e349-76b1-8f68-c9d481df3a32|Antall dager som gjenstår|-|Resultat|true|
 |01a01e28-4bc6-7132-a846-a5666f92427c|Antall fritaksperiodedager som er forbrukt|-|Fakta|false|
 |01a01e28-a90b-7109-beae-b69d61cea3c0|Antall fritaksperiodedager som gjenstår|-|Fakta|false|
 |019d0059-0e34-76a7-ab91-42925a1d03a3|Antall gjenstående dager for å kunne gjenoppta|-|Fakta|false|
@@ -63,7 +63,7 @@
 |0194881f-9433-70e9-a85b-c246150c45d2|Foreldrepenger etter lovens kapittel 14|-|Fakta|false|
 |0194881f-9444-7a73-a458-0af81c034d87|Forskutterte lønnsgarantimidler i form av dagpenger|-|Fakta|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a29|Garantilott fra Garantikassen for fiskere beløp|-|Fakta|false|
-|01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|-|Resultat|false|
+|01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|-|Resultat|true|
 |01a0c30f-87de-7359-b642-e009a91bbda8|Godkjent næringsfaglig vurdering|-|Fakta|false|
 |0194881f-9413-77ce-92ec-d29700f04243|Grunnbeløp|-|Fakta|false|
 |0194881f-940f-7af9-9387-052e028b29ee|Grunnbeløp for grunnlag|-|Resultat|false|

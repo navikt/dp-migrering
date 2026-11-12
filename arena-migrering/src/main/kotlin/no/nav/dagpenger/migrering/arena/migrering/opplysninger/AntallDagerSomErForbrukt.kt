@@ -7,7 +7,7 @@ import java.util.UUID
 // Arena: kvotebruk DPTEL
 class AntallDagerSomErForbrukt : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -19,8 +19,8 @@ class AntallDagerSomErForbrukt : OpplysningProdusent<Int> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = 123,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }
