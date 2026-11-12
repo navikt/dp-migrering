@@ -14,7 +14,7 @@ class GjenstaendeEgenandel : OpplysningProdusent<Int> {
         Opplysning(
             navn = opplysningsNavn,
             verdi = 0,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate().minusDays(7),
             uuid = opplysningsId,
         )
 }

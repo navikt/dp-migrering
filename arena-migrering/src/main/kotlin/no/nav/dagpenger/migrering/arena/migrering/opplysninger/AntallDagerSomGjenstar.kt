@@ -20,7 +20,7 @@ class AntallDagerSomGjenstar : OpplysningProdusent<Int> {
         Opplysning(
             navn = opplysningsNavn,
             verdi = 321,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate().minusDays(7),
             uuid = opplysningsId,
         )
 }
