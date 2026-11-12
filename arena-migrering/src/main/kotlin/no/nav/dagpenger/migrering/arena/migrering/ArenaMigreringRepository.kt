@@ -53,9 +53,15 @@ interface ArenaMigreringRepository {
             forbrukteDagerPERM = hentAntallForbrukteDagerPERM(sakId),
             forbrukteDagerFISK = hentAntallForbrukteDagerFISK(sakId),
             inntekt = hentInntekt(sakId),
+            gjenstaendeTellerMigrering = hentGjenstaendeTellerverdi(sakId),
+            opprinneligDPTELMigrering = hentOpprinneligDPTEL(sakId),
         )
 
     fun hentIdentForSak(sakId: Int): String
 
     fun hentInntekt(sakId: Int): Inntekt?
+
+    fun hentGjenstaendeTellerverdi(sakId: Int): List<ArenaSakMigrering.ArenaGjenstaendeTellerMigrering>
+
+    fun hentOpprinneligDPTEL(sakId: Int): List<ArenaSakMigrering.ArenaOpprinneligDPTELMigrering>
 }

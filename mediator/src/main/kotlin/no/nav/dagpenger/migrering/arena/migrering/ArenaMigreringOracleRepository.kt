@@ -312,4 +312,62 @@ class ArenaMigreringOracleRepository(
             row.string("inntekt")
         }.firstOrNull()?.let { return objectMapper.readValue(it, Inntekt::class.java) }
     }
+
+    override fun hentGjenstaendeTellerverdi(sakId: Int): List<ArenaSakMigrering.ArenaGjenstaendeTellerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT kvotetypekode  AS kolonne
+                     , new_verdi      AS verdi
+                     , dato_fra       AS mod_dato
+                FROM   v_juster_teller v
+                     , sak s
+                WHERE  s.sak_id = :sakId
+                AND    s.tabellnavnalias = 'PERS'
+                AND    s.objekt_id = v.person_id
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaGjenstaendeTellerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    override fun hentOpprinneligDPTEL(sakId: Int): List<ArenaSakMigrering.ArenaOpprinneligDPTELMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'INIT'||kb.kvotetypekode  AS kolonne
+                     , kb.antall_bevegelse       AS verdi
+                     , kb.dato_hendelse          AS mod_dato
+                FROM   kvotebruk kb
+                JOIN   vedtak v ON v.vedtak_id=kb.objekt_id_grunnlag AND kb.tabellnavnalias_grunnlag='VEDTAK' AND kb.kvotetypekode='DPTEL' AND kb.posteringtypekode='NULLE' AND v.utfallkode='JA' AND v.vedtaktypekode IN ('O','E','G','S') AND v.rettighetkode IN ('DAGO','DEKS')
+                JOIN   sak s    ON s.sak_id=v.sak_id
+                WHERE  s.sak_id=:sakId
+                AND EXISTS (SELECT 0 
+                            FROM   vedtak ve 
+                            WHERE  ve.sak_id=s.sak_id 
+                            AND    ve.utfallkode='JA' 
+                            AND    ve.vedtaktypekode IN ('O','E','G','S') 
+                            AND    NVL(ve.til_dato,SYSDATE+1) > SYSDATE 
+                            AND    ve.rettighetkode IN ('DAGO','DEKS'))
+                ORDER BY v.fra_dato DESC
+                FETCH FIRST 1 ROW ONLY
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaOpprinneligDPTELMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
 }

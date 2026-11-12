@@ -16,11 +16,20 @@ class AntallDagerSomGjenstar : OpplysningProdusent<Int> {
     override val opplysningsId: UUID = UUID.fromString("01992956-e349-76b1-8f68-c9d481df3a32")
     override val opplysningsNavn: String = "Antall dager som gjenstår"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
+        val opplysning = kontekst.sakTilMigrering.gjenstaendeTellerMigrering.firstOrNull { it.kode == "DPTEL" }
+
+        if (opplysning == null) {
+            vedManglendeOpplysning()
+        }
+
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = verdi(opplysning?.verdi),
+            gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
+
+    private fun verdi(verdi: String?): Int? = verdi?.toInt()?.div(200)
 }
