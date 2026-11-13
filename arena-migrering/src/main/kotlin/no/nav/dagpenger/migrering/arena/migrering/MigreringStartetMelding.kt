@@ -57,7 +57,12 @@ internal class MigreringStartetMelding(
     internal val manglendeOpplysninger =
         if (!packet["manglendeOpplysninger"].isMissingOrNull()) {
             packet["manglendeOpplysninger"].asArray().toList().map {
-                it["uuid"].asString().toUUID()
+                Opplysning(
+                    navn = it["navn"].asString(),
+                    verdi = null,
+                    gyldigFraOgMed = null,
+                    uuid = it["uuid"].asString().toUUID(),
+                )
             }
         } else {
             emptyList()

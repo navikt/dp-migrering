@@ -175,6 +175,7 @@ object Opplysninger {
             VentelonnBelop(),
             VilligTilABytteYrke(),
             VurderRettFraOgMed(),
+            Sisteforbruksdato(),
         )
     val aktiveProdusenter: List<OpplysningProdusent<*>> = produsenter.filter { it.aktiv }
 }

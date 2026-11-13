@@ -25,7 +25,7 @@
 |01a0c30f-60d5-778a-a749-ff5f5f55f98d|Antas å føre til selvforsørgelse|-|Fakta|false|
 |0194d105-bd54-7b2b-9dc6-6e6664951894|Årsaken til permitteringen er godkjent|-|Fakta|false|
 |019522b8-0f1b-7536-8691-fd824bca86de|Årsaken til permitteringen fra fiskeindustrien er godkjent|-|Fakta|false|
-|01948d3c-4bea-7802-9d18-5342a5e2be99|Avtjent verneplikt|-|Fakta|false|
+|01948d3c-4bea-7802-9d18-5342a5e2be99|Avtjent verneplikt|-|Fakta|true|
 |0194881f-9428-74d5-b160-f63a4c61a23b|Barn fra Arena|-|Fakta|false|
 |0194881f-9435-72a8-b1ce-9575cbc2a767|Beregnet vanlig arbeidstid per uke før tap|-|Fakta|false|
 |0194881f-9435-72a8-b1ce-9575cbc2a765|Beregningsregel: Arbeidstid siste 12 måneder|-|Fakta|false|
@@ -148,8 +148,8 @@
 |019d007f-8696-7409-bd51-f4fbfc4babb4|Siste antall dager som gjenstår|-|Fakta|false|
 |0194881f-9414-7823-8d29-0e25b7feb7d0|SisteAvsluttendeKalendrmåned for bruker|-|Fakta|true|
 |01a0c310-b597-75be-acb6-e91c77024a33|Siste dato for dagpenger under etablering|-|Fakta|false|
-|019f608d-f9c5-7ccc-a6f3-c53531d1f00c|Skal eksport vurderes|-|Resultat|false|
-|01a0c316-a2e9-7088-acb1-da5596bd0055|Skal etablering vurderes|-|Resultat|false|
+|019f608d-f9c5-7ccc-a6f3-c53531d1f00c|Skal eksport vurderes|-|Resultat|true|
+|01a0c316-a2e9-7088-acb1-da5596bd0055|Skal etablering vurderes|-|Resultat|true|
 |019d0068-8037-7d91-bfff-de88f9e87fd3|Skal kravet til gjenopptak vurderes|-|Resultat|false|
 |01980cf4-9010-7bcf-b578-ca5a825d64ef|Skal kravet til verneplikt vurderes|-|Resultat|false|
 |0194881f-9444-7a73-a458-0af81c034d86|Skal permittering vurderes|-|Fakta|true|
@@ -175,3 +175,4 @@
 |0194881f-942f-7bde-ab16-68ffd19e9a27|Ventelønn beløp|-|Fakta|false|
 |0194881f-9442-707b-a6ee-e96c06877bde|Villig til å bytte yrke|-|Fakta|false|
 |019db9de-afaf-7e46-98b4-2fd20655b80f|Vurder rett fra og med|-|Fakta|false|
+|019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2|Siste forbruksdato|-|Fakta|true|

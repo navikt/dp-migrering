@@ -7,7 +7,8 @@ import java.util.UUID
 // Arena: vedtakfakta VERNP3AV12
 class AvtjentVerneplikt : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
         val logger = KotlinLogging.logger {}

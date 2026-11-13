@@ -63,11 +63,11 @@ class MigreringMediator(
         melding.lagreMelding(migreringRepository)
         val opplysninger =
             migreringRepository
-                .hentManglendeOpplysningerForMigrering(melding.migreringId, melding.manglendeOpplysninger)
+                .hentManglendeOpplysningerForMigrering(melding.migreringId, melding.manglendeOpplysninger.map { it.uuid })
                 .map { it.opplysning }
 
         val manglendeOpplysninger =
-            melding.manglendeOpplysninger.toSet() - opplysninger.map { it.uuid }.toSet()
+            melding.manglendeOpplysninger.map { it.uuid }.toSet() - opplysninger.map { it.uuid }.toSet()
         if (manglendeOpplysninger.isNotEmpty()) {
             MigreringAvbrutt
                 .ny(
