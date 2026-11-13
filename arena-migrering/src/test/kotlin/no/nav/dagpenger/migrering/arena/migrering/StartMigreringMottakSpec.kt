@@ -227,7 +227,7 @@ class StartMigreringMottakSpec :
                 test.repository.lagreMigreringHendelse(
                     migreringId,
                     UUID.fromString(svar["@id"].asString()),
-                    "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER",
+                    "MIGRERING_STARTET_OPPLYSNINGER",
                     "testident",
                     svar.toString(),
                     Hendelse.Opprinnelse.Intern.name,
