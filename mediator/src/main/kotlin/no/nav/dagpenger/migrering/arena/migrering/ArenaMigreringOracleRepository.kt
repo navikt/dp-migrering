@@ -2,6 +2,7 @@
 
 package no.nav.dagpenger.migrering.arena.migrering
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.inntekt.v1.Inntekt
 import no.nav.dagpenger.migrering.objectMapper
 import javax.sql.DataSource
@@ -9,6 +10,10 @@ import javax.sql.DataSource
 class ArenaMigreringOracleRepository(
     override val dataSource: Lazy<DataSource>,
 ) : ArenaMigreringRepository {
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
     override fun hentVedtakfakta(sakId: Int): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> =
         select(
             // language=oracle
@@ -310,6 +315,11 @@ class ArenaMigreringOracleRepository(
             mapOf("sakId" to sakId),
         ) { row ->
             row.string("inntekt")
-        }.firstOrNull()?.let { return objectMapper.readValue(it, Inntekt::class.java) }
+        }.firstOrNull()?.let {
+            logger.info { "Inntekt json for sakId $sakId: $it" }
+            val inntekt = objectMapper.readValue(it, Inntekt::class.java)
+            logger.info { "Inntekt for sakId $sakId: $inntekt" }
+            return inntekt
+        }
     }
 }

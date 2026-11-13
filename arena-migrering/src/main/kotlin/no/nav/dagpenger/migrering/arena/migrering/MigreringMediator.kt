@@ -63,8 +63,10 @@ class MigreringMediator(
         melding.lagreMelding(migreringRepository)
         val opplysninger =
             migreringRepository
-                .hentManglendeOpplysningerForMigrering(melding.migreringId, melding.manglendeOpplysninger.map { it.uuid })
-                .map { it.opplysning }
+                .hentManglendeOpplysningerForMigrering(
+                    melding.migreringId,
+                    melding.manglendeOpplysninger.map { it.uuid },
+                ).map { it.opplysning }
 
         val manglendeOpplysninger =
             melding.manglendeOpplysninger.map { it.uuid }.toSet() - opplysninger.map { it.uuid }.toSet()
@@ -87,7 +89,6 @@ class MigreringMediator(
         publiserOgLagreMelding(
             context = context,
             melding = svar,
-            hendelse = svar.hendelse.navn(),
         )
 
         migreringRepository.markereOpplysningerSomMigrert(
@@ -149,7 +150,6 @@ class MigreringMediator(
     private fun publiserOgLagreMelding(
         context: MessageContext,
         melding: KafkaMelding,
-        hendelse: String = melding.hendelse.navn(),
     ) {
         val (sendte, feilede) = context.publish(listOf(OutgoingMessage(melding.toJson())))
         if (feilede.isNotEmpty()) {
@@ -160,7 +160,7 @@ class MigreringMediator(
         migreringRepository.lagreMigreringHendelse(
             migreringId = melding.migreringId,
             meldingId = UUID.fromString(publisertMelding.id),
-            hendelse = hendelse,
+            hendelse = melding.hendelse.navn(),
             ident = melding.ident,
             jsonData = publisertJson,
             opprinnelse = melding.hendelse.opprinnelse().name,
