@@ -108,6 +108,7 @@ class StartMigreringMottakSpec :
                 MigreringStartetMelding(
                     JsonMessage(json, MessageProblems(json)),
                     Hendelse.Opprinnelse.Ekstern,
+                    "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER",
                 )
             val context = mockk<MessageContext>()
             every {
@@ -335,6 +336,7 @@ class StartMigreringMottakSpec :
                 MigreringStartetMelding(
                     JsonMessage(json, MessageProblems(json)),
                     Hendelse.Opprinnelse.Ekstern,
+                    "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER",
                 )
             val context = mockk<MessageContext>()
             every {

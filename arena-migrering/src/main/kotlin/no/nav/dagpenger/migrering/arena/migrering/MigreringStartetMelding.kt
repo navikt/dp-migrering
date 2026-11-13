@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
-import com.github.navikt.tbd_libs.rapids_and_rivers.asOptionalLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
@@ -11,6 +10,7 @@ import java.util.UUID
 internal class MigreringStartetMelding(
     private val packet: JsonMessage,
     opprinnelse: Hendelse.Opprinnelse,
+    hendelse: String,
 ) : KafkaMelding(packet) {
     companion object {
         private val mapper = JsonMapper.builder().build()
@@ -31,6 +31,7 @@ internal class MigreringStartetMelding(
                         ),
                     ),
                 Hendelse.Opprinnelse.Intern,
+                "MIGRERING_STARTET",
             )
     }
 
@@ -43,13 +44,7 @@ internal class MigreringStartetMelding(
 
     override val hendelse =
         object : Hendelse {
-            override fun navn(): String =
-                when {
-                    manglendeOpplysninger.isNotEmpty() -> "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER"
-                    opplysninger.isNotEmpty() -> "MIGRERING_STARTET_OPPLYSNINGER"
-                    else -> "MIGRERING_STARTET"
-                }
-//                if (manglendeOpplysninger.isNotEmpty()) "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER" else "MIGRERING_STARTET"
+            override fun navn(): String = hendelse
 
             override fun opprinnelse(): Hendelse.Opprinnelse = opprinnelse
         }
@@ -67,19 +62,19 @@ internal class MigreringStartetMelding(
         } else {
             emptyList()
         }
-    internal val opplysninger =
-        if (!packet["opplysninger"].isMissingOrNull()) {
-            packet["opplysninger"].asArray().toList().map { opplysning ->
-                Opplysning(
-                    navn = opplysning["navn"].asString(),
-                    verdi = opplysning["verdi"].asString(),
-                    gyldigFraOgMed = opplysning["gyldigFraOgMed"].asOptionalLocalDate(), // .asString()?.let { LocalDate.parse(it) },
-                    uuid = opplysning["uuid"].asString().toUUID(),
-                )
-            }
-        } else {
-            emptyList()
-        }
+//    internal val opplysninger =
+//        if (!packet["opplysninger"].isMissingOrNull()) {
+//            packet["opplysninger"].asArray().toList().map { opplysning ->
+//                Opplysning(
+//                    navn = opplysning["navn"].asString(),
+//                    verdi = opplysning["verdi"].asString(),
+//                    gyldigFraOgMed = opplysning["gyldigFraOgMed"].asOptionalLocalDate(), // .asString()?.let { LocalDate.parse(it) },
+//                    uuid = opplysning["uuid"].asString().toUUID(),
+//                )
+//            }
+//        } else {
+//            emptyList()
+//        }
 
     internal fun svar(opplysninger: List<Opplysning<*>>): MigreringStartetMelding =
         MigreringStartetMelding(
@@ -102,5 +97,6 @@ internal class MigreringStartetMelding(
                         }
                 },
             Hendelse.Opprinnelse.Intern,
+            "MIGRERING_STARTET_OPPLYSNINGER",
         )
 }

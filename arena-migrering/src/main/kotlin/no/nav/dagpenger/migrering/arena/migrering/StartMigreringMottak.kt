@@ -45,7 +45,10 @@ class StartMigreringMottak(
                 "migreringId" to packet["migreringId"].asString(),
             ) {
                 logger.info { "Mottok melding om manglende opplysninger for migrering" }
-                migreringMediator.håndter(MigreringStartetMelding(packet, Hendelse.Opprinnelse.Ekstern), context)
+                migreringMediator.håndter(
+                    MigreringStartetMelding(packet, Hendelse.Opprinnelse.Ekstern, "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER"),
+                    context,
+                )
             }
         }
     }
