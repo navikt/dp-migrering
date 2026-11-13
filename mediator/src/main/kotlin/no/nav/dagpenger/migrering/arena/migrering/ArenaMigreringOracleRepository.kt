@@ -10,10 +10,10 @@ import javax.sql.DataSource
 class ArenaMigreringOracleRepository(
     override val dataSource: Lazy<DataSource>,
 ) : ArenaMigreringRepository {
-
     companion object {
         private val logger = KotlinLogging.logger {}
     }
+
     override fun hentVedtakfakta(sakId: Int): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> =
         select(
             // language=oracle
