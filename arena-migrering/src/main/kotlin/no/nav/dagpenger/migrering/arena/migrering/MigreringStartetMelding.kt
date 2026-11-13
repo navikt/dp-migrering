@@ -1,6 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.asOptionalLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
@@ -34,7 +35,7 @@ internal class MigreringStartetMelding(
     }
 
     init {
-        packet.interestedIn("sakId", "migreringId", "manglendeOpplysninger")
+        packet.interestedIn("sakId", "migreringId", "manglendeOpplysninger", "opplysninger")
     }
 
     override val migreringId: UUID = packet["migreringId"].asUUID()
@@ -43,7 +44,12 @@ internal class MigreringStartetMelding(
     override val hendelse =
         object : Hendelse {
             override fun navn(): String =
-                if (manglendeOpplysninger.isNotEmpty()) "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER" else "MIGRERING_STARTET"
+                when {
+                    manglendeOpplysninger.isNotEmpty() -> "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER"
+                    opplysninger.isNotEmpty() -> "MIGRERING_STARTET_OPPLYSNINGER"
+                    else -> "MIGRERING_STARTET"
+                }
+//                if (manglendeOpplysninger.isNotEmpty()) "MIGRERING_STARTET_MED_MANGLENDE_OPPLYSNINGER" else "MIGRERING_STARTET"
 
             override fun opprinnelse(): Hendelse.Opprinnelse = opprinnelse
         }
@@ -52,6 +58,19 @@ internal class MigreringStartetMelding(
         if (!packet["manglendeOpplysninger"].isMissingOrNull()) {
             packet["manglendeOpplysninger"].asArray().toList().map {
                 it["uuid"].asString().toUUID()
+            }
+        } else {
+            emptyList()
+        }
+    internal val opplysninger =
+        if (!packet["opplysninger"].isMissingOrNull()) {
+            packet["opplysninger"].asArray().toList().map { opplysning ->
+                Opplysning(
+                    navn = opplysning["navn"].asString(),
+                    verdi = opplysning["verdi"].asString(),
+                    gyldigFraOgMed = opplysning["gyldigFraOgMed"].asOptionalLocalDate(), // .asString()?.let { LocalDate.parse(it) },
+                    uuid = opplysning["uuid"].asString().toUUID(),
+                )
             }
         } else {
             emptyList()
