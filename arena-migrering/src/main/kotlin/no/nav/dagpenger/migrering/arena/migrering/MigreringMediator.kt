@@ -87,7 +87,7 @@ class MigreringMediator(
         publiserOgLagreMelding(
             context = context,
             melding = svar,
-            hendelse = melding.hendelse.navn(),
+            hendelse = svar.hendelse.navn(),
         )
 
         migreringRepository.markereOpplysningerSomMigrert(
