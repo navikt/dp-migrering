@@ -8,6 +8,7 @@ class Egenandel : OpplysningProdusent<Int> {
     override val aktiv: Boolean = true
     override val opplysningsId: UUID = UUID.fromString("0194881f-943f-78d9-b874-00a4944c54ef")
     override val opplysningsNavn: String = "Egenandel"
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
         val opplysning = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { it.kode == "EGENANDDP" }

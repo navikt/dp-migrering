@@ -52,16 +52,16 @@
 |0194881f-9445-734c-a7ee-045edf29b52a|Deltar i høyere yrkesfaglig utdanning|Dummy|Fakta|true|
 |0194881f-9445-734c-a7ee-045edf29b528|Deltar i opplæring for innvandrere|Dummy|Fakta|true|
 |0194881f-9445-734c-a7ee-045edf29b52c|Deltar på kurs mv|Dummy|Fakta|true|
-|0194881f-943f-78d9-b874-00a4944c54ef|Egenandel|Dummy|Resultat|true|
+|0194881f-943f-78d9-b874-00a4944c54ef|Egenandel|Alfa|Resultat|true|
 |019e82fc-04e7-7f8d-bd52-6a7041ebb15f|Er ilagt sanskjonsperiode ved selvforskyldt arbeidsløshet|Dummy|Resultat|true|
 |019df9b1-7052-72e9-9232-547f7cb6ba60|Er ilagt tidsbegrenset bortfall av dagpenger|Dummy|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a28|Etterlønn beløp|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a76a|Fastsatt arbeidstid per uke for tap|Dummy|Fakta|true|
-|0194881f-940b-76ff-acf5-ba7bcb367233|Fødselsdato|Dummy|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a76a|Fastsatt arbeidstid per uke for tap|Alfa|Fakta|true|
+|0194881f-940b-76ff-acf5-ba7bcb367233|Fødselsdato|Alfa|Fakta|true|
 |01973a27-d8b3-7ffd-a81a-a3826963b079|Forbrukt egenandel|Dummy|Resultat|true|
 |0194881f-9433-70e9-a85b-c246150c45d9|Foreldrepenger dagsats|Dummy|Fakta|true|
 |0194881f-9433-70e9-a85b-c246150c45d2|Foreldrepenger etter lovens kapittel 14|Dummy|Fakta|true|
-|0194881f-9444-7a73-a458-0af81c034d87|Forskutterte lønnsgarantimidler i form av dagpenger|Dummy|Fakta|true|
+|0194881f-9444-7a73-a458-0af81c034d87|Forskutterte lønnsgarantimidler i form av dagpenger|Alfa|Fakta|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a29|Garantilott fra Garantikassen for fiskere beløp|Dummy|Fakta|true|
 |01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|Dummy|Resultat|true|
 |01a0c30f-87de-7359-b642-e009a91bbda8|Godkjent næringsfaglig vurdering|Dummy|Fakta|true|
@@ -75,20 +75,20 @@
 |01990a09-0eab-7957-b88f-14484a50e194|Har løpende rett på dagpenger|Dummy|Resultat|true|
 |019a81bf-50e1-7f1d-b23b-f30265b16042|Har meldt seg i tide|Dummy|Resultat|true|
 |01956ab8-126c-7636-803e-a5d87eda2015|Har meldt seg via meldekort|Dummy|Resultat|true|
-|0194881f-9444-7a73-a458-0af81c034d85|Har rett til ordinære dagpenger gjennom arbeidsforhold|Dummy|Fakta|true|
+|0194881f-9444-7a73-a458-0af81c034d85|Har rett til ordinære dagpenger gjennom arbeidsforhold|Alfa|Fakta|true|
 |0194881f-9445-734c-a7ee-045edf29b524|Har svart ja på spørsmål om utdanning eller opplæring|Dummy|Fakta|true|
 |0194881f-9445-734c-a7ee-045edf29b525|Har svart nei på spørsmål om utdanning eller opplæring|Dummy|Fakta|true|
 |019bc5f8-8af4-73c7-8b15-6feecd7810d2|Holder tilbake opplysninger som er viktige for rettigheter eller plikter etter denne loven|Dummy|Fakta|true|
 |01a0c30f-af05-736e-8d44-bd525b24bf4a|Ikke selvforskyldt arbeidsledig|Dummy|Fakta|true|
-|0194881f-9410-7481-b263-4606fdd10cad|Utbetalt inntekt periode 1|Dummy|Resultat|true|
-|0194881f-9410-7481-b263-4606fdd10cae|Utbetalt inntekt periode 2|Dummy|Resultat|true|
-|0194881f-9410-7481-b263-4606fdd10caf|Utbetalt inntekt periode 3|Dummy|Resultat|true|
-|0194881f-9413-77ce-92ec-d29700f04244|Inntektsopplysninger|Dummy|Resultat|true|
+|0194881f-9410-7481-b263-4606fdd10cad|Utbetalt inntekt periode 1|Alfa|Resultat|true|
+|0194881f-9410-7481-b263-4606fdd10cae|Utbetalt inntekt periode 2|Alfa|Resultat|true|
+|0194881f-9410-7481-b263-4606fdd10caf|Utbetalt inntekt periode 3|Alfa|Resultat|true|
+|0194881f-9413-77ce-92ec-d29700f04244|Inntektsopplysninger|Alfa|Resultat|true|
 |0194881f-9441-7d1b-a06a-6727543a141e|Kan jobbe heltid og deltid|Dummy|Fakta|true|
 |0194881f-9442-707b-a6ee-e96c06877bd9|Kan jobbe i hele Norge|Dummy|Fakta|true|
 |0194881f-9442-707b-a6ee-e96c06877bdc|Kan ta alle typer arbeid|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a762|Krav til prosentvis tap av arbeidstid|Dummy|Fakta|true|
-|0194881f-9443-72b4-8b30-5f6cdb24d54c|Bruker er medlem av folketrygden|Dummy|Resultat|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a762|Krav til prosentvis tap av arbeidstid|Alfa|Fakta|true|
+|0194881f-9443-72b4-8b30-5f6cdb24d54c|Bruker er medlem av folketrygden|Alfa|Resultat|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86ea|Medlem har reduserte ytelser fra folketrygden (Samordning)|Dummy|Resultat|true|
 |019a9b47-2442-7533-bc71-a71a4600c49a|Meldedato|Dummy|Resultat|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a769|Minimum vanlig arbeidstid|Dummy|Fakta|true|
@@ -105,18 +105,18 @@
 |0194881f-9433-70e9-a85b-c246150c45cf|Omsorgspenger etter lovens kapittel 9|Dummy|Fakta|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc74|Ønsker dagpenger fra dato|Dummy|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a75f|Ønsket arbeidstid|Dummy|Fakta|true|
-|0194881f-940b-76ff-acf5-ba7bcb367237|Bruker oppfyller kravet til alder|Dummy|Resultat|true|
+|0194881f-940b-76ff-acf5-ba7bcb367237|Bruker oppfyller kravet til alder|Alfa|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdd|Oppfyller kravet til å være arbeidsfør|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdf|Oppfyller kravet til å ta ethvert arbeid|Dummy|Resultat|true|
 |019c092a-7759-700a-9f7d-f4415b91e8db|Oppfyller kravet til framsatt søknad|Dummy|Resultat|true|
-|0194881f-9442-707b-a6ee-e96c06877bd8|Bruker oppfyller kravet til heltid- og deltidsarbeid|Dummy|Resultat|true|
+|0194881f-9442-707b-a6ee-e96c06877bd8|Bruker oppfyller kravet til heltid- og deltidsarbeid|Alfa|Resultat|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54d|Oppfyller kravet til medlemskap|Dummy|Resultat|true|
 |0194881f-9413-77ce-92ec-d29700f0424c|Oppfyller kravet til minsteinntekt|Dummy|Resultat|true|
-|0194881f-9442-707b-a6ee-e96c06877bdb|Bruker oppfyller kravet til mobilitet|Dummy|Resultat|true|
+|0194881f-9442-707b-a6ee-e96c06877bdb|Bruker oppfyller kravet til mobilitet|Alfa|Resultat|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54b|Oppfyller kravet til opphold i Norge eller unntak|Dummy|Resultat|true|
 |01997b70-6e6e-702a-a296-18ae5fb9621d|Oppfyller kravet til tapt arbeidstid i perioden|Dummy|Resultat|true|
-|01948d43-e218-76f1-b29b-7e604241d98a|Oppfyller kravet til verneplikt|Dummy|Resultat|true|
-|0194881f-9442-707b-a6ee-e96c06877be1|Oppfyller kravet til å være registrert som arbeidssøker|Dummy|Resultat|true|
+|01948d43-e218-76f1-b29b-7e604241d98a|Oppfyller kravet til verneplikt|Alfa|Resultat|true|
+|0194881f-9442-707b-a6ee-e96c06877be1|Oppfyller kravet til å være registrert som arbeidssøker|Alfa|Resultat|true|
 |0194881f-9447-7e36-a569-3e9f42bff9f7|Oppfyller krav til ikke utestengt|Dummy|Resultat|true|
 |0194881f-9445-734c-a7ee-045edf29b52d|Oppfyller krav til utdanning eller opplæring|Dummy|Resultat|true|
 |019d870c-6847-71fa-89d2-81a53d19cfcf|Oppfyller meldeplikt|Dummy|Resultat|true|
@@ -127,11 +127,11 @@
 |0194881f-9435-72a8-b1ce-9575cbc2a76e|Oppfyller vilkåret om tap av arbeidstid|Dummy|Resultat|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a761|Oppfyller vilkåret til tap av arbeidsinntekt|Dummy|Resultat|true|
 |0194881f-942e-7cb0-aa59-05ea449d88e0|Oppgitt andre ytelser utenfor NAV|Dummy|Fakta|true|
-|0194881f-9443-72b4-8b30-5f6cdb24d54e|Bruker har opphold i Norge|Dummy|Resultat|true|
+|0194881f-9443-72b4-8b30-5f6cdb24d54e|Bruker har opphold i Norge|Alfa|Resultat|true|
 |0194881f-9433-70e9-a85b-c246150c45d7|Opplæringspenger dagsats|Dummy|Fakta|true|
 |0194881f-9433-70e9-a85b-c246150c45d0|Opplæringspenger etter lovens kapittel 9|Dummy|Fakta|true|
 |0194881f-9413-77ce-92ec-d29700f04247|OpptjeningsperiodeFraOgMed|Dummy|Fakta|true|
-|0194881f-9444-7a73-a458-0af81c034d8a|Ordinære dagpenger|Dummy|Fakta|true|
+|0194881f-9444-7a73-a458-0af81c034d8a|Ordinære dagpenger|Alfa|Fakta|true|
 |01a0fb7e-5dd3-746d-a9eb-1c81f98cf545|Over 50 prosent eierandel i virksomheten|Dummy|Fakta|true|
 |0194881f-942e-7cb0-aa59-05ea449d88e7|Pensjon fra en offentlig tjenestepensjonsordning beløp|Dummy|Fakta|true|
 |0194881f-9421-766c-9dc6-41fe6c9a1e01|Periode som gis ved verneplikt|Dummy|Resultat|true|
@@ -141,19 +141,19 @@
 |0194881f-9433-70e9-a85b-c246150c45ce|Pleiepenger etter lovens kapittel 9|Dummy|Fakta|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc76|Prøvingsdato|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877be2|Reell arbeidssøker|Dummy|Resultat|true|
-|0194881f-9442-707b-a6ee-e96c06877be0|Registrert som arbeidssøker|Dummy|Fakta|true|
+|0194881f-9442-707b-a6ee-e96c06877be0|Registrert som arbeidssøker|Alfa|Fakta|true|
 |0194881f-9444-7a73-a458-0af81c034d8b|Rettighetstype|Dummy|Resultat|true|
-|0194881f-9428-74d5-b160-f63a4c61a250|Er samordning utført|Dummy|Resultat|true|
-|0194881f-9434-79e8-a64d-1a23cc5d86eb|Samordnet dagsats uten barnetillegg|Dummy|Resultat|true|
+|0194881f-9428-74d5-b160-f63a4c61a250|Er samordning utført|Alfa|Resultat|true|
+|0194881f-9434-79e8-a64d-1a23cc5d86eb|Samordnet dagsats uten barnetillegg|Alfa|Resultat|true|
 |019d007f-8696-7409-bd51-f4fbfc4babb4|Siste antall dager som gjenstår|Dummy|Fakta|true|
-|0194881f-9414-7823-8d29-0e25b7feb7d0|SisteAvsluttendeKalendrmåned for bruker|Dummy|Fakta|true|
+|0194881f-9414-7823-8d29-0e25b7feb7d0|SisteAvsluttendeKalendrmåned for bruker|Alfa|Fakta|true|
 |01a0c310-b597-75be-acb6-e91c77024a33|Siste dato for dagpenger under etablering|Dummy|Fakta|true|
 |019f608d-f9c5-7ccc-a6f3-c53531d1f00c|Skal eksport vurderes|Alfa|Resultat|true|
 |01a0c316-a2e9-7088-acb1-da5596bd0055|Skal etablering vurderes|Dummy|Resultat|true|
 |019d0068-8037-7d91-bfff-de88f9e87fd3|Skal kravet til gjenopptak vurderes|Dummy|Resultat|true|
 |01980cf4-9010-7bcf-b578-ca5a825d64ef|Skal kravet til verneplikt vurderes|Dummy|Resultat|true|
-|0194881f-9444-7a73-a458-0af81c034d86|Skal permittering vurderes|Dummy|Fakta|true|
-|0194881f-9444-7a73-a458-0af81c034d88|Skal permittert fra fiskeindustrien vurderes|Dummy|Fakta|true|
+|0194881f-9444-7a73-a458-0af81c034d86|Skal permittering vurderes|Alfa|Fakta|true|
+|0194881f-9444-7a73-a458-0af81c034d88|Skal permittert fra fiskeindustrien vurderes|Alfa|Fakta|true|
 |0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|Dummy|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a2d|Skal samordnes med ytelser utenfor folketrygden|Dummy|Resultat|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc77|søknadId|Dummy|Fakta|true|
@@ -167,8 +167,8 @@
 |0194881f-9433-70e9-a85b-c246150c45d8|Uføre dagsats|Dummy|Fakta|true|
 |0194881f-942e-7cb0-aa59-05ea449d88e8|Uførepensjon fra offentlig pensjonsordning beløp|Dummy|Fakta|true|
 |0194881f-9433-70e9-a85b-c246150c45d1|Uføretrygd etter lovens kapittel 12|Dummy|Fakta|true|
-|0194881f-9428-74d5-b160-f63a4c61a24e|Ukessats med barnetillegg etter samordning|Dummy|Resultat|true|
-|0194881f-9428-74d5-b160-f63a4c61a240|Ukessats med barnetillegg før samordning|Dummy|Resultat|true|
+|0194881f-9428-74d5-b160-f63a4c61a24e|Ukessats med barnetillegg etter samordning|Alfa|Resultat|true|
+|0194881f-9428-74d5-b160-f63a4c61a240|Ukessats med barnetillegg før samordning|Alfa|Resultat|true|
 |019bc5f8-c377-740f-9df6-3c743b5144b1|Uten rimelig grunn unnlater å etterkomme pålegg som er gitt med hjemmel i denne loven|Dummy|Fakta|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86ef|Utfall etter samordning|Dummy|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a26|Vartpenger beløp|Dummy|Fakta|true|

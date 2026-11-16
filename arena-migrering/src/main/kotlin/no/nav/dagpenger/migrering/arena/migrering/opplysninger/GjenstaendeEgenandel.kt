@@ -7,6 +7,7 @@ import java.util.UUID
 class GjenstaendeEgenandel : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("01997b70-a12c-7622-bff8-82a20687e640")
     override val opplysningsNavn: String = "Gjenstående egenandel"
 

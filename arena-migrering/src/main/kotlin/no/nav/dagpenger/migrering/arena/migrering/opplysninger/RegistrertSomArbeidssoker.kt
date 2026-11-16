@@ -8,6 +8,7 @@ import java.util.UUID
 class RegistrertSomArbeidssoker : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -36,6 +37,7 @@ class RegistrertSomArbeidssoker : OpplysningProdusent<Boolean> {
             "ARBS" -> {
                 true
             }
+
             else -> {
                 false
             }

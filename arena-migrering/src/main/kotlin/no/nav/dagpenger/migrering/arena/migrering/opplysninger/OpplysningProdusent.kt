@@ -15,7 +15,6 @@ interface OpplysningProdusent<T : Any> {
     val rolle: Rolle
 
     val status: Status
-        get() = Status.Dummy
 
     enum class Rolle {
         Fakta,
