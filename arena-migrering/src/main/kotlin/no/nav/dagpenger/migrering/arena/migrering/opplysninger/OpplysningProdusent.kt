@@ -1,12 +1,20 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.prometheus.metrics.core.metrics.Counter
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 interface OpplysningProdusent<T : Any> {
     companion object {
         val logger = KotlinLogging.logger {}
+        private val manglendeOpplysninger =
+            Counter
+                .builder()
+                .name("arena_migrering_manglende_opplysninger_total")
+                .help("Antall ganger en opplysning mangler under migrering fra Arena")
+                .labelNames("id", "navn", "status")
+                .register()
     }
 
     val opplysningsId: UUID
@@ -24,7 +32,8 @@ interface OpplysningProdusent<T : Any> {
     suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>
 
     fun vedManglendeOpplysning() {
-        logger.info { "Fant ikke opplysning: $opplysningsNavn ($opplysningsId)" }
+        manglendeOpplysninger.labelValues(opplysningsId.toString(), opplysningsNavn, status.name).inc()
+        logger.info { "Fant ikke opplysning: $opplysningsNavn ($opplysningsId). Status: ${status.name}" }
     }
 
     enum class Status {

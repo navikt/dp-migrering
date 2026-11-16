@@ -10,6 +10,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:${libs.versions.ktor.get()}")
     implementation(libs.kotlinquery)
     implementation(libs.rapids.and.rivers)
+    implementation("io.prometheus:prometheus-metrics-core:1.10.0")
     api("com.github.navikt:dp-inntekt-kontrakter:2_202609181789745424.d9cfdc")
 
     testImplementation(libs.bundles.kotest.assertions)
