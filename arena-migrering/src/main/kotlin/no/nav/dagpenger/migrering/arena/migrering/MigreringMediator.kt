@@ -6,6 +6,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.prometheus.metrics.core.metrics.Counter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -22,6 +23,14 @@ class MigreringMediator(
 ) {
     companion object {
         private val logger = KotlinLogging.logger {}
+
+        private val manglendeOpplysninger =
+            Counter
+                .builder()
+                .name("migrering_manglende_opplysninger_forespurt_total")
+                .help("Antall ganger en opplysning mangler blitt forespurt under migrering")
+                .labelNames("id", "navn")
+                .register()
     }
 
     suspend fun startMigrering(
@@ -68,8 +77,15 @@ class MigreringMediator(
                     melding.manglendeOpplysninger.map { it.uuid },
                 ).map { it.opplysning }
 
+        melding.manglendeOpplysninger.forEach {
+            manglendeOpplysninger
+                .labelValues(it.uuid.toString(), it.navn)
+                .inc()
+        }
+
         val manglendeOpplysninger =
             melding.manglendeOpplysninger.map { it.uuid }.toSet() - opplysninger.map { it.uuid }.toSet()
+
         if (manglendeOpplysninger.isNotEmpty()) {
             MigreringAvbrutt
                 .ny(
