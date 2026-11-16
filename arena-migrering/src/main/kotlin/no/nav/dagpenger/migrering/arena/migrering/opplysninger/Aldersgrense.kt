@@ -7,7 +7,8 @@ import java.util.UUID
 // Arena: vilkår UNDER67
 class Aldersgrense : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -19,8 +20,8 @@ class Aldersgrense : OpplysningProdusent<Int> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = 67,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

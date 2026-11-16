@@ -8,6 +8,7 @@ import java.util.UUID
 class Dagsats : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
         val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
@@ -18,6 +19,7 @@ class Dagsats : OpplysningProdusent<Int> {
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
         val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "DAGS" }
+
         if (vedtakfakta == null) {
             vedManglendeOpplysning()
         }

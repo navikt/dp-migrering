@@ -7,7 +7,8 @@ import java.util.UUID
 // Arena: ? vedtakfakta BERREGEL
 class BruktBeregningsregel : OpplysningProdusent<String> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -21,8 +22,8 @@ class BruktBeregningsregel : OpplysningProdusent<String> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = "dummy",
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

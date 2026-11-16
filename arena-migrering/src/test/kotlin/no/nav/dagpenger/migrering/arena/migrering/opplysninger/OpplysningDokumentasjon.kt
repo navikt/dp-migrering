@@ -26,7 +26,7 @@ class OpplysningDokumentasjon : StringSpec() {
             markdown.appendLine(
                 """
                 >#### Opplysninger
-                >|UUID|Navn|Arena kilde|Rolle|Aktiv|
+                >|UUID|Navn|Status|Rolle|Aktiv|
                 >|---|---|---|---|---|
                 """.trimMargin(">"),
             )
@@ -36,10 +36,11 @@ class OpplysningDokumentasjon : StringSpec() {
                 val navn = produsent.opplysningsNavn
                 val rolle = produsent.rolle.name
                 val aktiv = produsent.aktiv
+                val status = produsent.status.name
 
                 markdown.appendLine(
                     """
-                        >|$id|$navn|-|$rolle|$aktiv|
+                        >|$id|$navn|$status|$rolle|$aktiv|
                         """.trimMargin(">").trimIndent(),
                 )
             }

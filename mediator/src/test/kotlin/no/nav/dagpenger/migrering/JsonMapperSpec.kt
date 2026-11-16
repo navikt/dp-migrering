@@ -40,7 +40,7 @@ class JsonMapperSpec :
 
             val json = objectMapper.readTree(objectMapper.writeValueAsString(opplysning))
             val verdi = json.path("verdi")
-            val inntektsListe = verdi.path("inntektsListe").asSequence().toList()
+            val inntektsListe = verdi.path("inntektsListe").toList()
 
             inntektsListe.map { it.path("årMåned").asString() } shouldBe maaneder.map(YearMonth::toString)
             val gjenopprettet = objectMapper.treeToValue(verdi, Inntekt::class.java)

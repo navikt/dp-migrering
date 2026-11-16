@@ -13,11 +13,9 @@ interface OpplysningProdusent<T : Any> {
     val opplysningsNavn: String
     val aktiv: Boolean
     val rolle: Rolle
-    val pakrevd: Boolean
-        get() = true
 
     val status: Status
-        get() = Status.Alfa
+        get() = Status.Dummy
 
     enum class Rolle {
         Fakta,

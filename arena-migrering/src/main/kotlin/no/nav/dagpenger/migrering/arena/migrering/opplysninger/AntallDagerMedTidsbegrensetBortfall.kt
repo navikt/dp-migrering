@@ -6,7 +6,8 @@ import java.util.UUID
 
 class AntallDagerMedTidsbegrensetBortfall : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -18,8 +19,8 @@ class AntallDagerMedTidsbegrensetBortfall : OpplysningProdusent<Int> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = 0,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

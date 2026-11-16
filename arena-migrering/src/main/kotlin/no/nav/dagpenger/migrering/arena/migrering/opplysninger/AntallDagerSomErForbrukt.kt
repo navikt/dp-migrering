@@ -8,6 +8,7 @@ import java.util.UUID
 class AntallDagerSomErForbrukt : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -20,7 +21,7 @@ class AntallDagerSomErForbrukt : OpplysningProdusent<Int> {
         Opplysning(
             navn = opplysningsNavn,
             verdi = 123,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate().minusDays(7),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

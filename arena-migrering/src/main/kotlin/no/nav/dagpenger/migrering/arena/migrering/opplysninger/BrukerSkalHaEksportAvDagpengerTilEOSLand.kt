@@ -7,11 +7,16 @@ import java.util.UUID
 class BrukerSkalHaEksportAvDagpengerTilEOSLand : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
     override val opplysningsId: UUID = UUID.fromString("019f608e-807e-758c-80ff-58e95f429f5a")
     override val opplysningsNavn: String = "Bruker skal ha eksport av dagpenger til EØS-land"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val opplysning = kontekst.sakTilMigrering.rettighetstype.firstOrNull { rettighetstype -> rettighetstype.kode == "RETTIGHETKODE" }
+
+        if (opplysning == null) {
+            vedManglendeOpplysning()
+        }
 
         return Opplysning(
             navn = opplysningsNavn,
@@ -26,6 +31,7 @@ class BrukerSkalHaEksportAvDagpengerTilEOSLand : OpplysningProdusent<Boolean> {
             "DEKS" -> {
                 true
             }
+
             else -> {
                 false
             }
