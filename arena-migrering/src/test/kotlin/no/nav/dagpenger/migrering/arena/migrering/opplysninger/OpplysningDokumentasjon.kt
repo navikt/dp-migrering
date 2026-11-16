@@ -18,7 +18,7 @@ class OpplysningDokumentasjon : StringSpec() {
             val markdown =
                 StringBuilder(
                     """
-            ># Dokumentasjon av opplysninger
+            ># Dokumentasjon av opplysningsprodusenter
             >
             >""".trimMargin(">"),
                 )

@@ -1,4 +1,4 @@
-# Dokumentasjon av opplysninger
+# Dokumentasjon av opplysningsprodusenter
 
 #### Opplysninger
 |UUID|Navn|Status|Rolle|Aktiv|
