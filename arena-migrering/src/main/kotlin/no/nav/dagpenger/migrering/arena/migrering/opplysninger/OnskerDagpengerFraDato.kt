@@ -8,7 +8,8 @@ import java.util.UUID
 // Arena: dp-behandling setter dette fra migreringsdato
 class OnskerDagpengerFraDato : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -20,8 +21,8 @@ class OnskerDagpengerFraDato : OpplysningProdusent<LocalDate> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = kontekst.opprettetTidspunkt.toLocalDate(),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

@@ -6,15 +6,16 @@ import java.util.UUID
 // Arena: vedtaktype T (vedtaktype F)
 class ErIlagtTidsbegrensetBortfallAvDagpenger : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("019df9b1-7052-72e9-9232-547f7cb6ba60")
     override val opplysningsNavn: String = "Er ilagt tidsbegrenset bortfall av dagpenger"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = false,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

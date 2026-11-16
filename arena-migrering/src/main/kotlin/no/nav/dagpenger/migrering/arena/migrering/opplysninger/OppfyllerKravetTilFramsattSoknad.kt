@@ -5,15 +5,16 @@ import java.util.UUID
 
 class OppfyllerKravetTilFramsattSoknad : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("019c092a-7759-700a-9f7d-f4415b91e8db")
     override val opplysningsNavn: String = "Oppfyller kravet til framsatt søknad"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = true,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

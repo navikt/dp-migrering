@@ -5,15 +5,16 @@ import java.util.UUID
 
 class UtfallEtterSamordning : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("0194881f-9434-79e8-a64d-1a23cc5d86ef")
     override val opplysningsNavn: String = "Utfall etter samordning"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = false,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

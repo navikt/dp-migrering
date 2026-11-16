@@ -7,7 +7,8 @@ import java.util.UUID
 // Arena: Vedtakfakta NAARBTID
 class NyArbeidstidPerUke : OpplysningProdusent<Double> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -19,8 +20,8 @@ class NyArbeidstidPerUke : OpplysningProdusent<Double> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Double> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = 0.0,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

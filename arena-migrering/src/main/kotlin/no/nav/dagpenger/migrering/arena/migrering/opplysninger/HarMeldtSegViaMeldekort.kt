@@ -7,7 +7,8 @@ import java.util.UUID
 // Arena: fikses av Ramp? meldekort dato_innkommet
 class HarMeldtSegViaMeldekort : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -19,8 +20,8 @@ class HarMeldtSegViaMeldekort : OpplysningProdusent<Boolean> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = true,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

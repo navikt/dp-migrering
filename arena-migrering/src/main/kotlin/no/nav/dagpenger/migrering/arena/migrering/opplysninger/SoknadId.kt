@@ -7,7 +7,8 @@ import java.util.UUID
 // Arena: Arena har ikke denne
 class SoknadId : OpplysningProdusent<String> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -19,8 +20,8 @@ class SoknadId : OpplysningProdusent<String> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = UUID.randomUUID().toString(),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

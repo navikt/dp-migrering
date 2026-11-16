@@ -7,15 +7,16 @@ import java.util.UUID
 // Arena: dp-behandling setter dette fra migreringsdato
 class Provingsdato : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("0194881f-91d1-7df2-ba1d-4533f37fcc76")
     override val opplysningsNavn: String = "Prøvingsdato"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = kontekst.opprettetTidspunkt.toLocalDate(),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

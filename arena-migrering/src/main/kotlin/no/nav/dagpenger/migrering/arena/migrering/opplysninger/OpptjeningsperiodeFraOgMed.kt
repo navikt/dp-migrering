@@ -6,15 +6,16 @@ import java.util.UUID
 
 class OpptjeningsperiodeFraOgMed : OpplysningProdusent<LocalDate> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("0194881f-9413-77ce-92ec-d29700f04247")
     override val opplysningsNavn: String = "OpptjeningsperiodeFraOgMed"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = kontekst.opprettetTidspunkt.toLocalDate().minusMonths(36),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }

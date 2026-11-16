@@ -6,15 +6,16 @@ import java.util.UUID
 // Arena: vilkaar IFYT
 class SykepengerEtterLovensKapittel8 : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = false
+    override val aktiv: Boolean = true
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("0194881f-9433-70e9-a85b-c246150c45cd")
     override val opplysningsNavn: String = "Sykepenger etter lovens kapittel 8"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = null,
+            verdi = false,
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
 }
