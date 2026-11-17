@@ -25,7 +25,6 @@ class StartMigreringMottak(
                 precondition { it.requireValue("@event_name", "migrering_startet") }
                 validate {
                     it.requireKey(
-                        "manglendeOpplysninger",
                         "migreringId",
                         "@id",
                         "ident",
@@ -46,7 +45,7 @@ class StartMigreringMottak(
             ) {
                 logger.info { "Mottok melding om manglende opplysninger for migrering" }
                 migreringMediator.håndter(
-                    MigreringStartetMelding(packet, Hendelse.Opprinnelse.Ekstern, "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER"),
+                    MigreringStartetMelding(packet),
                     context,
                 )
             }

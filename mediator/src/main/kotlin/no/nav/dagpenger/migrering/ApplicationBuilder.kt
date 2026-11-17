@@ -18,8 +18,11 @@ import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.ArenaMigreringOracleRepository
 import no.nav.dagpenger.migrering.arena.migrering.BehandlingOpprettetMottak
 import no.nav.dagpenger.migrering.arena.migrering.ForslagTilBehandlingsresultatMottak
+import no.nav.dagpenger.migrering.arena.migrering.MigreringAvbruttMottak
+import no.nav.dagpenger.migrering.arena.migrering.MigreringManglendeOpplysningerMottak
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepositoryPostgres
+import no.nav.dagpenger.migrering.arena.migrering.MigreringSimuleringResultatMottak
 import no.nav.dagpenger.migrering.arena.migrering.StartMigreringMottak
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import no.nav.dagpenger.migrering.db.PostgresDataSourceBuilder
@@ -70,6 +73,18 @@ internal class ApplicationBuilder(
                 migreringMediator = migreringMediator,
             )
             ForslagTilBehandlingsresultatMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
+            MigreringAvbruttMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
+            MigreringManglendeOpplysningerMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
+            MigreringSimuleringResultatMottak(
                 rapidsConnection = rapid,
                 migreringMediator = migreringMediator,
             )
