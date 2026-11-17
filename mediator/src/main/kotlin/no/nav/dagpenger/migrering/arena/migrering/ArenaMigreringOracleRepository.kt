@@ -322,4 +322,36 @@ class ArenaMigreringOracleRepository(
             return inntekt
         }
     }
+
+    override fun hentDeks(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering> =
+        select(
+            // language=oracle
+            """
+            SELECT     'ERDEKS'         AS kolonne
+                     , rettighetkode
+                     , mod_dato
+                FROM   vedtak vedt
+                WHERE  vedt.sak_id = :sakId
+                AND    vedt.rettighetkode = 'DEKS'
+                AND    vedt.utfallkode = 'JA'
+                AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
+                AND    vedt.vedtaktypekode IN ('O','E','G')
+                AND    vedt.vedtakstatuskode = 'IVERK'
+                AND EXISTS ( SELECT 1 
+                             FROM   vedtak vedt2 
+                             WHERE  vedt2.sak_id = vedt.sak_id
+                             AND    vedt2.rettighetkode='DAGO'
+                             AND    vedt2.vedtakstatuskode = 'IVERK'
+                             AND    SYSDATE BETWEEN vedt2.fra_dato AND NVL( vedt2.til_dato, SYSDATE )
+                             AND    vedt2.aktfasekode='EOS'
+                             )
+            """.trimIndent(),
+            mapOf("sakId" to sakId),
+        ) { row ->
+            ArenaSakMigrering.ArenaRetttighetstypeMigrering(
+                kode = row.string("kolonne"),
+                verdi = row.string("rettighetkode"),
+                gyldigFra = row.localDate("mod_dato"),
+            )
+        }
 }

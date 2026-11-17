@@ -14,6 +14,7 @@ data class ArenaSakMigrering(
     val forbrukteDagerFISK: List<ArenaForbrukteDagerMigrering>,
     val tidsbegrensetVedtak: List<ArenaTidsbegrensetVedtakMigrering>,
     val inntekt: Inntekt?,
+    val erDeks: List<ArenaRetttighetstypeMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,

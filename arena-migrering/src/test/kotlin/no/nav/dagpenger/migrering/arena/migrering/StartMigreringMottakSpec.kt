@@ -612,6 +612,7 @@ private class StartMigreringTest(
                 forbrukteDagerFISK = emptyList(),
                 tidsbegrensetVedtak = emptyList(),
                 inntekt = null,
+                erDeks = emptyList(),
             )
         every { repository.lagreMigrering(any()) } just Runs
         every { repository.lagreOpplysninger(any(), any()) } just Runs

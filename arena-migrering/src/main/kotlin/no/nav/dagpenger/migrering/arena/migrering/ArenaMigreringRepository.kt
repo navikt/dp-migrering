@@ -53,9 +53,12 @@ interface ArenaMigreringRepository {
             forbrukteDagerPERM = hentAntallForbrukteDagerPERM(sakId),
             forbrukteDagerFISK = hentAntallForbrukteDagerFISK(sakId),
             inntekt = hentInntekt(sakId),
+            erDeks = hentDeks(sakId),
         )
 
     fun hentIdentForSak(sakId: Int): String
 
     fun hentInntekt(sakId: Int): Inntekt?
+
+    fun hentDeks(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering>
 }
