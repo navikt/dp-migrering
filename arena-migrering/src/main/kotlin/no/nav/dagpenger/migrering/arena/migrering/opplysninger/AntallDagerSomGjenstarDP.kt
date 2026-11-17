@@ -26,7 +26,7 @@ class AntallDagerSomGjenstarDP : OpplysningProdusent<Int> {
 
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = (opplysning?.verdi?.toInt() ?: 0).div(200),
+            verdi = (opplysning?.verdi?.toInt() ?: 0).div(20),
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
         )
