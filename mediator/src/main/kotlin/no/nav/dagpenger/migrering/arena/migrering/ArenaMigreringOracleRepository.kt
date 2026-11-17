@@ -195,21 +195,24 @@ class ArenaMigreringOracleRepository(
             select(
                 // language=oracle
                 """
-                SELECT 'GJENNDPTEL'  AS kolonne
-                     , bl.verdi      AS verdi
-                     , bl.mod_dato   AS mod_dato
-                FROM   BEREGNINGSLEDD bl 
+                SELECT 'GJENNTELLER'         AS kolonne
+                     , kb.kvotetypekode      AS kvotetypekode
+                     , bl.verdi              AS verdi
+                     , bl.mod_dato           AS mod_dato
+                FROM   KVOTEBRUK kb
+                     , BEREGNINGSLEDD bl 
                      , SAK s
-                WHERE  s.tabellnavnalias = 'PERS'
-                AND    s.objekt_id = bl.person_id
-                AND    s.sak_id = :sakId
+                WHERE  kb.kvotebruk_id = bl.objekt_id_kilde
                 AND    bl.tabellnavnalias_kilde='KVOTBR'
-                AND    bl.beregningsleddkode = 'DPTEL'
+                AND    s.tabellnavnalias = 'PERS'
+                AND    s.objekt_id = bl.person_id
+                AND    s.sak_id = :sakId                
                 """.trimIndent(),
                 mapOf("sakId" to sakId),
             ) { row ->
                 ArenaSakMigrering.ArenaGjenstaendeTellerMigrering(
                     kode = row.string("kolonne"),
+                    kodetype = row.string("kvotetypekode"),
                     verdi = row.string("verdi"),
                     gyldigFra = row.localDate("mod_dato"),
                 )

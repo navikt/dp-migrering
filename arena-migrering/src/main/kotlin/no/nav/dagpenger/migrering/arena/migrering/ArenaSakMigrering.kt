@@ -61,6 +61,7 @@ data class ArenaSakMigrering(
 
     data class ArenaGjenstaendeTellerMigrering(
         val kode: String,
+        val kodetype: String,
         val verdi: String,
         val gyldigFra: LocalDate,
     )

@@ -18,7 +18,7 @@ class AntallDagerSomGjenstarDP : OpplysningProdusent<Int> {
     override val opplysningsNavn: String = "Antall dager som gjenstår"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
-        val opplysning = kontekst.sakTilMigrering.gjenstaendeTeller.firstOrNull { it.kode == "GJENNDPTEL" }
+        val opplysning = kontekst.sakTilMigrering.gjenstaendeTeller.firstOrNull { it.kode == "GJENNTELLER" && it.kodetype == "DPTEL" }
 
         if (opplysning == null) {
             vedManglendeOpplysning()
