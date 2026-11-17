@@ -77,13 +77,10 @@ class MigreringMediator(
                     melding.manglendeOpplysninger().map { it.uuid },
                 ).map { it.opplysning }
 
-        val viHarIkkeAlleNodvendigeOpplysninger =
-            (
-                melding.manglendeOpplysninger().map { it.uuid }.toSet() -
-                    opplysninger
-                        .map { it.uuid }
-                        .toSet()
-            ).isNotEmpty()
+        val opplysningsIderViHar = opplysninger.map { it.uuid }.toSet()
+        val opplysningerViIkkeFinner =
+            melding.manglendeOpplysninger().filterNot { it.uuid in opplysningsIderViHar }
+        val viHarIkkeAlleNodvendigeOpplysninger = opplysningerViIkkeFinner.isNotEmpty()
 
         if (viHarIkkeAlleNodvendigeOpplysninger) {
             MigreringAvbruttMelding
@@ -94,13 +91,8 @@ class MigreringMediator(
                     initiertAv = melding.initiertAv,
                     årsak =
                         mapOf(
-                            "manglendeOpplysninger" to
-                                (
-                                    melding
-                                        .manglendeOpplysninger()
-                                        .map { it.uuid }
-                                        .toSet() - opplysninger.map { it.uuid }.toSet()
-                                ).toList(),
+                            "kode" to "FINNER_IKKE_MANGLENDE_OPPLYSNINGER",
+                            "beskrivelse" to opplysningerViIkkeFinner.joinToString { "${it.navn} (${it.uuid})" },
                         ),
                 ).also {
                     rapid.publish(it.toJson())
@@ -122,6 +114,11 @@ class MigreringMediator(
                     context = context,
                     melding = it,
                 )
+                it.lagreMelding(migreringRepository)
+                migreringRepository.markereOpplysningerSomMigrert(
+                    migreringId = melding.migreringId,
+                    opplysninger = opplysninger,
+                )
             }
     }
 
@@ -142,6 +139,7 @@ class MigreringMediator(
     ) {
         withLoggingContext("migreringId" to melding.migreringId.toString()) {
             logger.info { "Mottok start migrering melding" }
+            melding.lagreMelding(migreringRepository)
         }
     }
 
@@ -202,7 +200,7 @@ class MigreringMediator(
         }
         val publisertJson = sendte.single().message.body
 //        val publisertMelding = JsonMessage(publisertJson, MessageProblems(publisertJson))
-        melding.lagreMelding(migreringRepository)
+        // melding.lagreMelding(migreringRepository)
 //        migreringRepository.lagreMigreringHendelse(
 //            migreringId = melding.migreringId,
 //            meldingId = UUID.fromString(publisertMelding.id),

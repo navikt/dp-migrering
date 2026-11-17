@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
-import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
@@ -9,11 +8,13 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.spyk
+import io.mockk.verify
 import io.mockk.verifyOrder
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 class StartMigreringMottakSpec :
@@ -27,24 +28,44 @@ class StartMigreringMottakSpec :
             skruAvFeatures()
         }
 
-        "lagrer startmeldingen som utgående etter publisering med samme melding-ID og data" {
+        "skal starte migrering" {
             val rapid = spyk(TestRapid())
             val test = StartMigreringTest(rapid)
 
-            val migrering = test.startMigrering()
+            test.startMigrering()
 
             rapid.inspektør.size shouldBe 1
-            val melding = rapid.inspektør.message(0)
-            val meldingId = UUID.fromString(melding["@id"].asString())
-            verifyOrder {
-                rapid.publish(any<List<OutgoingMessage>>())
+            val publisertMelding = rapid.inspektør.message(0).toString()
+            rapid.sendTestMessage(publisertMelding)
+
+            verify(exactly = 1) {
+                test.repository.lagreMigrering(any())
+                test.repository.lagreOpplysninger(any(), any())
                 test.repository.lagreMigreringHendelse(
-                    migrering.migreringId,
-                    meldingId,
-                    melding["@event_name"].asString().uppercase(),
-                    "testident",
-                    melding.toString(),
-                    Hendelse.Opprinnelse.Intern.name,
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            }
+        }
+
+        "skal motta start migrering melding og lagre migrering hendelse" {
+            val rapid = spyk(TestRapid())
+            val test = StartMigreringTest(rapid)
+
+            test.sendTestMigreringStartet()
+
+            verifyOrder {
+                test.repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
                 )
             }
         }
@@ -87,11 +108,39 @@ private class StartMigreringTest(
         )
     }
 
-    suspend fun startMigrering(): Migrering =
-        mediator.startMigrering(
+    private val migrering =
+        Migrering(
+            migreringId = UUID.randomUUID(),
+            ident = "testident",
             sakId = 12345,
-            initiertAv = "testbruker",
+            initiertAv = "testident",
+            opprettet = LocalDateTime.now(),
+            migreringTidspunkt = LocalDate.now(),
             simulering = true,
-            migreringsTidspunkt = LocalDate.of(2026, 11, 6),
+        )
+
+    suspend fun startMigrering() {
+        mediator.startMigrering(
+            sakId = migrering.sakId,
+            initiertAv = migrering.initiertAv,
+            simulering = migrering.simulering,
+            migreringsTidspunkt = migrering.migreringTidspunkt,
+        )
+    }
+
+    fun sendTestMigreringStartet() =
+        rapid.sendTestMessage(
+            MigreringStartetMelding
+                .fra(
+                    Migrering(
+                        migreringId = UUID.randomUUID(),
+                        ident = "testident",
+                        sakId = 12345,
+                        initiertAv = "testident",
+                        opprettet = LocalDateTime.now(),
+                        migreringTidspunkt = LocalDate.now(),
+                        simulering = true,
+                    ),
+                ).toJson(),
         )
 }
