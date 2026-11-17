@@ -8,7 +8,7 @@ import java.util.UUID
 class AntallDagerSomGjenstarDP : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
         val logger = KotlinLogging.logger {}
