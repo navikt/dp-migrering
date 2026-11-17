@@ -2,6 +2,7 @@ package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
+import java.time.LocalDate
 import java.util.UUID
 
 internal class MigreringOpplysningerMelding(
@@ -27,6 +28,7 @@ internal class MigreringOpplysningerMelding(
             sakId: Int,
             ident: String,
             initiertAv: String,
+            migreringTidspunkt: LocalDate,
             opplysninger: List<Opplysning<*>>,
         ): MigreringOpplysningerMelding {
             val packet =
@@ -37,6 +39,7 @@ internal class MigreringOpplysningerMelding(
                         "ident" to ident,
                         "sakId" to sakId,
                         "initiertAv" to initiertAv,
+                        "migreringTidspunkt" to migreringTidspunkt.toString(),
                         "opplysninger" to
                             opplysninger.map { opplysning ->
                                 mapOf(

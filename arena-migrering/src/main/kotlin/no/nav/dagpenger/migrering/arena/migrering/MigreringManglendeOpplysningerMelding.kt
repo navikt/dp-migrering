@@ -1,9 +1,11 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
+import java.time.LocalDate
 import java.util.UUID
 
 internal class MigreringManglendeOpplysningerMelding(
@@ -14,7 +16,7 @@ internal class MigreringManglendeOpplysningerMelding(
     }
 
     init {
-        packet.interestedIn("sakId", "migreringId", "initiertAv", "manglendeOpplysninger")
+        packet.interestedIn("sakId", "migreringId", "initiertAv", "manglendeOpplysninger", "migreringTidspunkt")
     }
 
     override val migreringId: UUID = packet["migreringId"].asUUID()
@@ -28,6 +30,8 @@ internal class MigreringManglendeOpplysningerMelding(
     internal val initiertAv: String = packet["initiertAv"].asString()
 
     internal val sakId: Int = packet["sakId"].asInt()
+
+    internal val migreringTidspunkt: LocalDate = packet["migreringTidspunkt"].asLocalDate()
 
     internal fun manglendeOpplysninger() =
         if (!packet["manglendeOpplysninger"].isMissingOrNull()) {

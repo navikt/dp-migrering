@@ -1,6 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import io.kotest.core.spec.style.StringSpec
@@ -82,7 +83,7 @@ class MigreringManglendeOpplysningerMottakSpec :
                                             uuid = opplysningId,
                                         ),
                                     ),
-                                "opprettet" to LocalDate.now().toString(),
+                                "migreringTidspunkt" to LocalDate.now().toString(),
                                 "opplysninger" to emptyList<Any>(),
                             ),
                         ),
@@ -96,6 +97,7 @@ class MigreringManglendeOpplysningerMottakSpec :
             sendtMelding["opplysninger"].isArray shouldBe true
             sendtMelding["opplysninger"].size() shouldBe 1
             sendtMelding["manglendeOpplysninger"] shouldBe null
+            sendtMelding["migreringTidspunkt"].asLocalDate() shouldBe melding.migreringTidspunkt
 
             verifyOrder {
                 repository.lagreMigreringHendelse(

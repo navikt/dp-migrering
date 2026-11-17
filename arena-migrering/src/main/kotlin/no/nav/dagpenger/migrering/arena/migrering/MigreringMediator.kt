@@ -115,6 +115,7 @@ class MigreringMediator(
                 sakId = melding.sakId,
                 initiertAv = melding.initiertAv,
                 ident = melding.ident,
+                migreringTidspunkt = melding.migreringTidspunkt,
                 opplysninger = opplysninger,
             ).also {
                 publiserOgLagreMelding(
