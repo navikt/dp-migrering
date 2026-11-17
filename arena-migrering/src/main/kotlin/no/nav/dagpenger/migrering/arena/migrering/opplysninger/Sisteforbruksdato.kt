@@ -15,7 +15,7 @@ class Sisteforbruksdato : OpplysningProdusent<LocalDate> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = kontekst.opprettetTidspunkt.toLocalDate().minusDays(1),
             gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
