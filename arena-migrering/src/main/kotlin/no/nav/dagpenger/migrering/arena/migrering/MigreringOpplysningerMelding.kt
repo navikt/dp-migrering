@@ -29,6 +29,7 @@ internal class MigreringOpplysningerMelding(
             ident: String,
             initiertAv: String,
             migreringTidspunkt: LocalDate,
+            simulering: Boolean,
             opplysninger: List<Opplysning<*>>,
         ): MigreringOpplysningerMelding {
             val packet =
@@ -40,6 +41,7 @@ internal class MigreringOpplysningerMelding(
                         "sakId" to sakId,
                         "initiertAv" to initiertAv,
                         "migreringTidspunkt" to migreringTidspunkt.toString(),
+                        "simulering" to simulering,
                         "opplysninger" to
                             opplysninger.map { opplysning ->
                                 mapOf(

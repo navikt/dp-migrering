@@ -6,18 +6,17 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import tools.jackson.databind.JsonNode
-import java.time.LocalDate
 import java.util.UUID
 
 internal class MigreringManglendeOpplysningerMelding(
     private val packet: JsonMessage,
-) : KafkaMelding(packet) {
+) : MigreringMelding(packet) {
     companion object {
         const val EVENT_NAME = "migrering_manglende_opplysninger"
     }
 
     init {
-        packet.interestedIn("sakId", "migreringId", "initiertAv", "manglendeOpplysninger", "migreringTidspunkt", "opplysninger")
+        packet.interestedIn("manglendeOpplysninger", "opplysninger")
     }
 
     override val migreringId: UUID = packet["migreringId"].asUUID()
@@ -28,11 +27,11 @@ internal class MigreringManglendeOpplysningerMelding(
             override fun opprinnelse(): Hendelse.Opprinnelse = Hendelse.Opprinnelse.Ekstern
         }
 
-    internal val initiertAv: String = packet["initiertAv"].asString()
-
-    internal val sakId: Int = packet["sakId"].asInt()
-
-    internal val migreringTidspunkt: LocalDate = packet["migreringTidspunkt"].asLocalDate()
+//    internal val initiertAv: String = packet["initiertAv"].asString()
+//
+//    internal val sakId: Int = packet["sakId"].asInt()
+//
+//    internal val migreringTidspunkt: LocalDate = packet["migreringTidspunkt"].asLocalDate()
 
     internal fun manglendeOpplysninger() =
         if (!packet["manglendeOpplysninger"].isMissingOrNull()) {

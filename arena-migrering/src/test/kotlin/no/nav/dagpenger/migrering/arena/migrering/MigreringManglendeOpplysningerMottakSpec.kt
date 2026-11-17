@@ -70,6 +70,7 @@ class MigreringManglendeOpplysningerMottakSpec :
             sendtMelding["opplysninger"].size() shouldBe 3
             sendtMelding["manglendeOpplysninger"] shouldBe null
             sendtMelding["migreringTidspunkt"].asLocalDate() shouldBe melding.migreringTidspunkt
+            sendtMelding["simulering"].asBoolean() shouldBe melding.simulering
 
             verifyOrder {
                 test.repository.lagreMigreringHendelse(
