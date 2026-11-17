@@ -175,4 +175,4 @@
 |0194881f-942f-7bde-ab16-68ffd19e9a27|Ventelønn beløp|Dummy|Fakta|true|
 |0194881f-9442-707b-a6ee-e96c06877bde|Villig til å bytte yrke|Dummy|Fakta|true|
 |019db9de-afaf-7e46-98b4-2fd20655b80f|Vurder rett fra og med|Dummy|Fakta|true|
-|019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2|Siste forbruksdato|Dummy|Fakta|true|
+|019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2|Siste forbruksdato|Alfa|Fakta|true|
