@@ -2,7 +2,6 @@ package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
-import tools.jackson.databind.JsonNode
 import tools.jackson.databind.json.JsonMapper
 import java.util.UUID
 
@@ -24,6 +23,7 @@ internal class MigreringStartetMelding(
                             "initiertAv" to migrering.initiertAv,
                             "ident" to migrering.ident,
                             "migreringId" to migrering.migreringId.toString(),
+                            "opplysninger" to emptyList<Any>(),
                         ),
                     ),
             )
@@ -45,15 +45,4 @@ internal class MigreringStartetMelding(
         }
 
     val simulering = if (!packet["simulering"].isMissingOrNull()) packet["simulering"].asBoolean() else false
-
-    private fun verdi(node: JsonNode): Any? =
-        when {
-            node.isBoolean -> node.asBoolean()
-            node.isInt -> node.asInt()
-            node.isLong -> node.asLong()
-            node.isDouble -> node.asDouble()
-            node.isString -> node.asString()
-            node.isObject -> node.asObject()
-            else -> null
-        }
 }
