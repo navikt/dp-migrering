@@ -29,9 +29,9 @@ class MigreringSimuleringResultatMottak(
                         "migreringId",
                         "@id",
                         "ident",
-                        "simuleringResultat",
+                        "simulerteOpplysninger",
                     )
-                    it.requireValue("simulering", "true")
+                    it.requireValue("simulering", true)
                 }
             }.register(this)
     }
