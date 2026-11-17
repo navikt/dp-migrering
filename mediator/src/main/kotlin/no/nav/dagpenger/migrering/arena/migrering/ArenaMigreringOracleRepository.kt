@@ -190,6 +190,33 @@ class ArenaMigreringOracleRepository(
         return select
     }
 
+    override fun hentGjenstaendeTeller(sakId: Int): List<ArenaSakMigrering.ArenaGjenstaendeTellerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'GJENNDPTEL'  AS kolonne
+                     , bl.verdi      AS verdi
+                     , bl.mod_dato   AS mod_dato
+                FROM   BEREGNINGSLEDD bl 
+                     , SAK s
+                WHERE  s.tabellnavnalias = 'PERS'
+                AND    s.objekt_id = bl.person_id
+                AND    s.sak_id = :sakId
+                AND    bl.tabellnavnalias_kilde='KVOTBR'
+                AND    bl.beregningsleddkode = 'DPTEL'
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaGjenstaendeTellerMigrering(
+                    kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
     override fun hentAntallForbrukteDagerFISK(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
         val select =
             select(
