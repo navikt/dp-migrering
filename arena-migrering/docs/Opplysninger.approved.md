@@ -85,7 +85,7 @@
 |0194881f-9410-7481-b263-4606fdd10caf|Utbetalt inntekt periode 3|Alfa|Resultat|true|
 |0194881f-9413-77ce-92ec-d29700f04244|Inntektsopplysninger|Alfa|Resultat|true|
 |0194881f-9441-7d1b-a06a-6727543a141e|Kan jobbe heltid og deltid|Alfa|Fakta|true|
-|0194881f-9442-707b-a6ee-e96c06877bd9|Kan jobbe i hele Norge|Dummy|Fakta|true|
+|0194881f-9442-707b-a6ee-e96c06877bd9|Kan jobbe i hele Norge|Alfa|Fakta|true|
 |0194881f-9442-707b-a6ee-e96c06877bdc|Kan ta alle typer arbeid|Dummy|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a762|Krav til prosentvis tap av arbeidstid|Alfa|Fakta|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54c|Bruker er medlem av folketrygden|Alfa|Resultat|true|
