@@ -63,7 +63,7 @@
 |0194881f-9433-70e9-a85b-c246150c45d2|Foreldrepenger etter lovens kapittel 14|Dummy|Fakta|true|
 |0194881f-9444-7a73-a458-0af81c034d87|Forskutterte lønnsgarantimidler i form av dagpenger|Alfa|Fakta|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a29|Garantilott fra Garantikassen for fiskere beløp|Dummy|Fakta|true|
-|01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|Dummy|Resultat|true|
+|01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|Alfa|Resultat|true|
 |01a0c30f-87de-7359-b642-e009a91bbda8|Godkjent næringsfaglig vurdering|Dummy|Fakta|true|
 |0194881f-9413-77ce-92ec-d29700f04243|Grunnbeløp|Dummy|Fakta|true|
 |0194881f-940f-7af9-9387-052e028b29ee|Grunnbeløp for grunnlag|Dummy|Resultat|true|
@@ -154,7 +154,7 @@
 |01980cf4-9010-7bcf-b578-ca5a825d64ef|Skal kravet til verneplikt vurderes|Dummy|Resultat|true|
 |0194881f-9444-7a73-a458-0af81c034d86|Skal permittering vurderes|Alfa|Fakta|true|
 |0194881f-9444-7a73-a458-0af81c034d88|Skal permittert fra fiskeindustrien vurderes|Alfa|Fakta|true|
-|0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|Dummy|Resultat|true|
+|0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|Alfa|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a2d|Skal samordnes med ytelser utenfor folketrygden|Dummy|Resultat|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc77|søknadId|Dummy|Fakta|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc73|Søknadsdato|Dummy|Fakta|true|
