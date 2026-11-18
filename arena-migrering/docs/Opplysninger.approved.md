@@ -86,7 +86,7 @@
 |0194881f-9413-77ce-92ec-d29700f04244|Inntektsopplysninger|Alfa|Resultat|true|
 |0194881f-9441-7d1b-a06a-6727543a141e|Kan jobbe heltid og deltid|Alfa|Fakta|true|
 |0194881f-9442-707b-a6ee-e96c06877bd9|Kan jobbe i hele Norge|Alfa|Fakta|true|
-|0194881f-9442-707b-a6ee-e96c06877bdc|Kan ta alle typer arbeid|Dummy|Fakta|true|
+|0194881f-9442-707b-a6ee-e96c06877bdc|Kan ta alle typer arbeid|Alfa|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a762|Krav til prosentvis tap av arbeidstid|Alfa|Fakta|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54c|Bruker er medlem av folketrygden|Alfa|Resultat|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86ea|Medlem har reduserte ytelser fra folketrygden (Samordning)|Dummy|Resultat|true|
@@ -173,6 +173,6 @@
 |0194881f-9434-79e8-a64d-1a23cc5d86ef|Utfall etter samordning|Dummy|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a26|Vartpenger beløp|Dummy|Fakta|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a27|Ventelønn beløp|Dummy|Fakta|true|
-|0194881f-9442-707b-a6ee-e96c06877bde|Villig til å bytte yrke|Dummy|Fakta|true|
+|0194881f-9442-707b-a6ee-e96c06877bde|Villig til å bytte yrke|Alfa|Fakta|true|
 |019db9de-afaf-7e46-98b4-2fd20655b80f|Vurder rett fra og med|Dummy|Fakta|true|
 |019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2|Siste forbruksdato|Alfa|Fakta|true|
