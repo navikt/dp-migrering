@@ -413,4 +413,28 @@ class ArenaMigreringOracleRepository(
                 gyldigFra = row.localDate("mod_dato"),
             )
         }
+
+    override fun hentAktfase(sakId: Int): List<ArenaSakMigrering.ArenaAktfaseMigrering> =
+        select(
+            // language=oracle
+            """
+            SELECT     'AKTFASE'             AS kolonne
+                     , vedt.aktfasekode      AS verdi
+                     , vedt.mod_dato         AS mod_dato
+                FROM   vedtak vedt
+                WHERE  vedt.sak_id = :sakId
+                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                AND    vedt.utfallkode = 'JA'
+                AND    vedt.vedtaktypekode IN ('O','E','G','S')
+                AND    vedt.vedtakstatuskode IN ('IVERK')
+                AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
+            """.trimIndent(),
+            mapOf("sakId" to sakId),
+        ) { row ->
+            ArenaSakMigrering.ArenaAktfaseMigrering(
+                kode = row.string("kolonne"),
+                verdi = row.string("verdi"),
+                gyldigFra = row.localDate("mod_dato"),
+            )
+        }
 }

@@ -8,7 +8,7 @@ import java.util.UUID
 class SkalEtableringVurderes : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -19,11 +19,24 @@ class SkalEtableringVurderes : OpplysningProdusent<Boolean> {
 
 // Bare lagt til midlertidig FALSE
     // IKKE OK!
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
+        val opplysning = kontekst.sakTilMigrering.aktfase.firstOrNull { aktfase -> aktfase.kode == "AKTFASE" }
+
+        if (opplysning == null) {
+            vedManglendeOpplysning()
+        }
+
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = false,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = verdi(opplysning?.verdi),
+            gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
+
+    private fun verdi(verdi: String?): Boolean? =
+        when (verdi) {
+            in setOf("UETO", "UETA", "UETU") -> true
+            else -> false
+        }
 }

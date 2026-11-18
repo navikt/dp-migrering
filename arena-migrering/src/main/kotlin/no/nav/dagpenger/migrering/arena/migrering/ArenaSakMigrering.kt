@@ -17,6 +17,7 @@ data class ArenaSakMigrering(
     val erDeks: List<ArenaRetttighetstypeMigrering>,
     val gjenstaendeTeller: List<ArenaGjenstaendeTellerMigrering>,
     val initiellTeller: List<ArenaInitiellTellerMigrering>,
+    val aktfase: List<ArenaAktfaseMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,
@@ -55,6 +56,12 @@ data class ArenaSakMigrering(
     )
 
     data class ArenaTidsbegrensetVedtakMigrering(
+        val kode: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
+    data class ArenaAktfaseMigrering(
         val kode: String,
         val verdi: String,
         val gyldigFra: LocalDate,

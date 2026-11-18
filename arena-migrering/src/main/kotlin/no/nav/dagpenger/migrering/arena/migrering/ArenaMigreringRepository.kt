@@ -60,6 +60,7 @@ interface ArenaMigreringRepository {
             erDeks = hentDeks(sakId),
             gjenstaendeTeller = hentGjenstaendeTeller(sakId),
             initiellTeller = hentInitiellTeller(sakId),
+            aktfase = hentAktfase(sakId),
         )
 
     fun hentIdentForSak(sakId: Int): String
@@ -67,4 +68,6 @@ interface ArenaMigreringRepository {
     fun hentInntekt(sakId: Int): Inntekt?
 
     fun hentDeks(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering>
+
+    fun hentAktfase(sakId: Int): List<ArenaSakMigrering.ArenaAktfaseMigrering>
 }

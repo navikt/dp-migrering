@@ -149,7 +149,7 @@
 |0194881f-9414-7823-8d29-0e25b7feb7d0|SisteAvsluttendeKalendrmåned for bruker|Alfa|Fakta|true|
 |01a0c310-b597-75be-acb6-e91c77024a33|Siste dato for dagpenger under etablering|Dummy|Fakta|true|
 |019f608d-f9c5-7ccc-a6f3-c53531d1f00c|Skal eksport vurderes|Alfa|Resultat|true|
-|01a0c316-a2e9-7088-acb1-da5596bd0055|Skal etablering vurderes|Dummy|Resultat|true|
+|01a0c316-a2e9-7088-acb1-da5596bd0055|Skal etablering vurderes|Alfa|Resultat|true|
 |019d0068-8037-7d91-bfff-de88f9e87fd3|Skal kravet til gjenopptak vurderes|Dummy|Resultat|true|
 |01980cf4-9010-7bcf-b578-ca5a825d64ef|Skal kravet til verneplikt vurderes|Dummy|Resultat|true|
 |0194881f-9444-7a73-a458-0af81c034d86|Skal permittering vurderes|Alfa|Fakta|true|
