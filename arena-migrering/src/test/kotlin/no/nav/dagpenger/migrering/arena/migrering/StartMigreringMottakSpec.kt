@@ -614,6 +614,7 @@ private class StartMigreringTest(
                 inntekt = null,
                 erDeks = emptyList(),
                 gjenstaendeTeller = emptyList(),
+                initiellTeller = emptyList(),
             )
         every { repository.lagreMigrering(any()) } just Runs
         every { repository.lagreOpplysninger(any(), any()) } just Runs

@@ -11,7 +11,7 @@
 |e8e28792-0ad4-4419-9cda-b166036e0fd9|Antall dager med sanksjon som er forbrukt|Dummy|Resultat|true|
 |76d9c243-228b-4359-9550-1ebbb7ba5cb5|Antall dager med sanksjon som gjenstår|Dummy|Resultat|true|
 |019df7d6-5156-7785-a6fd-54f5af1244be|Antall dager med tidsbegrenset bortfall|Dummy|Resultat|true|
-|01992934-66e4-7606-bdd3-c6c9dd420ffd|Antall dager som er forbrukt|Dummy|Resultat|true|
+|01992934-66e4-7606-bdd3-c6c9dd420ffd|Antall dager som er forbrukt|Alfa|Resultat|true|
 |01992956-e349-76b1-8f68-c9d481df3a32|Antall dager som gjenstår|Alfa|Resultat|true|
 |01a01e28-4bc6-7132-a846-a5666f92427c|Antall fritaksperiodedager som er forbrukt|Dummy|Fakta|false|
 |01a01e28-a90b-7109-beae-b69d61cea3c0|Antall fritaksperiodedager som gjenstår|Dummy|Fakta|true|

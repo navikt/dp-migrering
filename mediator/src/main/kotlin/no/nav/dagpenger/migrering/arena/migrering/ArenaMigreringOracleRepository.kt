@@ -220,6 +220,35 @@ class ArenaMigreringOracleRepository(
         return select
     }
 
+    override fun hentInitiellTeller(sakId: Int): List<ArenaSakMigrering.ArenaInitiellTellerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'INITTELLER'              AS kolonne
+                     , kb.kvotetypekode          AS kvotetypekode
+                     , sum(kb.antall_bevegelse)  AS verdi
+                     , MIN(kb.dato_hendelse)     AS mod_dato
+                FROM   kvotebruk kb 
+                WHERE  kb.posteringtypekode IN ('INIT','NULLE') 
+                AND    kb.tabellnavnalias_grunnlag = 'VEDTAK' 
+                AND    kb.objekt_id_grunnlag IN ( SELECT vedtak_id 
+                                                  FROM   vedtak 
+                                                  WHERE  sak_id = :sakId) 
+                group by kb.kvotetypekode;
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaInitiellTellerMigrering(
+                    kode = row.string("kolonne"),
+                    kodetype = row.string("kvotetypekode"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
     override fun hentAntallForbrukteDagerFISK(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering> {
         val select =
             select(
@@ -367,13 +396,13 @@ class ArenaMigreringOracleRepository(
                 AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
                 AND    vedt.vedtaktypekode IN ('O','E','G')
                 AND    vedt.vedtakstatuskode = 'IVERK'
-                AND EXISTS ( SELECT 1 
-                             FROM   vedtak vedt2 
-                             WHERE  vedt2.sak_id = vedt.sak_id
-                             AND    vedt2.rettighetkode='DAGO'
-                             AND    vedt2.vedtakstatuskode = 'IVERK'
-                             AND    SYSDATE BETWEEN vedt2.fra_dato AND NVL( vedt2.til_dato, SYSDATE )
-                             AND    vedt2.aktfasekode='EOS'
+                AND    EXISTS ( SELECT 1 
+                                FROM   vedtak vedt2 
+                                WHERE  vedt2.sak_id = vedt.sak_id
+                                AND    vedt2.rettighetkode='DAGO'
+                                AND    vedt2.vedtakstatuskode = 'IVERK'
+                                AND    SYSDATE BETWEEN vedt2.fra_dato AND NVL( vedt2.til_dato, SYSDATE )
+                                AND    vedt2.aktfasekode='EOS'
                              )
             """.trimIndent(),
             mapOf("sakId" to sakId),
