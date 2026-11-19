@@ -62,7 +62,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-oracle-free:2.0.5")
     testImplementation(libs.bundles.postgres.test)
     testImplementation("no.nav.dagpenger:stpeter-plugin-test:2026.11.11-14.08.cc755d392004")
-    testRuntimeOnly("org.flywaydb:flyway-database-oracle:13.12.2")
+    testRuntimeOnly("org.flywaydb:flyway-database-oracle:13.13.0")
 }
 
 application {
