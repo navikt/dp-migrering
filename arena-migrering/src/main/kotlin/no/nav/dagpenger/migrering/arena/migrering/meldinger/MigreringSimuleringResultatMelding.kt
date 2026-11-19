@@ -15,7 +15,7 @@ internal class MigreringSimuleringResultatMelding(
         packet.interestedIn(
             "migreringId",
             "ident",
-            "simuleringResultat",
+            "simulerteOpplysninger",
         )
     }
 
@@ -31,9 +31,9 @@ internal class MigreringSimuleringResultatMelding(
             override fun opprinnelse(): Hendelse.Opprinnelse = Hendelse.Opprinnelse.Ekstern
         }
 
-    val simuleringResultat =
-        if (!packet["simuleringResultat"].isMissingOrNull()) {
-            packet["simuleringResultat"].asArray().toList().map {
+    val simulerteOpplysninger =
+        if (!packet["simulerteOpplysninger"].isMissingOrNull()) {
+            packet["simulerteOpplysninger"].asArray().toList().map {
                 Opplysning(
                     navn = it["navn"].asString(),
                     verdi = verdi(it["verdi"]),

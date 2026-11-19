@@ -163,10 +163,10 @@ class MigreringMediator(
         melding.lagreMelding(migreringRepository)
 
         withLoggingContext("migreringId" to melding.migreringId.toString()) {
-            logger.info { "Mottok simulering resultat for migrering. Resultat: ${melding.simuleringResultat}" }
+            logger.info { "Mottok simulering resultat for migrering. Resultat: ${melding.simulerteOpplysninger}" }
 
             val (verifisert, ikkeVerifisert) =
-                melding.simuleringResultat
+                melding.simulerteOpplysninger
                     .mapNotNull {
                         produsentMap[it.uuid]?.verifiser(it, melding.migreringId, migreringRepository)
                     }.partition { it.verifisert }
