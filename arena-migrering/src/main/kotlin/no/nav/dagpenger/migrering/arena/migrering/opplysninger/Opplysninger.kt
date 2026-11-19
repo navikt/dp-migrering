@@ -180,5 +180,5 @@ object Opplysninger {
             Sisteforbruksdato(),
         )
     val aktiveProdusenter: List<OpplysningProdusent<*>> = produsenter.filter { it.aktiv }
-    val produsentMap: Map<UUID, OpplysningProdusent<*>> = produsenter.associateBy { it.opplysningsId }
+    val produsentMap: Map<UUID, OpplysningProdusent<*>> = aktiveProdusenter.associateBy { it.opplysningsId }
 }

@@ -7,7 +7,7 @@ import java.util.UUID
 // Arena: Arena har ikke denne
 class SoknadId : OpplysningProdusent<String> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
-    override val aktiv: Boolean = true
+    override val aktiv: Boolean = false
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
     companion object {

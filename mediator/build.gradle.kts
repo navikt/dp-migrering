@@ -22,8 +22,6 @@ dependencies {
     implementation("no.nav.dagpenger:stpeter-plugin:2026.11.11-14.08.cc755d392004")
     implementation(libs.rapids.and.rivers)
 
-    implementation("tools.jackson.module:jackson-module-blackbird:${libs.versions.jackson.get()}")
-
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
     implementation("com.oracle.database.jdbc:ojdbc11:23.26.4.0.0")
     // implementation(libs.kotlinquery)

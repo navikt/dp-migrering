@@ -13,5 +13,5 @@ data class Migrering(
     val opprettet: LocalDateTime = LocalDateTime.now(),
     val migreringTidspunkt: LocalDate,
     val simulering: Boolean = false,
-    val status: String = "Ukjent",
+    val status: String = "Starter",
 )
