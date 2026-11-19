@@ -10,6 +10,10 @@ import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import no.dagpenger.ArenaStatistikkRepository
 import no.dagpenger.OppdaterMenneskerMetrikk
 import no.nav.dagpenger.migrering.api.apiConfig
@@ -53,11 +57,18 @@ internal class ApplicationBuilder(
                 }
             },
         ) { server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>, rapid: KafkaRapid ->
+            val migreringsScope =
+                CoroutineScope(
+                    server.application.coroutineContext +
+                        SupervisorJob(server.application.coroutineContext[Job]) +
+                        Dispatchers.IO,
+                )
             val migreringMediator =
                 MigreringMediator(
                     arenaMigreringRepository = ArenaMigreringOracleRepository(dataSource),
                     migreringRepository = MigreringRepositoryPostgres(postgresDataSourceBuilder.dbsession),
                     rapid = rapid,
+                    migreringsScope = migreringsScope,
                 )
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),

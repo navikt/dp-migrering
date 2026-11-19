@@ -12,9 +12,12 @@ import io.opentelemetry.extension.kotlin.asContextElement
 import io.opentelemetry.instrumentation.annotations.WithSpan
 import io.prometheus.metrics.core.metrics.Counter
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMelding
@@ -34,6 +37,7 @@ class MigreringMediator(
     private val arenaMigreringRepository: ArenaMigreringRepository,
     private val migreringRepository: MigreringRepository,
     private val rapid: RapidsConnection,
+    private val migreringsScope: CoroutineScope,
 ) {
     companion object {
         private val logger = KotlinLogging.logger {}
@@ -50,14 +54,12 @@ class MigreringMediator(
     }
 
     @WithSpan("migrering.start")
-    suspend fun startMigrering(
+    fun startMigrering(
         sakId: Int,
         initiertAv: String,
         simulering: Boolean,
         migreringsTidspunkt: LocalDate,
     ): Migrering {
-        val opplysninger = hentOpplysningerForSak(sakId, initiertAv, migreringsTidspunkt.atStartOfDay())
-
         val migrering =
             Migrering(
                 sakId = sakId,
@@ -68,16 +70,26 @@ class MigreringMediator(
             )
         migreringRepository.lagreMigrering(migrering)
 
-        migreringRepository.lagreOpplysninger(
-            migreringId = migrering.migreringId,
-            opplysninger = opplysninger,
-        )
+        val feilhåndterer =
+            CoroutineExceptionHandler { _, feil ->
+                withLoggingContext("migreringId" to migrering.migreringId.toString()) {
+                    logger.error { "Oppstart av migrering feilet: ${feil.javaClass.simpleName}" }
+                }
+            }
 
-        val melding = MigreringStartetMelding.fra(migrering)
-        publiserOgLagreMelding(
-            context = rapid,
-            melding = melding,
-        )
+        migreringsScope.launch(Context.current().asContextElement() + feilhåndterer) {
+            val opplysninger = hentOpplysningerForSak(sakId, initiertAv, migreringsTidspunkt.atStartOfDay())
+
+            migreringRepository.lagreOpplysninger(
+                migreringId = migrering.migreringId,
+                opplysninger = opplysninger,
+            )
+
+            publiserMelding(
+                context = rapid,
+                melding = MigreringStartetMelding.fra(migrering),
+            )
+        }
 
         return migrering
     }
@@ -130,7 +142,7 @@ class MigreringMediator(
                 opplysninger = opplysninger,
                 simulering = melding.simulering,
             ).also {
-                publiserOgLagreMelding(
+                publiserMelding(
                     context = context,
                     melding = it,
                 )
@@ -236,7 +248,7 @@ class MigreringMediator(
             deferredOpplysninger.awaitAll()
         }
 
-    private fun publiserOgLagreMelding(
+    private fun publiserMelding(
         context: MessageContext,
         melding: KafkaMelding,
     ) {

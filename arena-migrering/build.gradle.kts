@@ -22,5 +22,6 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-json:${libs.versions.kotest.get()}")
     testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.mockk)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
     testImplementation("com.approvaltests:approvaltests:31.0.0")
 }

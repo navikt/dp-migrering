@@ -157,6 +157,7 @@ private class MigreringManglendeOpplysningerTest(
             arenaMigreringRepository = arenaMigreringRepository,
             migreringRepository = repository,
             rapid = rapid,
+            migreringsScope = mockk(),
         )
 
     val opplysningId1 = UUID.randomUUID()

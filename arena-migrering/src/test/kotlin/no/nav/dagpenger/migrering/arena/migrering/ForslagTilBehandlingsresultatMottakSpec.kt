@@ -130,6 +130,7 @@ private class ForslagTilBehandlingsresultatTest {
                     arenaMigreringRepository = mockk<ArenaMigreringRepository>(),
                     migreringRepository = repository,
                     rapid = rapid,
+                    migreringsScope = mockk(),
                 ),
         )
     }

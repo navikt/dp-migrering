@@ -35,6 +35,7 @@ class MigreringAvbruttMottakSpec :
                         migreringRepository = repository,
                         arenaMigreringRepository = mockk(),
                         rapid = testRapid,
+                        migreringsScope = mockk(),
                     ),
             )
 

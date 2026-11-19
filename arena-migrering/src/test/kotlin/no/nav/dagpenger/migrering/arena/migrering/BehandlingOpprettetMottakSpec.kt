@@ -131,6 +131,7 @@ private class BehandlingOpprettetTest {
                     arenaMigreringRepository = mockk<ArenaMigreringRepository>(),
                     migreringRepository = repository,
                     rapid = rapid,
+                    migreringsScope = mockk(),
                 ),
         )
     }
