@@ -192,20 +192,20 @@ private class StartMigreringTest(
 
     val sak =
         ArenaSakMigrering(
-               vilkaarsVurderinger = emptyList(),
-                vedtakfakta = emptyList(),
-                personopplysninger = emptyList(),
-                personFodselsdatoMigrering = emptyList(),
-                rettighetstype = emptyList(),
-                forbrukteDagerDP = emptyList(),
-                forbrukteDagerPERM = emptyList(),
-                forbrukteDagerFISK = emptyList(),
-                tidsbegrensetVedtak = emptyList(),
-                inntekt = null,
-                erDeks = emptyList(),
-                gjenstaendeTeller = emptyList(),
-                initiellTeller = emptyList(),
-                aktfase = emptyList(),
+            vilkaarsVurderinger = emptyList(),
+            vedtakfakta = emptyList(),
+            personopplysninger = emptyList(),
+            personFodselsdatoMigrering = emptyList(),
+            rettighetstype = emptyList(),
+            forbrukteDagerDP = emptyList(),
+            forbrukteDagerPERM = emptyList(),
+            forbrukteDagerFISK = emptyList(),
+            tidsbegrensetVedtak = emptyList(),
+            inntekt = null,
+            erDeks = emptyList(),
+            gjenstaendeTeller = emptyList(),
+            initiellTeller = emptyList(),
+            aktfase = emptyList(),
         )
 
     init {
