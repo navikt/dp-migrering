@@ -12,7 +12,7 @@ class SkalEksportVurderes : OpplysningProdusent<Boolean> {
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
-        val opplysning = kontekst.sakTilMigrering.rettighetstype.firstOrNull { rettighetstype -> rettighetstype.kode == "RETTIGHETKODE" }
+        val opplysning = kontekst.sakTilMigrering.erDeks.firstOrNull { erDeks -> erDeks.kode == "ERDEKS" }
 
         if (opplysning == null) {
             vedManglendeOpplysning()

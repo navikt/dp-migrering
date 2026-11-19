@@ -12,7 +12,7 @@ object Opplysninger {
             AntallDagerMedSanksjonSomGjenstar(),
             AntallDagerMedTidsbegrensetBortfall(),
             AntallDagerSomErForbrukt(),
-            AntallDagerSomGjenstar(),
+            AntallDagerSomGjenstarDP(),
             AntallFritaksperiodedagerSomErForbrukt(),
             AntallFritaksperiodedagerSomGjenstar(),
             AntallGjenstaendeDagerForAKunneGjenoppta(),

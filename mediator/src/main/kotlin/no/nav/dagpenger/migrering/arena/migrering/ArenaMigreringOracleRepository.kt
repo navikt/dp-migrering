@@ -148,7 +148,7 @@ class ArenaMigreringOracleRepository(
                      , mod_dato
                 FROM   vedtak vedt
                 WHERE  vedt.sak_id = :sakId
-                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN','DEKS')
+                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
                 AND    vedt.utfallkode = 'JA'
                 AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
                 AND    vedt.vedtaktypekode IN ('O','E','G','S')
@@ -183,6 +183,65 @@ class ArenaMigreringOracleRepository(
             ) { row ->
                 ArenaSakMigrering.ArenaForbrukteDagerMigrering(
                     kode = row.string("kolonne"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    override fun hentGjenstaendeTeller(sakId: Int): List<ArenaSakMigrering.ArenaGjenstaendeTellerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'GJENNTELLER'         AS kolonne
+                     , kb.kvotetypekode      AS kvotetypekode
+                     , bl.verdi              AS verdi
+                     , bl.mod_dato           AS mod_dato
+                FROM   KVOTEBRUK kb
+                     , BEREGNINGSLEDD bl 
+                     , SAK s
+                WHERE  kb.kvotebruk_id = bl.objekt_id_kilde
+                AND    bl.tabellnavnalias_kilde='KVOTBR'
+                AND    s.tabellnavnalias = 'PERS'
+                AND    s.objekt_id = bl.person_id
+                AND    s.sak_id = :sakId                
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaGjenstaendeTellerMigrering(
+                    kode = row.string("kolonne"),
+                    kodetype = row.string("kvotetypekode"),
+                    verdi = row.string("verdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    override fun hentInitiellTeller(sakId: Int): List<ArenaSakMigrering.ArenaInitiellTellerMigrering> {
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT 'INITTELLER'              AS kolonne
+                     , kb.kvotetypekode          AS kvotetypekode
+                     , sum(kb.antall_bevegelse)  AS verdi
+                     , MIN(kb.dato_hendelse)     AS mod_dato
+                FROM   kvotebruk kb 
+                WHERE  kb.posteringtypekode IN ('INIT','NULLE') 
+                AND    kb.tabellnavnalias_grunnlag = 'VEDTAK' 
+                AND    kb.objekt_id_grunnlag IN ( SELECT vedtak_id 
+                                                  FROM   vedtak 
+                                                  WHERE  sak_id = :sakId) 
+                group by kb.kvotetypekode
+                """.trimIndent(),
+                mapOf("sakId" to sakId),
+            ) { row ->
+                ArenaSakMigrering.ArenaInitiellTellerMigrering(
+                    kode = row.string("kolonne"),
+                    kodetype = row.string("kvotetypekode"),
                     verdi = row.string("verdi"),
                     gyldigFra = row.localDate("mod_dato"),
                 )
@@ -322,4 +381,60 @@ class ArenaMigreringOracleRepository(
             return inntekt
         }
     }
+
+    override fun hentDeks(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering> =
+        select(
+            // language=oracle
+            """
+            SELECT     'ERDEKS'         AS kolonne
+                     , rettighetkode
+                     , mod_dato
+                FROM   vedtak vedt
+                WHERE  vedt.sak_id = :sakId
+                AND    vedt.rettighetkode = 'DEKS'
+                AND    vedt.utfallkode = 'JA'
+                AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
+                AND    vedt.vedtaktypekode IN ('O','E','G')
+                AND    vedt.vedtakstatuskode = 'IVERK'
+                AND    EXISTS ( SELECT 1 
+                                FROM   vedtak vedt2 
+                                WHERE  vedt2.sak_id = vedt.sak_id
+                                AND    vedt2.rettighetkode='DAGO'
+                                AND    vedt2.vedtakstatuskode = 'IVERK'
+                                AND    SYSDATE BETWEEN vedt2.fra_dato AND NVL( vedt2.til_dato, SYSDATE )
+                                AND    vedt2.aktfasekode='EOS'
+                             )
+            """.trimIndent(),
+            mapOf("sakId" to sakId),
+        ) { row ->
+            ArenaSakMigrering.ArenaRetttighetstypeMigrering(
+                kode = row.string("kolonne"),
+                verdi = row.string("rettighetkode"),
+                gyldigFra = row.localDate("mod_dato"),
+            )
+        }
+
+    override fun hentAktfase(sakId: Int): List<ArenaSakMigrering.ArenaAktfaseMigrering> =
+        select(
+            // language=oracle
+            """
+            SELECT     'AKTFASE'             AS kolonne
+                     , vedt.aktfasekode      AS verdi
+                     , vedt.mod_dato         AS mod_dato
+                FROM   vedtak vedt
+                WHERE  vedt.sak_id = :sakId
+                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                AND    vedt.utfallkode = 'JA'
+                AND    vedt.vedtaktypekode IN ('O','E','G','S')
+                AND    vedt.vedtakstatuskode IN ('IVERK')
+                AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
+            """.trimIndent(),
+            mapOf("sakId" to sakId),
+        ) { row ->
+            ArenaSakMigrering.ArenaAktfaseMigrering(
+                kode = row.string("kolonne"),
+                verdi = row.string("verdi"),
+                gyldigFra = row.localDate("mod_dato"),
+            )
+        }
 }

@@ -37,6 +37,10 @@ interface ArenaMigreringRepository {
 
     fun hentAntallForbrukteDagerDP(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering>
 
+    fun hentGjenstaendeTeller(sakId: Int): List<ArenaSakMigrering.ArenaGjenstaendeTellerMigrering>
+
+    fun hentInitiellTeller(sakId: Int): List<ArenaSakMigrering.ArenaInitiellTellerMigrering>
+
     fun hentAntallForbrukteDagerFISK(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering>
 
     fun hentAntallForbrukteDagerPERM(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering>
@@ -53,9 +57,17 @@ interface ArenaMigreringRepository {
             forbrukteDagerPERM = hentAntallForbrukteDagerPERM(sakId),
             forbrukteDagerFISK = hentAntallForbrukteDagerFISK(sakId),
             inntekt = hentInntekt(sakId),
+            erDeks = hentDeks(sakId),
+            gjenstaendeTeller = hentGjenstaendeTeller(sakId),
+            initiellTeller = hentInitiellTeller(sakId),
+            aktfase = hentAktfase(sakId),
         )
 
     fun hentIdentForSak(sakId: Int): String
 
     fun hentInntekt(sakId: Int): Inntekt?
+
+    fun hentDeks(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering>
+
+    fun hentAktfase(sakId: Int): List<ArenaSakMigrering.ArenaAktfaseMigrering>
 }

@@ -11,8 +11,8 @@
 |e8e28792-0ad4-4419-9cda-b166036e0fd9|Antall dager med sanksjon som er forbrukt|Dummy|Resultat|true|
 |76d9c243-228b-4359-9550-1ebbb7ba5cb5|Antall dager med sanksjon som gjenstår|Dummy|Resultat|true|
 |019df7d6-5156-7785-a6fd-54f5af1244be|Antall dager med tidsbegrenset bortfall|Dummy|Resultat|true|
-|01992934-66e4-7606-bdd3-c6c9dd420ffd|Antall dager som er forbrukt|Dummy|Resultat|true|
-|01992956-e349-76b1-8f68-c9d481df3a32|Antall dager som gjenstår|Dummy|Resultat|true|
+|01992934-66e4-7606-bdd3-c6c9dd420ffd|Antall dager som er forbrukt|Alfa|Resultat|true|
+|01992956-e349-76b1-8f68-c9d481df3a32|Antall dager som gjenstår|Alfa|Resultat|true|
 |01a01e28-4bc6-7132-a846-a5666f92427c|Antall fritaksperiodedager som er forbrukt|Dummy|Fakta|false|
 |01a01e28-a90b-7109-beae-b69d61cea3c0|Antall fritaksperiodedager som gjenstår|Dummy|Fakta|true|
 |019d0059-0e34-76a7-ab91-42925a1d03a3|Antall gjenstående dager for å kunne gjenoppta|Dummy|Fakta|true|
@@ -63,7 +63,7 @@
 |0194881f-9433-70e9-a85b-c246150c45d2|Foreldrepenger etter lovens kapittel 14|Dummy|Fakta|true|
 |0194881f-9444-7a73-a458-0af81c034d87|Forskutterte lønnsgarantimidler i form av dagpenger|Alfa|Fakta|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a29|Garantilott fra Garantikassen for fiskere beløp|Dummy|Fakta|true|
-|01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|Dummy|Resultat|true|
+|01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|Alfa|Resultat|true|
 |01a0c30f-87de-7359-b642-e009a91bbda8|Godkjent næringsfaglig vurdering|Dummy|Fakta|true|
 |0194881f-9413-77ce-92ec-d29700f04243|Grunnbeløp|Dummy|Fakta|true|
 |0194881f-940f-7af9-9387-052e028b29ee|Grunnbeløp for grunnlag|Dummy|Resultat|true|
@@ -84,9 +84,9 @@
 |0194881f-9410-7481-b263-4606fdd10cae|Utbetalt inntekt periode 2|Alfa|Resultat|true|
 |0194881f-9410-7481-b263-4606fdd10caf|Utbetalt inntekt periode 3|Alfa|Resultat|true|
 |0194881f-9413-77ce-92ec-d29700f04244|Inntektsopplysninger|Alfa|Resultat|true|
-|0194881f-9441-7d1b-a06a-6727543a141e|Kan jobbe heltid og deltid|Dummy|Fakta|true|
-|0194881f-9442-707b-a6ee-e96c06877bd9|Kan jobbe i hele Norge|Dummy|Fakta|true|
-|0194881f-9442-707b-a6ee-e96c06877bdc|Kan ta alle typer arbeid|Dummy|Fakta|true|
+|0194881f-9441-7d1b-a06a-6727543a141e|Kan jobbe heltid og deltid|Alfa|Fakta|true|
+|0194881f-9442-707b-a6ee-e96c06877bd9|Kan jobbe i hele Norge|Alfa|Fakta|true|
+|0194881f-9442-707b-a6ee-e96c06877bdc|Kan ta alle typer arbeid|Alfa|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a762|Krav til prosentvis tap av arbeidstid|Alfa|Fakta|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54c|Bruker er medlem av folketrygden|Alfa|Resultat|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86ea|Medlem har reduserte ytelser fra folketrygden (Samordning)|Dummy|Resultat|true|
@@ -149,12 +149,12 @@
 |0194881f-9414-7823-8d29-0e25b7feb7d0|SisteAvsluttendeKalendrmåned for bruker|Alfa|Fakta|true|
 |01a0c310-b597-75be-acb6-e91c77024a33|Siste dato for dagpenger under etablering|Dummy|Fakta|true|
 |019f608d-f9c5-7ccc-a6f3-c53531d1f00c|Skal eksport vurderes|Alfa|Resultat|true|
-|01a0c316-a2e9-7088-acb1-da5596bd0055|Skal etablering vurderes|Dummy|Resultat|true|
+|01a0c316-a2e9-7088-acb1-da5596bd0055|Skal etablering vurderes|Alfa|Resultat|true|
 |019d0068-8037-7d91-bfff-de88f9e87fd3|Skal kravet til gjenopptak vurderes|Dummy|Resultat|true|
 |01980cf4-9010-7bcf-b578-ca5a825d64ef|Skal kravet til verneplikt vurderes|Dummy|Resultat|true|
 |0194881f-9444-7a73-a458-0af81c034d86|Skal permittering vurderes|Alfa|Fakta|true|
 |0194881f-9444-7a73-a458-0af81c034d88|Skal permittert fra fiskeindustrien vurderes|Alfa|Fakta|true|
-|0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|Dummy|Resultat|true|
+|0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|Alfa|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a2d|Skal samordnes med ytelser utenfor folketrygden|Dummy|Resultat|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc77|søknadId|Dummy|Fakta|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc73|Søknadsdato|Dummy|Fakta|true|
@@ -173,6 +173,6 @@
 |0194881f-9434-79e8-a64d-1a23cc5d86ef|Utfall etter samordning|Dummy|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a26|Vartpenger beløp|Dummy|Fakta|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a27|Ventelønn beløp|Dummy|Fakta|true|
-|0194881f-9442-707b-a6ee-e96c06877bde|Villig til å bytte yrke|Dummy|Fakta|true|
+|0194881f-9442-707b-a6ee-e96c06877bde|Villig til å bytte yrke|Alfa|Fakta|true|
 |019db9de-afaf-7e46-98b4-2fd20655b80f|Vurder rett fra og med|Dummy|Fakta|true|
-|019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2|Siste forbruksdato|Dummy|Fakta|true|
+|019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2|Siste forbruksdato|Alfa|Fakta|true|

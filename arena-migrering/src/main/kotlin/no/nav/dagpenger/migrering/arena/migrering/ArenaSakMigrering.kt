@@ -14,6 +14,10 @@ data class ArenaSakMigrering(
     val forbrukteDagerFISK: List<ArenaForbrukteDagerMigrering>,
     val tidsbegrensetVedtak: List<ArenaTidsbegrensetVedtakMigrering>,
     val inntekt: Inntekt?,
+    val erDeks: List<ArenaRetttighetstypeMigrering>,
+    val gjenstaendeTeller: List<ArenaGjenstaendeTellerMigrering>,
+    val initiellTeller: List<ArenaInitiellTellerMigrering>,
+    val aktfase: List<ArenaAktfaseMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,
@@ -53,6 +57,26 @@ data class ArenaSakMigrering(
 
     data class ArenaTidsbegrensetVedtakMigrering(
         val kode: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
+    data class ArenaAktfaseMigrering(
+        val kode: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
+    data class ArenaGjenstaendeTellerMigrering(
+        val kode: String,
+        val kodetype: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
+    data class ArenaInitiellTellerMigrering(
+        val kode: String,
+        val kodetype: String,
         val verdi: String,
         val gyldigFra: LocalDate,
     )

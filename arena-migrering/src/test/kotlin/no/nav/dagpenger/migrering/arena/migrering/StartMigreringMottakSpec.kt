@@ -192,20 +192,25 @@ private class StartMigreringTest(
 
     val sak =
         ArenaSakMigrering(
-            vilkaarsVurderinger = emptyList(),
-            vedtakfakta = emptyList(),
-            personopplysninger = emptyList(),
-            personFodselsdatoMigrering = emptyList(),
-            rettighetstype = emptyList(),
-            forbrukteDagerDP = emptyList(),
-            forbrukteDagerPERM = emptyList(),
-            forbrukteDagerFISK = emptyList(),
-            tidsbegrensetVedtak = emptyList(),
-            inntekt = null,
+               vilkaarsVurderinger = emptyList(),
+                vedtakfakta = emptyList(),
+                personopplysninger = emptyList(),
+                personFodselsdatoMigrering = emptyList(),
+                rettighetstype = emptyList(),
+                forbrukteDagerDP = emptyList(),
+                forbrukteDagerPERM = emptyList(),
+                forbrukteDagerFISK = emptyList(),
+                tidsbegrensetVedtak = emptyList(),
+                inntekt = null,
+                erDeks = emptyList(),
+                gjenstaendeTeller = emptyList(),
+                initiellTeller = emptyList(),
+                aktfase = emptyList(),
         )
 
     init {
         every { arenaMigreringRepository.hentIdentForSak(12345) } returns "testident"
+
         every { arenaMigreringRepository.hentSakTilMigrering(12345) } returns sak
         every { repository.lagreMigrering(any()) } just Runs
         every { repository.lagreOpplysninger(any(), any()) } just Runs
