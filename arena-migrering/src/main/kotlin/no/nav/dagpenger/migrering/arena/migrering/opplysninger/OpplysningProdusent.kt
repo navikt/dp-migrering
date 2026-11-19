@@ -36,7 +36,21 @@ interface OpplysningProdusent<T : Any> {
         opplysning: Opplysning<Any>,
         migreringId: UUID,
         repository: MigreringRepository,
-    ): OpplysningVerifisertResultat? = null
+    ): OpplysningVerifisertResultat {
+        val arenaOpplysning =
+            repository.hentOpplysning(
+                migreringId = migreringId,
+                opplysningId = opplysning.uuid,
+            )
+
+        return OpplysningVerifisertResultat(
+            uuid = opplysningsId,
+            navn = opplysningsNavn,
+            verifisert = arenaOpplysning?.verdi == opplysning.verdi && arenaOpplysning?.uuid == opplysning.uuid,
+            dpSakVerdi = opplysning.verdi,
+            arenaVerdi = arenaOpplysning?.verdi,
+        )
+    }
 
     fun vedManglendeOpplysning() {
         manglendeOpplysninger.labelValues(opplysningsId.toString(), opplysningsNavn, status.name).inc()

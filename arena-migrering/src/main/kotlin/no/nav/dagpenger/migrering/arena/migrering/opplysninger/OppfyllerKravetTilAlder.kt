@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -17,26 +16,6 @@ class OppfyllerKravetTilAlder : OpplysningProdusent<Boolean> {
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-940b-76ff-acf5-ba7bcb367237")
     override val opplysningsNavn: String = "Bruker oppfyller kravet til alder"
-
-    override fun verifiser(
-        opplysning: Opplysning<Any>,
-        migreringId: UUID,
-        repository: MigreringRepository,
-    ): OpplysningVerifisertResultat? {
-        val arenaOpplysning =
-            repository.hentOpplysning(
-                migreringId = migreringId,
-                opplysningId = opplysning.uuid,
-            )
-
-        return OpplysningVerifisertResultat(
-            uuid = opplysningsId,
-            navn = opplysningsNavn,
-            verifisert = arenaOpplysning?.verdi == opplysning.verdi && arenaOpplysning?.uuid == opplysning.uuid,
-            dpSakVerdi = opplysning.verdi,
-            arenaVerdi = arenaOpplysning?.verdi,
-        )
-    }
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val vilkaar = kontekst.sakTilMigrering.vilkaarsVurderinger.firstOrNull { vilkaar -> vilkaar.kode == "UNDER67" }

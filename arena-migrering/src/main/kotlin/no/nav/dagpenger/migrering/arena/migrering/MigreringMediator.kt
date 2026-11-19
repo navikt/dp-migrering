@@ -163,7 +163,7 @@ class MigreringMediator(
         melding.lagreMelding(migreringRepository)
 
         withLoggingContext("migreringId" to melding.migreringId.toString()) {
-            logger.info { "Mottok simulering resultat for migrering. Resultat: ${melding.simulerteOpplysninger}" }
+//            logger.info { "Mottok simulering resultat for migrering. Resultat: ${melding.simulerteOpplysninger}" }
 
             val (verifisert, ikkeVerifisert) =
                 melding.simulerteOpplysninger
