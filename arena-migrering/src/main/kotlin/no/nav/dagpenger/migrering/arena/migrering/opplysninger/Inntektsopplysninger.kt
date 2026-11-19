@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import no.nav.dagpenger.migrering.objectMapper
 import java.util.UUID
@@ -15,27 +14,13 @@ class Inntektsopplysninger : OpplysningProdusent<InntektV1> {
     override val opplysningsNavn: String = "Inntektsopplysninger"
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
-    override fun verifiser(
-        opplysning: Opplysning<Any>,
-        migreringId: UUID,
-        repository: MigreringRepository,
-    ): OpplysningVerifisertResultat {
-        val arenaVerdi =
-            repository.hentOpplysning(
-                migreringId = migreringId,
-                opplysningId = opplysning.uuid,
-            )
-        val arenaInntekt = arenaVerdi?.verdi?.tilInntekt()
-        val dpSakInntekt = opplysning.verdi?.tilInntekt()
-        val verifisert = dpSakInntekt?.harSammeInnholdSom(arenaInntekt) ?: false
-
-        return OpplysningVerifisertResultat(
-            uuid = opplysning.uuid,
-            navn = opplysning.navn,
-            verifisert = verifisert,
-            dpSakVerdi = opplysning.verdi,
-            arenaVerdi = arenaVerdi?.verdi,
-        )
+    override fun sammenlignVerdier(
+        arenaVerdi: Any?,
+        dpSakVerdi: Any?,
+    ): Boolean {
+        val arenaInntekt = arenaVerdi?.tilInntekt()
+        val dpSakInntekt = dpSakVerdi?.tilInntekt()
+        return dpSakInntekt?.harSammeInnholdSom(arenaInntekt) ?: false
     }
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<InntektV1> {

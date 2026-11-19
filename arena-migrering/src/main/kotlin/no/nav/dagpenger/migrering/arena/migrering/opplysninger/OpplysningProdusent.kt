@@ -42,14 +42,32 @@ interface OpplysningProdusent<T : Any> {
                 migreringId = migreringId,
                 opplysningId = opplysning.uuid,
             )
+        val sammeVerdi = sammenlignVerdier(arenaOpplysning?.verdi, opplysning.verdi)
 
         return OpplysningVerifisertResultat(
             uuid = opplysningsId,
             navn = opplysningsNavn,
-            verifisert = arenaOpplysning?.verdi == opplysning.verdi && arenaOpplysning?.uuid == opplysning.uuid,
+            verifisert = sammeVerdi && arenaOpplysning?.uuid == opplysning.uuid,
             dpSakVerdi = opplysning.verdi,
             arenaVerdi = arenaOpplysning?.verdi,
         )
+    }
+
+    fun sammenlignVerdier(
+        arenaVerdi: Any?,
+        dpSakVerdi: Any?,
+    ): Boolean {
+        listOf(arenaVerdi, dpSakVerdi).forEach { verdi ->
+            when (verdi) {
+                null, is Boolean, is String, is Int, is Long, is Double -> Unit
+                else ->
+                    throw UnsupportedOperationException(
+                        "Opplysningen $opplysningsNavn ($opplysningsId) krever egen sammenligning for " +
+                            "${verdi.javaClass.name}. Overstyr sammenlignVerdier.",
+                    )
+            }
+        }
+        return arenaVerdi == dpSakVerdi
     }
 
     fun vedManglendeOpplysning() {

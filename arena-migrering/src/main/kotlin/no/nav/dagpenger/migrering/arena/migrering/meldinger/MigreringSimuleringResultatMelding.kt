@@ -47,12 +47,13 @@ internal class MigreringSimuleringResultatMelding(
 
     private fun verdi(node: JsonNode): Any? =
         when {
+            node.isMissingOrNull() -> null
             node.isBoolean -> node.asBoolean()
             node.isInt -> node.asInt()
             node.isLong -> node.asLong()
             node.isDouble -> node.asDouble()
             node.isString -> node.asString()
             node.isObject -> node.asObject()
-            else -> null
+            else -> node
         }
 }
