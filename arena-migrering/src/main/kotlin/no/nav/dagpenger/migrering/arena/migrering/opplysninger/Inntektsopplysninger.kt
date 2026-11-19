@@ -1,9 +1,10 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
-import no.nav.dagpenger.migrering.objectMapper
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.InntektV1
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.harSammeInnholdSom
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.tilInntekt
 import java.util.UUID
-import no.nav.dagpenger.inntekt.v1.Inntekt as InntektV1
 
 // Arena: Kan den lages fra vedtakfakta i Arena? class inntekt... vedtakfakta DDIDINNTGR INTSISTE / INTP1SLUTT INTNESTS
 //   / INTP2SLUTT INTTREDS / INTP3SLUTT
@@ -37,19 +38,3 @@ class Inntektsopplysninger : OpplysningProdusent<InntektV1> {
         )
     }
 }
-
-private fun Any.tilInntekt(): InntektV1 =
-    when (this) {
-        is InntektV1 -> this
-        else -> objectMapper.convertValue(this, InntektV1::class.java)
-    }
-
-fun InntektV1.harSammeInnholdSom(other: InntektV1?): Boolean =
-    other != null &&
-        inntektsId == other.inntektsId &&
-        manueltRedigert == other.manueltRedigert &&
-        begrunnelseManueltRedigert == other.begrunnelseManueltRedigert &&
-        sisteAvsluttendeKalenderMåned == other.sisteAvsluttendeKalenderMåned &&
-        hentetTidspunkt == other.hentetTidspunkt &&
-        inntektsListe.groupingBy { it }.eachCount() ==
-        other.inntektsListe.groupingBy { it }.eachCount()
