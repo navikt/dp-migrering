@@ -2,7 +2,6 @@ package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
-import no.nav.dagpenger.migrering.arena.migrering.KafkaMelding
 
 internal class BehandlingOpprettetMelding(
     packet: JsonMessage,

@@ -38,7 +38,17 @@ class MigreringAvbruttMottakSpec :
                     ),
             )
 
-            every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any()) } returns Unit
+            every {
+                repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            } returns Unit
 
             testRapid.sendTestMessage(
                 MigreringAvbruttMelding
@@ -60,6 +70,7 @@ class MigreringAvbruttMottakSpec :
             verifyOrder {
 
                 repository.lagreMigreringHendelse(
+                    any(),
                     any(),
                     any(),
                     any(),

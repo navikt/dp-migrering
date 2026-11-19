@@ -4,7 +4,6 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
-import no.nav.dagpenger.migrering.arena.migrering.KafkaMelding
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import tools.jackson.databind.JsonNode
 import java.util.UUID

@@ -50,6 +50,7 @@ class StartMigreringMottakSpec :
                     any(),
                     any(),
                     any(),
+                    any(),
                 )
             }
         }
@@ -62,6 +63,7 @@ class StartMigreringMottakSpec :
 
             verifyOrder {
                 test.repository.lagreMigreringHendelse(
+                    any(),
                     any(),
                     any(),
                     any(),
@@ -102,7 +104,7 @@ private class StartMigreringTest(
             )
         every { repository.lagreMigrering(any()) } just Runs
         every { repository.lagreOpplysninger(any(), any()) } just Runs
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any()) } just Runs
+        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any(), any()) } just Runs
         every { repository.markereOpplysningerSomMigrert(any(), any()) } just Runs
         MigreringStartetMottak(
             rapidsConnection = rapid,

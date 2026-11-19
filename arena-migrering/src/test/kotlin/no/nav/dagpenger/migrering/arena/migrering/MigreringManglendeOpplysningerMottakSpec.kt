@@ -82,9 +82,11 @@ class MigreringManglendeOpplysningerMottakSpec :
                     any(),
                     any(),
                     any(),
+                    any(),
                 )
                 testRapid.publish(any<List<OutgoingMessage>>())
                 test.repository.lagreMigreringHendelse(
+                    any(),
                     any(),
                     any(),
                     any(),
@@ -130,7 +132,15 @@ class MigreringManglendeOpplysningerMottakSpec :
             sendtMelding["årsak"].asObject()["beskrivelse"].asString() shouldContain "Opplysning 4"
 
             verify(exactly = 1) {
-                test.repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any())
+                test.repository.lagreMigreringHendelse(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
             }
 
             verify(exactly = 0) { test.repository.markereOpplysningerSomMigrert(any(), any()) }
@@ -221,7 +231,7 @@ private class MigreringManglendeOpplysningerTest(
 
     init {
 
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any()) } just Runs
+        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any(), any()) } just Runs
         every { repository.markereOpplysningerSomMigrert(any(), any()) } just Runs
         every { repository.hentManglendeOpplysningerForMigrering(any(), any()) } returns
             listOf(

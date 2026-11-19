@@ -49,6 +49,7 @@ class BehandlingOpprettetMottakSpec :
                     "testident",
                     any(),
                     Hendelse.Opprinnelse.Ekstern.name,
+                    any(),
                 )
                 test.repository.markereBehandlingOpprettet(test.migreringId, test.behandlingId)
             }
@@ -111,7 +112,17 @@ private class BehandlingOpprettetTest {
     val lagretHendelse = slot<String>()
 
     init {
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), capture(lagretHendelse), any()) } just Runs
+        every {
+            repository.lagreMigreringHendelse(
+                migreringId = any(),
+                meldingId = any(),
+                hendelse = any(),
+                ident = any(),
+                jsonData = capture(lagretHendelse),
+                opprinnelse = any(),
+                tidspunkt = any(),
+            )
+        } just Runs
         every { repository.markereBehandlingOpprettet(any(), any()) } just Runs
         BehandlingOpprettetMottak(
             rapidsConnection = rapid,

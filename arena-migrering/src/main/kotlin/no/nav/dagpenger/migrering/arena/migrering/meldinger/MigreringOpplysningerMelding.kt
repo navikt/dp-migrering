@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
-import no.nav.dagpenger.migrering.arena.migrering.KafkaMelding
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import java.time.LocalDate
 import java.util.UUID

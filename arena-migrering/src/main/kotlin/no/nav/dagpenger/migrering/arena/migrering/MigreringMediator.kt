@@ -11,6 +11,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringOpplysningerMelding
