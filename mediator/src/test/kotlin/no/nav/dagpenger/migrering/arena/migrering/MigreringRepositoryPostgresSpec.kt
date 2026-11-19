@@ -66,7 +66,7 @@ class MigreringRepositoryPostgresSpec :
             val jsonData = """{"antall":42}"""
             repository.lagreMigrering(migrering)
 
-            val tidspunkt = LocalDateTime.now()
+            val tidspunkt = LocalDateTime.parse("2026-11-19T08:29:40.169510")
             repository.lagreMigreringHendelse(
                 migreringId = migrering.migreringId,
                 meldingId = meldingId,
