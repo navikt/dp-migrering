@@ -1,7 +1,8 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
+import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import tools.jackson.databind.JsonNode
 import java.util.UUID
 
@@ -29,6 +30,7 @@ internal abstract class KafkaMelding(
             ident = ident,
             jsonData = toJson(),
             opprinnelse = hendelse.opprinnelse().name,
+            tidspunkt = opprettet,
         )
     }
 

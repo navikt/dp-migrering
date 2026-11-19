@@ -1,10 +1,10 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import java.util.UUID
 
-internal class MigreringAvbrutt(
+internal class MigreringAvbruttMelding(
     packet: JsonMessage,
 ) : KafkaMelding(packet) {
     init {
@@ -12,17 +12,19 @@ internal class MigreringAvbrutt(
     }
 
     companion object {
+        const val EVENT_NAME = "migrering_avbrutt"
+
         fun ny(
             migreringId: UUID,
             sakId: Int,
             initiertAv: String,
             ident: String,
             årsak: Map<String, Any> = emptyMap(),
-        ): MigreringAvbrutt {
+        ): MigreringAvbruttMelding {
             val packet =
                 JsonMessage.newMessage(
                     mapOf(
-                        "@event_name" to "migrering_avbrutt",
+                        "@event_name" to EVENT_NAME,
                         "migreringId" to migreringId.toString(),
                         "ident" to ident,
                         "sakId" to sakId,
@@ -30,7 +32,7 @@ internal class MigreringAvbrutt(
                         "årsak" to årsak,
                     ),
                 )
-            return MigreringAvbrutt(packet)
+            return MigreringAvbruttMelding(packet)
         }
     }
 
@@ -38,7 +40,7 @@ internal class MigreringAvbrutt(
     val årsak = packet["årsak"]
     override val hendelse: Hendelse =
         object : Hendelse {
-            override fun navn(): String = "MIGRERING_AVBRUTT"
+            override fun navn(): String = EVENT_NAME.uppercase()
 
             override fun opprinnelse(): Hendelse.Opprinnelse = Hendelse.Opprinnelse.Intern
         }

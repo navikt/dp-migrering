@@ -1,6 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.StringSpec
@@ -13,6 +14,8 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.Hendelse
+import no.nav.dagpenger.migrering.arena.migrering.mottak.ForslagTilBehandlingsresultatMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
@@ -41,12 +44,13 @@ class ForslagTilBehandlingsresultatMottakSpec :
 
             verify(exactly = 1) {
                 test.repository.lagreMigreringHendelse(
-                    test.migreringId,
-                    meldingId,
-                    "FORSLAG_TIL_BEHANDLINGSRESULTAT",
-                    "testident",
-                    any(),
-                    Hendelse.Opprinnelse.Ekstern.name,
+                    migreringId = test.migreringId,
+                    meldingId = meldingId,
+                    hendelse = "FORSLAG_TIL_BEHANDLINGSRESULTAT",
+                    ident = "testident",
+                    jsonData = any(),
+                    opprinnelse = Hendelse.Opprinnelse.Ekstern.name,
+                    tidspunkt = forventet["@opprettet"].asLocalDateTime(),
                 )
             }
             val lagret = mapper.readTree(test.lagretHendelse.captured)
@@ -108,7 +112,17 @@ private class ForslagTilBehandlingsresultatTest {
     val lagretHendelse = slot<String>()
 
     init {
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), capture(lagretHendelse), any()) } just Runs
+        every {
+            repository.lagreMigreringHendelse(
+                migreringId = any(),
+                meldingId = any(),
+                hendelse = any(),
+                ident = any(),
+                jsonData = capture(lagretHendelse),
+                opprinnelse = any(),
+                tidspunkt = any(),
+            )
+        } just Runs
         ForslagTilBehandlingsresultatMottak(
             rapidsConnection = rapid,
             migreringMediator =
@@ -116,6 +130,7 @@ private class ForslagTilBehandlingsresultatTest {
                     arenaMigreringRepository = mockk<ArenaMigreringRepository>(),
                     migreringRepository = repository,
                     rapid = rapid,
+                    migreringsScope = mockk(),
                 ),
         )
     }

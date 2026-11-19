@@ -1,6 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
+import java.time.LocalDateTime
 import java.util.UUID
 
 interface MigreringRepository {
@@ -37,6 +38,7 @@ interface MigreringRepository {
         ident: String,
         jsonData: String,
         opprinnelse: String,
+        tidspunkt: LocalDateTime,
     )
 
     fun hentMigreringHendels(id: Long): MigreringHendelse?

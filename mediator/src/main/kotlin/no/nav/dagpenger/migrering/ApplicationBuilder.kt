@@ -10,17 +10,24 @@ import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import no.dagpenger.ArenaStatistikkRepository
 import no.dagpenger.OppdaterMenneskerMetrikk
 import no.nav.dagpenger.migrering.api.apiConfig
 import no.nav.dagpenger.migrering.api.auth.AuthFactory
 import no.nav.dagpenger.migrering.api.statusPagesConfig
 import no.nav.dagpenger.migrering.arena.migrering.ArenaMigreringOracleRepository
-import no.nav.dagpenger.migrering.arena.migrering.BehandlingOpprettetMottak
-import no.nav.dagpenger.migrering.arena.migrering.ForslagTilBehandlingsresultatMottak
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepositoryPostgres
-import no.nav.dagpenger.migrering.arena.migrering.StartMigreringMottak
+import no.nav.dagpenger.migrering.arena.migrering.mottak.BehandlingOpprettetMottak
+import no.nav.dagpenger.migrering.arena.migrering.mottak.ForslagTilBehandlingsresultatMottak
+import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringAvbruttMottak
+import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringManglendeOpplysningerMottak
+import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringSimuleringResultatMottak
+import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringStartetMottak
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import no.nav.dagpenger.migrering.db.PostgresDataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
@@ -50,18 +57,25 @@ internal class ApplicationBuilder(
                 }
             },
         ) { server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>, rapid: KafkaRapid ->
+            val migreringsScope =
+                CoroutineScope(
+                    server.application.coroutineContext +
+                        SupervisorJob(server.application.coroutineContext[Job]) +
+                        Dispatchers.IO,
+                )
             val migreringMediator =
                 MigreringMediator(
                     arenaMigreringRepository = ArenaMigreringOracleRepository(dataSource),
                     migreringRepository = MigreringRepositoryPostgres(postgresDataSourceBuilder.dbsession),
                     rapid = rapid,
+                    migreringsScope = migreringsScope,
                 )
             server.application.apiConfig(
                 authFactory = AuthFactory(Configuration.properties),
                 dataSource = dataSource,
                 migreringMediator = migreringMediator,
             )
-            StartMigreringMottak(
+            MigreringStartetMottak(
                 rapidsConnection = rapid,
                 migreringMediator = migreringMediator,
             )
@@ -70,6 +84,18 @@ internal class ApplicationBuilder(
                 migreringMediator = migreringMediator,
             )
             ForslagTilBehandlingsresultatMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
+            MigreringAvbruttMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
+            MigreringManglendeOpplysningerMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
+            MigreringSimuleringResultatMottak(
                 rapidsConnection = rapid,
                 migreringMediator = migreringMediator,
             )

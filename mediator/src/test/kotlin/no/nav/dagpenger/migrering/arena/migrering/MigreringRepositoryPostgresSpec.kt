@@ -14,6 +14,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 import java.math.BigDecimal
 import java.sql.SQLException
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 class MigreringRepositoryPostgresSpec :
@@ -64,13 +65,16 @@ class MigreringRepositoryPostgresSpec :
             val meldingId = UUID.randomUUID()
             val jsonData = """{"antall":42}"""
             repository.lagreMigrering(migrering)
+
+            val tidspunkt = LocalDateTime.parse("2026-11-19T08:29:40.169510")
             repository.lagreMigreringHendelse(
-                migrering.migreringId,
-                meldingId,
-                "MIGRERING_STARTET",
-                migrering.ident,
-                jsonData,
-                "Ekstern",
+                migreringId = migrering.migreringId,
+                meldingId = meldingId,
+                hendelse = "MIGRERING_STARTET",
+                ident = migrering.ident,
+                jsonData = jsonData,
+                opprinnelse = "Ekstern",
+                tidspunkt = tidspunkt,
             )
 
             val hentetHendelse = repository.hentMigreringHendels(1L)
@@ -82,6 +86,7 @@ class MigreringRepositoryPostgresSpec :
             hentetHendelse.initiertAv shouldBe migrering.initiertAv
             hentetHendelse.hendelse shouldBe "MIGRERING_STARTET"
             hentetHendelse.opprinnelse shouldBe "Ekstern"
+            hentetHendelse.tidspunkt shouldBe tidspunkt
             objectMapper.readTree(hentetHendelse.data) shouldBe objectMapper.readTree(jsonData)
         }
 
@@ -271,12 +276,13 @@ class MigreringRepositoryPostgresSpec :
                 repository.lagreMigrering(migrering)
 
                 repository.lagreMigreringHendelse(
-                    migrering.migreringId,
-                    meldingId,
-                    "MIGRERING_STARTET",
-                    migrering.ident,
-                    jsonData,
-                    opprinnelse,
+                    migreringId = migrering.migreringId,
+                    meldingId = meldingId,
+                    hendelse = "MIGRERING_STARTET",
+                    ident = migrering.ident,
+                    jsonData = jsonData,
+                    opprinnelse = opprinnelse,
+                    tidspunkt = LocalDateTime.now(),
                 )
 
                 val førsteRad =
@@ -300,12 +306,13 @@ class MigreringRepositoryPostgresSpec :
                 førsteRad["tidspunkt"].shouldNotBeNull()
 
                 repository.lagreMigreringHendelse(
-                    migrering.migreringId,
-                    meldingId,
-                    "MIGRERING_FULLFØRT",
-                    migrering.ident,
-                    """{"antall":43}""",
-                    if (opprinnelse == "Intern") "Ekstern" else "Intern",
+                    migreringId = migrering.migreringId,
+                    meldingId = meldingId,
+                    hendelse = "MIGRERING_FULLFØRT",
+                    ident = migrering.ident,
+                    jsonData = """{"antall":43}""",
+                    opprinnelse = if (opprinnelse == "Intern") "Ekstern" else "Intern",
+                    tidspunkt = LocalDateTime.now(),
                 )
 
                 val rader =
@@ -333,19 +340,21 @@ class MigreringRepositoryPostgresSpec :
             repository.lagreMigreringHendelse(
                 migrering.migreringId,
                 meldingId,
-                "MIGRERING_STARTET",
-                migrering.ident,
-                jsonData,
-                "Ekstern",
+                hendelse = "MIGRERING_STARTET",
+                ident = migrering.ident,
+                jsonData = jsonData,
+                opprinnelse = "Ekstern",
+                tidspunkt = LocalDateTime.now(),
             )
 
             repository.lagreMigreringHendelse(
-                migrering.migreringId,
-                meldingId,
-                "migrering_fullført",
-                migrering.ident,
-                """{"antall":43}""",
-                "Intern",
+                migreringId = migrering.migreringId,
+                meldingId = meldingId,
+                hendelse = "migrering_fullført",
+                ident = migrering.ident,
+                jsonData = """{"antall":43}""",
+                opprinnelse = "Intern",
+                tidspunkt = LocalDateTime.now(),
             )
 
             databaseSession.session { session ->
@@ -370,18 +379,20 @@ class MigreringRepositoryPostgresSpec :
                 repository.lagreMigreringHendelse(
                     migrering.migreringId,
                     meldingId,
-                    "hendelse_$index",
-                    migrering.ident,
-                    """{"nummer":$index}""",
-                    "Intern",
+                    hendelse = "hendelse_$index",
+                    ident = migrering.ident,
+                    jsonData = """{"nummer":$index}""",
+                    opprinnelse = "Intern",
+                    tidspunkt = LocalDateTime.now(),
                 )
                 repository.lagreMigreringHendelse(
-                    annenMigrering.migreringId,
-                    UUID.randomUUID(),
-                    "annen_hendelse",
-                    annenMigrering.ident,
-                    "{}",
-                    "Ekstern",
+                    migreringId = annenMigrering.migreringId,
+                    meldingId = UUID.randomUUID(),
+                    hendelse = "annen_hendelse",
+                    ident = annenMigrering.ident,
+                    jsonData = "{}",
+                    opprinnelse = "Ekstern",
+                    tidspunkt = LocalDateTime.now(),
                 )
             }
             databaseSession.session { session ->
@@ -418,12 +429,13 @@ class MigreringRepositoryPostgresSpec :
         "avviser migreringshendelser for en migrering som ikke finnes" {
             shouldThrow<SQLException> {
                 repository.lagreMigreringHendelse(
-                    UUID.randomUUID(),
-                    UUID.randomUUID(),
-                    "migrering_startet",
-                    "testident",
-                    "{}",
-                    "Ekstern",
+                    migreringId = UUID.randomUUID(),
+                    meldingId = UUID.randomUUID(),
+                    hendelse = "migrering_startet",
+                    ident = "testident",
+                    jsonData = "{}",
+                    opprinnelse = "Ekstern",
+                    tidspunkt = LocalDateTime.now(),
                 )
             }
 

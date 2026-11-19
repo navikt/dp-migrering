@@ -13,6 +13,8 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.Hendelse
+import no.nav.dagpenger.migrering.arena.migrering.mottak.BehandlingOpprettetMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
@@ -47,6 +49,7 @@ class BehandlingOpprettetMottakSpec :
                     "testident",
                     any(),
                     Hendelse.Opprinnelse.Ekstern.name,
+                    any(),
                 )
                 test.repository.markereBehandlingOpprettet(test.migreringId, test.behandlingId)
             }
@@ -109,7 +112,17 @@ private class BehandlingOpprettetTest {
     val lagretHendelse = slot<String>()
 
     init {
-        every { repository.lagreMigreringHendelse(any(), any(), any(), any(), capture(lagretHendelse), any()) } just Runs
+        every {
+            repository.lagreMigreringHendelse(
+                migreringId = any(),
+                meldingId = any(),
+                hendelse = any(),
+                ident = any(),
+                jsonData = capture(lagretHendelse),
+                opprinnelse = any(),
+                tidspunkt = any(),
+            )
+        } just Runs
         every { repository.markereBehandlingOpprettet(any(), any()) } just Runs
         BehandlingOpprettetMottak(
             rapidsConnection = rapid,
@@ -118,6 +131,7 @@ private class BehandlingOpprettetTest {
                     arenaMigreringRepository = mockk<ArenaMigreringRepository>(),
                     migreringRepository = repository,
                     rapid = rapid,
+                    migreringsScope = mockk(),
                 ),
         )
     }

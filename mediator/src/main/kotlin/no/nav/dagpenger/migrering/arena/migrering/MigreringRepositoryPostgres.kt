@@ -6,6 +6,7 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.db.DatabaseSession
 import no.nav.dagpenger.migrering.objectMapper
 import org.postgresql.util.PGobject
+import java.time.LocalDateTime
 import java.util.UUID
 
 class MigreringRepositoryPostgres(
@@ -224,6 +225,7 @@ class MigreringRepositoryPostgres(
         ident: String,
         jsonData: String,
         opprinnelse: String,
+        tidspunkt: LocalDateTime,
     ) {
         databaseSession.session { session ->
             session.transaction { transactionalSession: TransactionalSession ->
@@ -242,7 +244,7 @@ class MigreringRepositoryPostgres(
                             INSERT INTO migrering_hendelse
                                 (ident, melding_id, migrering_id, hendelse, data, tidspunkt, opprinnelse)
                             VALUES
-                                (:ident, :melding_id, :migrering_id, :hendelse, :data, NOW(), :opprinnelse)
+                                (:ident, :melding_id, :migrering_id, :hendelse, :data, :tidspunkt, :opprinnelse)
                                 ON CONFLICT DO NOTHING 
                             """.trimIndent(),
                         paramMap =
@@ -252,6 +254,7 @@ class MigreringRepositoryPostgres(
                                 "migrering_id" to migreringId,
                                 "hendelse" to hendelse,
                                 "opprinnelse" to opprinnelse,
+                                "tidspunkt" to tidspunkt,
                                 "data" to
                                     PGobject().apply {
                                         type = "json"

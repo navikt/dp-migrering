@@ -1,17 +1,20 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
-class StartMigreringMottak(
+class MigreringAvbruttMottak(
     rapidsConnection: RapidsConnection,
     private val migreringMediator: MigreringMediator,
 ) : River.PacketListener {
@@ -22,13 +25,13 @@ class StartMigreringMottak(
     init {
         River(rapidsConnection)
             .apply {
-                precondition { it.requireValue("@event_name", "migrering_startet") }
+                precondition { it.requireValue("@event_name", MigreringAvbruttMelding.EVENT_NAME) }
                 validate {
                     it.requireKey(
-                        "manglendeOpplysninger",
                         "migreringId",
                         "@id",
                         "ident",
+                        "årsak",
                     )
                 }
             }.register(this)
@@ -44,12 +47,20 @@ class StartMigreringMottak(
             withLoggingContext(
                 "migreringId" to packet["migreringId"].asString(),
             ) {
-                logger.info { "Mottok melding om manglende opplysninger for migrering" }
+                logger.info { "Mottok melding om avbrutt migrering" }
                 migreringMediator.håndter(
-                    MigreringStartetMelding(packet, Hendelse.Opprinnelse.Ekstern, "MIGRERING_STARTET_MANGLENDE_OPPLYSNINGER"),
+                    MigreringAvbruttMelding(packet),
                     context,
                 )
             }
         }
+    }
+
+    override fun onError(
+        problems: MessageProblems,
+        context: MessageContext,
+        metadata: MessageMetadata,
+    ) {
+        logger.info { "Feil i melding om avbrutt migrering: ${problems.toExtendedReport()}" }
     }
 }
