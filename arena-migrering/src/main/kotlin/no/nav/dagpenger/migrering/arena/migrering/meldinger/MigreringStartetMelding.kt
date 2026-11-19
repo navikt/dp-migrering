@@ -1,6 +1,8 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import no.nav.dagpenger.migrering.arena.migrering.Migrering
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMelding
 
 internal class MigreringStartetMelding(
     packet: JsonMessage,

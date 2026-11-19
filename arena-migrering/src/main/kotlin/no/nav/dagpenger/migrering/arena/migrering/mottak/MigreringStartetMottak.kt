@@ -1,17 +1,20 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
-class ForslagTilBehandlingsresultatMottak(
+class MigreringStartetMottak(
     rapidsConnection: RapidsConnection,
     private val migreringMediator: MigreringMediator,
 ) : River.PacketListener {
@@ -22,15 +25,10 @@ class ForslagTilBehandlingsresultatMottak(
     init {
         River(rapidsConnection)
             .apply {
-                precondition {
-                    it.requireValue("@event_name", "forslag_til_behandlingsresultat")
-                    it.requireValue("behandletHendelse.type", "Migrering")
-                }
+                precondition { it.requireValue("@event_name", "migrering_startet") }
                 validate {
                     it.requireKey(
-                        "behandletHendelse",
-                        "behandletHendelse.id",
-                        "behandlingId",
+                        "migreringId",
                         "@id",
                         "ident",
                     )
@@ -46,12 +44,22 @@ class ForslagTilBehandlingsresultatMottak(
     ) {
         if (unleash.isEnabled(Feature.START_MIGRERING.navn)) {
             withLoggingContext(
-                "behandlingId" to packet["behandlingId"].asString(),
-                "migreringId" to packet["behandletHendelse"]["id"].asString(),
+                "migreringId" to packet["migreringId"].asString(),
             ) {
-                logger.info { "Mottok melding om forslag til behandlingsresultat for migrering" }
-                migreringMediator.håndter(ForslagTilBehandlingsresultatMelding(packet))
+                logger.info { "Mottok melding om manglende opplysninger for migrering" }
+                migreringMediator.håndter(
+                    MigreringStartetMelding(packet),
+                    context,
+                )
             }
         }
+    }
+
+    override fun onError(
+        problems: MessageProblems,
+        context: MessageContext,
+        metadata: MessageMetadata,
+    ) {
+        logger.error { "Feil ved mottak av melding om start migrering: ${problems.toExtendedReport()}" }
     }
 }

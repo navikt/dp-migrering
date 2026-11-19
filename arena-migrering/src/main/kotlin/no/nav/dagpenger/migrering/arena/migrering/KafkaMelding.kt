@@ -4,6 +4,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.Hendelse
 import tools.jackson.databind.JsonNode
 import java.time.LocalDate
 import java.util.UUID

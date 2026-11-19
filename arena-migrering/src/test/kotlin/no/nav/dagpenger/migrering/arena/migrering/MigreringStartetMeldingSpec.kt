@@ -3,6 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
 import java.time.LocalDate
 import java.util.UUID
 

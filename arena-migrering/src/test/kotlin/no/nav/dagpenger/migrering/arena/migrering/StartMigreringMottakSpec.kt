@@ -10,6 +10,8 @@ import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import io.mockk.verifyOrder
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
+import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringStartetMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature

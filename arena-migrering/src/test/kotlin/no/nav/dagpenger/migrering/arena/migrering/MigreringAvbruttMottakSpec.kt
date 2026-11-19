@@ -6,6 +6,8 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifyOrder
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
+import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringAvbruttMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature

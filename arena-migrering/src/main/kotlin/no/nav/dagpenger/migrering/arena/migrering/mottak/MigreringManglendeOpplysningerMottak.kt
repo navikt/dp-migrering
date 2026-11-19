@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
@@ -9,10 +9,12 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
-class MigreringSimuleringResultatMottak(
+class MigreringManglendeOpplysningerMottak(
     rapidsConnection: RapidsConnection,
     private val migreringMediator: MigreringMediator,
 ) : River.PacketListener {
@@ -23,15 +25,15 @@ class MigreringSimuleringResultatMottak(
     init {
         River(rapidsConnection)
             .apply {
-                precondition { it.requireValue("@event_name", MigreringSimuleringResultatMelding.EVENT_NAME) }
+                precondition { it.requireValue("@event_name", MigreringManglendeOpplysningerMelding.EVENT_NAME) }
                 validate {
                     it.requireKey(
                         "migreringId",
                         "@id",
                         "ident",
-                        "simulerteOpplysninger",
+                        "manglendeOpplysninger",
+                        "opplysninger",
                     )
-                    it.requireValue("simulering", true)
                 }
             }.register(this)
     }
@@ -46,9 +48,9 @@ class MigreringSimuleringResultatMottak(
             withLoggingContext(
                 "migreringId" to packet["migreringId"].asString(),
             ) {
-                logger.info { "Mottok melding om simulering resultat migrering" }
+                logger.info { "Mottok melding om manglende opplysninger for migrering" }
                 migreringMediator.håndter(
-                    MigreringSimuleringResultatMelding(packet),
+                    MigreringManglendeOpplysningerMelding(packet),
                     context,
                 )
             }
@@ -60,6 +62,6 @@ class MigreringSimuleringResultatMottak(
         context: MessageContext,
         metadata: MessageMetadata,
     ) {
-        logger.info { "Feil i melding om simulering resultat migrering: ${problems.toExtendedReport()}" }
+        logger.info { "Feil i melding om manglende opplysninger for migrering: ${problems.toExtendedReport()}" }
     }
 }

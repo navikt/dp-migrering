@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 internal interface Hendelse {
     fun navn(): String

@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering
+package no.nav.dagpenger.migrering.arena.migrering.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
@@ -8,10 +8,12 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
+import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMelding
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
-class BehandlingOpprettetMottak(
+class ForslagTilBehandlingsresultatMottak(
     rapidsConnection: RapidsConnection,
     private val migreringMediator: MigreringMediator,
 ) : River.PacketListener {
@@ -23,7 +25,7 @@ class BehandlingOpprettetMottak(
         River(rapidsConnection)
             .apply {
                 precondition {
-                    it.requireValue("@event_name", "behandling_opprettet")
+                    it.requireValue("@event_name", "forslag_til_behandlingsresultat")
                     it.requireValue("behandletHendelse.type", "Migrering")
                 }
                 validate {
@@ -49,8 +51,8 @@ class BehandlingOpprettetMottak(
                 "behandlingId" to packet["behandlingId"].asString(),
                 "migreringId" to packet["behandletHendelse"]["id"].asString(),
             ) {
-                logger.info { "Mottok melding om behandling opprettet for migrering" }
-                migreringMediator.håndter(BehandlingOpprettetMelding(packet))
+                logger.info { "Mottok melding om forslag til behandlingsresultat for migrering" }
+                migreringMediator.håndter(ForslagTilBehandlingsresultatMelding(packet))
             }
         }
     }

@@ -9,6 +9,13 @@ import io.prometheus.metrics.core.metrics.Counter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringOpplysningerMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
 import java.time.LocalDate

@@ -13,6 +13,8 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.Hendelse
+import no.nav.dagpenger.migrering.arena.migrering.mottak.BehandlingOpprettetMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
