@@ -2,13 +2,16 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier
 
 import no.nav.dagpenger.inntekt.v1.Inntekt
 import no.nav.dagpenger.migrering.objectMapper
+import tools.jackson.databind.node.ObjectNode
 
 typealias InntektV1 = Inntekt
 
-fun Any.tilInntekt(): InntektV1 =
+fun Any.tilInntekt(): InntektV1? =
     when (this) {
         is InntektV1 -> this
-        else -> objectMapper.convertValue(this, InntektV1::class.java)
+        is Map<*, *> -> objectMapper.convertValue(this, InntektV1::class.java)
+        is ObjectNode -> objectMapper.convertValue(this, InntektV1::class.java)
+        else -> null
     }
 
 fun InntektV1.harSammeInnholdSom(other: InntektV1?): Boolean =

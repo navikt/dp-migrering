@@ -1,15 +1,18 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.dagpenger.inntekt.v1.Inntekt
 import no.nav.dagpenger.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.inntekt.v1.KlassifisertInntektMåned
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.InntektV1
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.tilInntekt
 import no.nav.dagpenger.migrering.objectMapper
+import tools.jackson.databind.exc.MismatchedInputException
 import java.time.LocalDateTime
 import java.time.YearMonth
 import java.util.UUID
@@ -35,7 +38,7 @@ class InntektsopplysningerSpec :
             begrunnelse: String? = null,
             siste: YearMonth = sisteMaaned,
             hentet: LocalDateTime? = LocalDateTime.of(2026, 6, 1, 12, 0),
-        ) = Inntekt(id, liste, redigert, begrunnelse, siste, hentet)
+        ) = InntektV1(id, liste, redigert, begrunnelse, siste, hentet)
 
         fun opplysning(verdi: Any?): Opplysning<Any> =
             Opplysning(
@@ -68,6 +71,67 @@ class InntektsopplysningerSpec :
 
         "sammenligner ogsaa ferdig deserialiserte inntekter" {
             verifiser(opplysning(inntekt()), inntekt()).verifisert shouldBe true
+        }
+
+        "konverterer databaseverdien naar dp-sak allerede er deserialisert" {
+            val json = objectMapper.writeValueAsString(opplysning(inntekt()))
+            val arena = objectMapper.readValue(json, Opplysning::class.java)
+
+            verifiser(arena, inntekt()).verifisert shouldBe true
+        }
+
+        "konverterer Jackson-objektet naar Arena allerede er deserialisert" {
+            val dpSak = objectMapper.readTree(objectMapper.writeValueAsString(inntekt()))
+
+            verifiser(opplysning(inntekt()), dpSak).verifisert shouldBe true
+        }
+
+        "behandler historiske verdityper som manglende inntekt" {
+            val historiskeVerdier =
+                listOf(
+                    42,
+                    42L,
+                    42.5,
+                    42.toBigDecimal(),
+                    "historisk verdi",
+                    true,
+                    listOf(42),
+                    objectMapper.readTree("42"),
+                    objectMapper.readTree("[42]"),
+                )
+            val bruttoArbeidsinntekt = BruttoArbeidsinntekt()
+
+            historiskeVerdier.forEach { historiskVerdi ->
+                historiskVerdi.tilInntekt() shouldBe null
+                verifiser(opplysning(historiskVerdi), inntekt()).verifisert shouldBe false
+                verifiser(opplysning(inntekt()), historiskVerdi).verifisert shouldBe false
+                verifiser(opplysning(historiskVerdi), historiskVerdi).verifisert shouldBe false
+                bruttoArbeidsinntekt.sammenlignVerdier(historiskVerdi, inntekt()) shouldBe false
+                bruttoArbeidsinntekt.sammenlignVerdier(inntekt(), historiskVerdi) shouldBe false
+            }
+        }
+
+        "lar ugyldige inntektsobjekter gi konverteringsfeil paa begge sider" {
+            val ugyldigMap =
+                mapOf(
+                    "inntektsId" to "test-inntekt",
+                    "inntektsListe" to "ikke-en-liste",
+                    "sisteAvsluttendeKalenderMåned" to "2026-05",
+                )
+            val ugyldigeObjekter =
+                listOf(
+                    ugyldigMap,
+                    objectMapper.readTree(objectMapper.writeValueAsString(ugyldigMap)),
+                )
+
+            ugyldigeObjekter.forEach { ugyldigObjekt ->
+                shouldThrow<MismatchedInputException> {
+                    verifiser(opplysning(ugyldigObjekt), inntekt())
+                }
+                shouldThrow<MismatchedInputException> {
+                    verifiser(opplysning(inntekt()), ugyldigObjekt)
+                }
+            }
         }
 
         "ignorerer rekkefolgen paa maanedene" {
