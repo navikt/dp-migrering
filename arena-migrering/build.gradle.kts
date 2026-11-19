@@ -11,6 +11,9 @@ dependencies {
     implementation(libs.kotlinquery)
     implementation(libs.rapids.and.rivers)
     implementation("io.prometheus:prometheus-metrics-core:1.10.0")
+    implementation(libs.otel.instrumentation.annotations)
+    implementation(libs.otel.api)
+    implementation("io.opentelemetry:opentelemetry-extension-kotlin:${libs.versions.otel.api.get()}")
     api("com.github.navikt:dp-inntekt-kontrakter:2_202609181789745424.d9cfdc")
 
     testImplementation(libs.bundles.kotest.assertions)

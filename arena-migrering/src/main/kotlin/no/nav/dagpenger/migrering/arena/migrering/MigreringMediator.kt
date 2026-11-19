@@ -5,10 +5,17 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
+import io.opentelemetry.api.GlobalOpenTelemetry
+import io.opentelemetry.api.trace.StatusCode
+import io.opentelemetry.context.Context
+import io.opentelemetry.extension.kotlin.asContextElement
+import io.opentelemetry.instrumentation.annotations.WithSpan
 import io.prometheus.metrics.core.metrics.Counter
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMelding
@@ -31,6 +38,8 @@ class MigreringMediator(
     companion object {
         private val logger = KotlinLogging.logger {}
 
+        private val tracer = GlobalOpenTelemetry.getTracer("arena-migrering")
+
         private val manglendeOpplysninger =
             Counter
                 .builder()
@@ -40,6 +49,7 @@ class MigreringMediator(
                 .register()
     }
 
+    @WithSpan("migrering.start")
     suspend fun startMigrering(
         sakId: Int,
         initiertAv: String,
@@ -72,6 +82,7 @@ class MigreringMediator(
         return migrering
     }
 
+    @WithSpan("migrering.manglende_opplysninger")
     internal fun håndter(
         melding: MigreringManglendeOpplysningerMelding,
         context: MessageContext,
@@ -131,6 +142,7 @@ class MigreringMediator(
             }
     }
 
+    @WithSpan("migrering.simulering_resultat")
     internal fun håndter(
         melding: MigreringSimuleringResultatMelding,
         context: MessageContext,
@@ -142,6 +154,7 @@ class MigreringMediator(
         }
     }
 
+    @WithSpan("migrering.startet")
     internal fun håndter(
         melding: MigreringStartetMelding,
         context: MessageContext,
@@ -152,6 +165,7 @@ class MigreringMediator(
         }
     }
 
+    @WithSpan("migrering.avbrutt")
     internal fun håndter(
         melding: MigreringAvbruttMelding,
         context: MessageContext,
@@ -162,15 +176,18 @@ class MigreringMediator(
         melding.lagreMelding(migreringRepository)
     }
 
+    @WithSpan("migrering.behandling_opprettet")
     internal fun håndter(melding: BehandlingOpprettetMelding) {
         melding.lagreMelding(migreringRepository)
         migreringRepository.markereBehandlingOpprettet(melding.migreringId, melding.behandlingId)
     }
 
+    @WithSpan("migrering.forslag_til_behandlingsresultat")
     internal fun håndter(medling: ForslagTilBehandlingsresultatMelding) {
         medling.lagreMelding(migreringRepository)
     }
 
+    @WithSpan("migrering.hent_opplysninger")
     private suspend fun hentOpplysningerForSak(
         sakId: Int,
         initiertAv: String,
@@ -178,20 +195,40 @@ class MigreringMediator(
     ): List<Opplysning<*>> =
         coroutineScope {
             val sakTilMigrering = arenaMigreringRepository.hentSakTilMigrering(sakId)
+
+            val parentContext = Context.current()
             val deferredOpplysninger =
                 aktiveProdusenter.map { produsent ->
                     async {
+                        val span =
+                            tracer
+                                .spanBuilder("migrering.produser_opplysning")
+                                .setParent(parentContext)
+                                .setAttribute(
+                                    "migrering.opplysning_id",
+                                    produsent.opplysningsId.toString(),
+                                ).setAttribute(
+                                    "migrering.opplysning_navn",
+                                    produsent.opplysningsNavn,
+                                ).startSpan()
                         try {
-                            produsent.produser(
-                                MigreringsKontekst(
-                                    sakTilMigrering = sakTilMigrering,
-                                    migreringsId = UUID.randomUUID(),
-                                    initiertAv = initiertAv,
-                                    opprettetTidspunkt = migreringTidspunkt,
-                                ),
-                            )
+                            withContext(parentContext.with(span).asContextElement()) {
+                                produsent.produser(
+                                    MigreringsKontekst(
+                                        sakTilMigrering = sakTilMigrering,
+                                        migreringsId = UUID.randomUUID(),
+                                        initiertAv = initiertAv,
+                                        opprettetTidspunkt = migreringTidspunkt,
+                                    ),
+                                )
+                            }
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
+                            span.setStatus(StatusCode.ERROR, "Opplysningsprodusenten feilet")
                             throw MigreringsException("Feilet i ${produsent.opplysningsId}", e)
+                        } finally {
+                            span.end()
                         }
                     }
                 }
@@ -207,17 +244,6 @@ class MigreringMediator(
         if (feilede.isNotEmpty()) {
             throw IllegalStateException("Kunne ikke publisere migreringshendelse", feilede.first().error)
         }
-        val publisertJson = sendte.single().message.body
-//        val publisertMelding = JsonMessage(publisertJson, MessageProblems(publisertJson))
-        // melding.lagreMelding(migreringRepository)
-//        migreringRepository.lagreMigreringHendelse(
-//            migreringId = melding.migreringId,
-//            meldingId = UUID.fromString(publisertMelding.id),
-//            hendelse = melding.hendelse.navn(),
-//            ident = melding.ident,
-//            jsonData = publisertJson,
-//            opprinnelse = melding.hendelse.opprinnelse().name,
-//        )
     }
 
     fun hentMigrering(migreringId: UUID): Migrering? = migreringRepository.hentMigrering(migreringId)
