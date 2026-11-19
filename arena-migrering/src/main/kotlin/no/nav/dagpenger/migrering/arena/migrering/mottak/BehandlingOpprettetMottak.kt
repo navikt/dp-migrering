@@ -51,7 +51,7 @@ class BehandlingOpprettetMottak(
                 "behandlingId" to packet["behandlingId"].asString(),
                 "migreringId" to packet["behandletHendelse"]["id"].asString(),
             ) {
-                logger.info { "Mottok melding om behandling opprettet for migrering" }
+                logger.info { "Mottok behandling_opprettet melding" }
                 migreringMediator.håndter(BehandlingOpprettetMelding(packet))
             }
         }

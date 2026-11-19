@@ -25,6 +25,8 @@ import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringOpplysningerMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringKontrollResultat
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringKontrollResultatMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
@@ -162,18 +164,32 @@ class MigreringMediator(
     ) {
         melding.lagreMelding(migreringRepository)
 
-        withLoggingContext("migreringId" to melding.migreringId.toString()) {
-//            logger.info { "Mottok simulering resultat for migrering. Resultat: ${melding.simulerteOpplysninger}" }
+        val (verifisert, ikkeVerifisert) =
+            melding.simulerteOpplysninger
+                .mapNotNull {
+                    produsentMap[it.uuid]?.verifiser(it, melding.migreringId, migreringRepository)
+                }.partition { it.verifisert }
 
-            val (verifisert, ikkeVerifisert) =
-                melding.simulerteOpplysninger
-                    .mapNotNull {
-                        produsentMap[it.uuid]?.verifiser(it, melding.migreringId, migreringRepository)
-                    }.partition { it.verifisert }
-
-            logger.info { "Verifisert opplysninger (${verifisert.size}): ${verifisert.map { it.navn }}" }
-            logger.warn { "Ikke verifisert opplysninger (${ikkeVerifisert.size}): ${ikkeVerifisert.map { it.navn }}" }
-        }
+        logger.info { "Verifisert opplysninger (${verifisert.size}): ${verifisert.map { it.navn }}" }
+        logger.warn { "Ikke verifisert opplysninger (${ikkeVerifisert.size}): ${ikkeVerifisert.map { it.navn }}" }
+        MigreringSimuleringKontrollResultatMelding
+            .fra(
+                MigreringSimuleringKontrollResultat(
+                    migreringId = melding.migreringId,
+                    ident = melding.ident,
+                    sakId = melding.sakId,
+                    initiertAv = melding.initiertAv,
+                    migreringTidspunkt = melding.migreringTidspunkt,
+                    simulering = melding.simulering,
+                    verifisert = verifisert,
+                    ikkeVerifisert = ikkeVerifisert,
+                ),
+            ).also {
+                publiserMelding(
+                    context = context,
+                    melding = it,
+                )
+            }
     }
 
     @WithSpan("migrering.startet")
@@ -206,6 +222,11 @@ class MigreringMediator(
 
     @WithSpan("migrering.forslag_til_behandlingsresultat")
     internal fun håndter(medling: ForslagTilBehandlingsresultatMelding) {
+        medling.lagreMelding(migreringRepository)
+    }
+
+    @WithSpan("migrering.simulering_kontroll_resultat")
+    internal fun håndter(medling: MigreringSimuleringKontrollResultatMelding) {
         medling.lagreMelding(migreringRepository)
     }
 

@@ -26,6 +26,7 @@ import no.nav.dagpenger.migrering.arena.migrering.mottak.BehandlingOpprettetMott
 import no.nav.dagpenger.migrering.arena.migrering.mottak.ForslagTilBehandlingsresultatMottak
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringAvbruttMottak
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringManglendeOpplysningerMottak
+import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringSimuleringKontrollResultatMottak
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringSimuleringResultatMottak
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringStartetMottak
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
@@ -96,6 +97,10 @@ internal class ApplicationBuilder(
                 migreringMediator = migreringMediator,
             )
             MigreringSimuleringResultatMottak(
+                rapidsConnection = rapid,
+                migreringMediator = migreringMediator,
+            )
+            MigreringSimuleringKontrollResultatMottak(
                 rapidsConnection = rapid,
                 migreringMediator = migreringMediator,
             )

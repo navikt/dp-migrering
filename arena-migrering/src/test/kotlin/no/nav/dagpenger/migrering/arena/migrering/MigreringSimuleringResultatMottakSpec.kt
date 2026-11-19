@@ -63,7 +63,7 @@ class MigreringSimuleringResultatMottakSpec :
                 .forEach { (felt, verdi) ->
                     lagret[felt].toString() shouldEqualJson verdi.toString()
                 }
-            test.rapid.inspektør.size shouldBe 0
+            test.rapid.inspektør.size shouldBe 1
             confirmVerified(test.repository)
         }
 
@@ -108,7 +108,7 @@ class MigreringSimuleringResultatMottakSpec :
                         }
                     ]
                     """.trimIndent()
-                test.rapid.inspektør.size shouldBe 0
+                test.rapid.inspektør.size shouldBe 1
                 confirmVerified(test.repository)
             }
         }
@@ -198,6 +198,9 @@ private class MigreringSimuleringResultatTest {
                     "migreringId" to migreringId.toString(),
                     "simulering" to simulering,
                     "simulerteOpplysninger" to simulerteOpplysninger,
+                    "sakId" to 123,
+                    "migreringTidspunkt" to "2026-11-01",
+                    "initiertAv" to "testbruker",
                 ),
             )
         val json =

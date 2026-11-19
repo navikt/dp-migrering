@@ -16,6 +16,10 @@ internal class MigreringSimuleringResultatMelding(
             "migreringId",
             "ident",
             "simulerteOpplysninger",
+            "sakId",
+            "migreringTidspunkt",
+            "simulering",
+            "initiertAv",
         )
     }
 
@@ -24,6 +28,10 @@ internal class MigreringSimuleringResultatMelding(
     }
 
     override val migreringId: UUID = packet["migreringId"].asUUID()
+    val sakId: Int = packet["sakId"].asInt()
+    val migreringTidspunkt = packet["migreringTidspunkt"].asLocalDate()
+    val simulering: Boolean = packet["simulering"].asBoolean()
+    val initiertAv: String = packet["initiertAv"].asString()
     override val hendelse: Hendelse =
         object : Hendelse {
             override fun navn(): String = EVENT_NAME.uppercase()

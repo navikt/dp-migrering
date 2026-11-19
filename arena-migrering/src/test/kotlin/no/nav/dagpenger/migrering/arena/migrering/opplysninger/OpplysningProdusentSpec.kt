@@ -132,6 +132,10 @@ class OpplysningProdusentSpec :
                         "ident" to "testident",
                         "migreringId" to migreringId.toString(),
                         "simulerteOpplysninger" to listOf(opplysning(listOf("testverdi"))),
+                        "sakId" to 123,
+                        "migreringTidspunkt" to "2026-11-01",
+                        "simulering" to true,
+                        "initiertAv" to "testbruker",
                     ),
                 )
             val verdi = MigreringSimuleringResultatMelding(packet).simulerteOpplysninger.single().verdi
@@ -149,6 +153,10 @@ class OpplysningProdusentSpec :
                         "ident" to "testident",
                         "migreringId" to migreringId.toString(),
                         "simulerteOpplysninger" to listOf(opplysning(null)),
+                        "sakId" to 123,
+                        "migreringTidspunkt" to "2026-11-01",
+                        "simulering" to true,
+                        "initiertAv" to "testbruker",
                     ),
                 )
             val verdi = MigreringSimuleringResultatMelding(packet).simulerteOpplysninger.single().verdi
