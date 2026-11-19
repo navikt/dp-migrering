@@ -23,7 +23,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringManglendeOpplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepositoryPostgres
 import no.nav.dagpenger.migrering.arena.migrering.MigreringSimuleringResultatMottak
-import no.nav.dagpenger.migrering.arena.migrering.StartMigreringMottak
+import no.nav.dagpenger.migrering.arena.migrering.MigreringStartetMottak
 import no.nav.dagpenger.migrering.db.OracleDataSourceBuilder
 import no.nav.dagpenger.migrering.db.PostgresDataSourceBuilder
 import no.nav.dagpenger.migrering.konfigurasjon.Configuration
@@ -64,7 +64,7 @@ internal class ApplicationBuilder(
                 dataSource = dataSource,
                 migreringMediator = migreringMediator,
             )
-            StartMigreringMottak(
+            MigreringStartetMottak(
                 rapidsConnection = rapid,
                 migreringMediator = migreringMediator,
             )

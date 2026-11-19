@@ -102,7 +102,7 @@ private class StartMigreringTest(
         every { repository.lagreOpplysninger(any(), any()) } just Runs
         every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any()) } just Runs
         every { repository.markereOpplysningerSomMigrert(any(), any()) } just Runs
-        StartMigreringMottak(
+        MigreringStartetMottak(
             rapidsConnection = rapid,
             migreringMediator = mediator,
         )
