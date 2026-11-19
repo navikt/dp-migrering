@@ -108,6 +108,28 @@ class MigreringRepositoryPostgres(
         }
     }
 
+    override fun hentOpplysning(
+        migreringId: UUID,
+        opplysningId: UUID,
+    ): Opplysning<*>? =
+        databaseSession.session { session ->
+            session.run(
+                queryOf(
+                    //language=postgresql
+                    statement =
+                        """
+                        SELECT opplysning
+                        FROM migrering_opplysninger
+                        WHERE migrering_id = :migrering_id AND opplysning_id = :opplysning_id
+                        """.trimIndent(),
+                    paramMap = mapOf("migrering_id" to migreringId, "opplysning_id" to opplysningId),
+                ).map { row ->
+                    val opplysningJson = row.string("opplysning")
+                    objectMapper.readValue(opplysningJson, Opplysning::class.java)
+                }.asSingle,
+            )
+        }
+
     override fun markereOpplysningerSomMigrert(
         migreringId: UUID,
         opplysninger: List<Opplysning<*>>,

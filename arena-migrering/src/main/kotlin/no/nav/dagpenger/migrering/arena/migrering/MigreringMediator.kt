@@ -29,6 +29,7 @@ import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringR
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.produsentMap
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -163,6 +164,15 @@ class MigreringMediator(
 
         withLoggingContext("migreringId" to melding.migreringId.toString()) {
             logger.info { "Mottok simulering resultat for migrering. Resultat: ${melding.simuleringResultat}" }
+
+            val (verifisert, ikkeVerifisert) =
+                melding.simuleringResultat
+                    .mapNotNull {
+                        produsentMap[it.uuid]?.verifiser(it, melding.migreringId, migreringRepository)
+                    }.partition { it.verifisert }
+
+            logger.info { "Verifisert opplysninger (${verifisert.size}): ${verifisert.map { it.navn }}" }
+            logger.warn { "Ikke verifisert opplysninger (${ikkeVerifisert.size}): ${ikkeVerifisert.map { it.navn }}" }
         }
     }
 

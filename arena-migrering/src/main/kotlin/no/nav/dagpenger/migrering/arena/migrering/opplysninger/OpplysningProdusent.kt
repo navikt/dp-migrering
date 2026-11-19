@@ -2,6 +2,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.prometheus.metrics.core.metrics.Counter
+import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -30,6 +31,12 @@ interface OpplysningProdusent<T : Any> {
     }
 
     suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>
+
+    fun verifiser(
+        opplysning: Opplysning<Any>,
+        migreringId: UUID,
+        repository: MigreringRepository,
+    ): OpplysningVerifisertResultat? = null
 
     fun vedManglendeOpplysning() {
         manglendeOpplysninger.labelValues(opplysningsId.toString(), opplysningsNavn, status.name).inc()

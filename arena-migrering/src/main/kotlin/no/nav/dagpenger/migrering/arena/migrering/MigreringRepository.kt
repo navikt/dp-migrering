@@ -14,6 +14,11 @@ interface MigreringRepository {
         opplysninger: List<Opplysning<*>>,
     )
 
+    fun hentOpplysning(
+        migreringId: UUID,
+        opplysningId: UUID,
+    ): Opplysning<*>?
+
     fun markereOpplysningerSomMigrert(
         migreringId: UUID,
         opplysninger: List<Opplysning<*>>,

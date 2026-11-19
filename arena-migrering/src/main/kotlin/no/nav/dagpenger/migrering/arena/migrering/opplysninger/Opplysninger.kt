@@ -1,5 +1,7 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
+import java.util.UUID
+
 object Opplysninger {
     val produsenter: List<OpplysningProdusent<*>> =
         listOf(
@@ -178,4 +180,5 @@ object Opplysninger {
             Sisteforbruksdato(),
         )
     val aktiveProdusenter: List<OpplysningProdusent<*>> = produsenter.filter { it.aktiv }
+    val produsentMap: Map<UUID, OpplysningProdusent<*>> = produsenter.associateBy { it.opplysningsId }
 }
