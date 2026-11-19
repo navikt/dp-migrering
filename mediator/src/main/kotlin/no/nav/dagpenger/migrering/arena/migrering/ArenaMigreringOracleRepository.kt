@@ -235,7 +235,7 @@ class ArenaMigreringOracleRepository(
                 AND    kb.objekt_id_grunnlag IN ( SELECT vedtak_id 
                                                   FROM   vedtak 
                                                   WHERE  sak_id = :sakId) 
-                group by kb.kvotetypekode;
+                group by kb.kvotetypekode
                 """.trimIndent(),
                 mapOf("sakId" to sakId),
             ) { row ->
