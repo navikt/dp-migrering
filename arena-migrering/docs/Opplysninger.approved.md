@@ -104,7 +104,7 @@
 |0194881f-9433-70e9-a85b-c246150c45d6|Omsorgspenger dagsats|Dummy|Fakta|true|
 |0194881f-9433-70e9-a85b-c246150c45cf|Omsorgspenger etter lovens kapittel 9|Dummy|Fakta|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc74|Ønsker dagpenger fra dato|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a75f|Ønsket arbeidstid|Dummy|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a75f|Ønsket arbeidstid|Alfa|Fakta|true|
 |0194881f-940b-76ff-acf5-ba7bcb367237|Bruker oppfyller kravet til alder|Alfa|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdd|Oppfyller kravet til å være arbeidsfør|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdf|Oppfyller kravet til å ta ethvert arbeid|Dummy|Resultat|true|
@@ -156,7 +156,7 @@
 |0194881f-9444-7a73-a458-0af81c034d88|Skal permittert fra fiskeindustrien vurderes|Alfa|Fakta|true|
 |0194ff86-a035-7eb0-9c60-21899f7cc0c1|Skal reell arbeidssøker vurderes|Alfa|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a2d|Skal samordnes med ytelser utenfor folketrygden|Dummy|Resultat|true|
-|0194881f-91d1-7df2-ba1d-4533f37fcc77|søknadId|Dummy|Fakta|true|
+|0194881f-91d1-7df2-ba1d-4533f37fcc77|søknadId|Dummy|Fakta|false|
 |0194881f-91d1-7df2-ba1d-4533f37fcc73|Søknadsdato|Dummy|Fakta|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc75|Søknadstidspunkt|Dummy|Fakta|true|
 |019ae986-43bb-7529-af23-9b3d309501eb|Sum av fastsatt vanlig arbeidstid|Dummy|Resultat|true|
