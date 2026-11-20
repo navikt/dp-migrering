@@ -19,7 +19,7 @@ dependencies {
     implementation(project(path = ":uuid-v7"))
 
     implementation(libs.bundles.jackson)
-    implementation("no.nav.dagpenger:stpeter-plugin:2026.11.11-14.08.cc755d392004")
+    implementation("no.nav.dagpenger:stpeter-plugin:2026.11.19-18.47.94546ad11953")
     implementation(libs.rapids.and.rivers)
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
