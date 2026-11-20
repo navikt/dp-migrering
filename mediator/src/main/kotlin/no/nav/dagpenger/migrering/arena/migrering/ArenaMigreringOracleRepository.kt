@@ -320,7 +320,7 @@ class ArenaMigreringOracleRepository(
                                                                     JSON_OBJECT( 'årMåned' VALUE aar_mnd
                                                                                , 'klassifiserteInntekter' VALUE JSON_ARRAY(
                                                                                    JSON_OBJECT( 'beløp'   VALUE TO_NUMBER(belop, '999999999.99')
-                                                                                              , 'inntektKlasse' VALUE 'DAGPENGER' ))
+                                                                                              , 'inntektKlasse' VALUE 'ARBEIDSINNTEKT' ))
                                                                                , 'harAvvik' VALUE NULL ) )
                                                            FROM   ( SELECT intp.vedtakverdi aar_mnd, belo.vedtakverdi belop
                                                                     FROM   vedtakfakta intp
