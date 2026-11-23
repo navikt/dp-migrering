@@ -54,7 +54,7 @@ dependencies {
     testImplementation(libs.mock.oauth2.server)
     testImplementation("io.ktor:ktor-server-test-host-jvm:${libs.versions.ktor.get()}")
     testImplementation("io.ktor:ktor-client-content-negotiation:${libs.versions.ktor.get()}")
-    testImplementation("com.approvaltests:approvaltests:31.1.0")
+    testImplementation("com.approvaltests:approvaltests:31.3.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
     testImplementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
     testImplementation("org.testcontainers:testcontainers-oracle-free:2.0.5")
