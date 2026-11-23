@@ -29,11 +29,17 @@ class BruttoArbeidsinntekt : OpplysningProdusent<InntektV1> {
         return dpSakInntekt?.harSammeInnholdSom(arenaInntekt) ?: false
     }
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<InntektV1> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<InntektV1> {
+        val fakta = kontekst.sakTilMigrering.inntekt
+
+        if (fakta == null) {
+            vedManglendeOpplysning()
+        }
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = null,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = fakta,
+            gyldigFraOgMed = fakta?.hentetTidspunkt?.toLocalDate(),
             uuid = opplysningsId,
         )
+    }
 }

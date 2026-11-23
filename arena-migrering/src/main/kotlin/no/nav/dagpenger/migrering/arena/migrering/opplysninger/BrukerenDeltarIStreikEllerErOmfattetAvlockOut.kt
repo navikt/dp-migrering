@@ -33,10 +33,11 @@ class BrukerenDeltarIStreikEllerErOmfattetAvlockOut : OpplysningProdusent<Boolea
         )
     }
 
+    // I Arena er J at bruker ikke deltar i streik eller er omfattet av lock-out. N blir defor true her da vi svarer på om brukeren er omfattet,
     private fun verdi(fakta: String?): Boolean? =
         when (fakta) {
-            "J" -> true
-            "N" -> false
+            "N" -> true
+            "J" -> false
             else -> null
         }
 }
