@@ -6,11 +6,12 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifyOrder
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringAvbruttMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringAvbruttMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
+import java.time.LocalDate
 import java.util.UUID
 
 class MigreringAvbruttMottakSpec :
@@ -52,7 +53,7 @@ class MigreringAvbruttMottakSpec :
             } returns Unit
 
             testRapid.sendTestMessage(
-                MigreringAvbruttMelding
+                MigreringAvbruttMeldingV1
                     .ny(
                         migreringId = UUID.randomUUID(),
                         sakId = 123456,
@@ -63,6 +64,8 @@ class MigreringAvbruttMottakSpec :
                                 "kode" to "MANGELFULLE_OPPLYSNINGER",
                                 "beskrivelse" to "Mangler opplysninger om inntekt",
                             ),
+                        migreringTidspunkt = LocalDate.now(),
+                        simulering = false,
                     ).toJson(),
             )
 

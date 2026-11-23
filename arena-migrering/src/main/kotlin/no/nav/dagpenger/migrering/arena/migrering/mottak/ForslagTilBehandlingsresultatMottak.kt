@@ -9,7 +9,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
@@ -52,7 +52,7 @@ class ForslagTilBehandlingsresultatMottak(
                 "migreringId" to packet["behandletHendelse"]["id"].asString(),
             ) {
                 logger.info { "Mottok melding om forslag til behandlingsresultat for migrering" }
-                migreringMediator.håndter(ForslagTilBehandlingsresultatMelding(packet))
+                migreringMediator.håndter(ForslagTilBehandlingsresultatMeldingV1.fra(packet))
             }
         }
     }

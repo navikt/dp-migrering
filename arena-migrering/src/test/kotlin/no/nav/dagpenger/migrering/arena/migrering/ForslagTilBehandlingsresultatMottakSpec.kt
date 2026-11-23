@@ -1,9 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
-import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
-import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
-import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.Called
@@ -15,12 +12,14 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.Hendelse
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringAvbruttMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.ForslagTilBehandlingsresultatMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
-import tools.jackson.databind.json.JsonMapper
-import java.util.UUID
+import no.nav.dagpenger.uuid.UUIDv7
+import java.time.LocalDate
 
 class ForslagTilBehandlingsresultatMottakSpec :
     StringSpec({
@@ -36,30 +35,21 @@ class ForslagTilBehandlingsresultatMottakSpec :
         "lagrer forslaget som hendelse for riktig migrering uten å markere behandlingen som opprettet" {
             val test = ForslagTilBehandlingsresultatTest()
             val melding = test.melding()
-            val mapper = JsonMapper.builder().build()
-            val forventet = mapper.readTree(melding)
-            val meldingId = UUID.fromString(forventet["@id"].asString())
 
-            test.rapid.sendTestMessage(melding)
+            test.rapid.sendTestMessage(melding.toJson())
 
             verify(exactly = 1) {
                 test.repository.lagreMigreringHendelse(
-                    migreringId = test.migreringId,
-                    meldingId = meldingId,
-                    hendelse = "FORSLAG_TIL_BEHANDLINGSRESULTAT",
-                    ident = "testident",
+                    migreringId = melding.migreringId,
+                    meldingId = melding.id,
+                    hendelse = melding.navn,
+                    ident = melding.ident,
                     jsonData = any(),
                     opprinnelse = Hendelse.Opprinnelse.Ekstern.name,
-                    tidspunkt = forventet["@opprettet"].asLocalDateTime(),
+                    tidspunkt = melding.opprettet,
                 )
             }
-            val lagret = mapper.readTree(test.lagretHendelse.captured)
-            forventet
-                .properties()
-                .filterNot { it.key in setOf("system_read_count", "system_participating_services") }
-                .forEach { (felt, verdi) ->
-                    lagret[felt].toString() shouldEqualJson verdi.toString()
-                }
+
             test.rapid.inspektør.size shouldBe 0
             confirmVerified(test.repository)
         }
@@ -67,7 +57,18 @@ class ForslagTilBehandlingsresultatMottakSpec :
         "ignorerer andre hendelsesnavn" {
             val test = ForslagTilBehandlingsresultatTest()
 
-            test.rapid.sendTestMessage(test.melding(eventName = "behandling_opprettet"))
+            test.rapid.sendTestMessage(
+                MigreringAvbruttMeldingV1
+                    .ny(
+                        ident = "test-ident",
+                        migreringId = UUIDv7.ny(),
+                        sakId = 1,
+                        initiertAv = "test-initiator",
+                        migreringTidspunkt = LocalDate.now(),
+                        simulering = false,
+                        årsak = mapOf("årsak" to "test-årsak"),
+                    ).toJson(),
+            )
 
             verify { test.repository wasNot Called }
             test.rapid.inspektør.size shouldBe 0
@@ -76,28 +77,27 @@ class ForslagTilBehandlingsresultatMottakSpec :
         "ignorerer forslag som ikke gjelder migrering" {
             val test = ForslagTilBehandlingsresultatTest()
 
-            test.rapid.sendTestMessage(test.melding(hendelseType = "Søknad"))
+            test.rapid.sendTestMessage(
+                test
+                    .melding()
+                    .copy(
+                        behandletHendelse =
+                            ForslagTilBehandlingsresultatMeldingV1.BehandletHendelse(
+                                id = UUIDv7.ny(),
+                                type = "AnnenType",
+                            ),
+                    ).toJson(),
+            )
 
             verify { test.repository wasNot Called }
             test.rapid.inspektør.size shouldBe 0
-        }
-
-        listOf("behandletHendelse", "behandletHendelse.type", "behandletHendelse.id", "behandlingId").forEach { felt ->
-            "ignorerer meldinger uten $felt" {
-                val test = ForslagTilBehandlingsresultatTest()
-
-                test.rapid.sendTestMessage(test.melding(utenFelt = felt))
-
-                verify { test.repository wasNot Called }
-                test.rapid.inspektør.size shouldBe 0
-            }
         }
 
         "behandler ikke meldingen når start migrering er deaktivert" {
             val test = ForslagTilBehandlingsresultatTest()
             skruAvFeatures()
 
-            test.rapid.sendTestMessage(test.melding())
+            test.rapid.sendTestMessage(test.melding().toJson())
 
             verify { test.repository wasNot Called }
             test.rapid.inspektør.size shouldBe 0
@@ -107,8 +107,6 @@ class ForslagTilBehandlingsresultatMottakSpec :
 private class ForslagTilBehandlingsresultatTest {
     val rapid = TestRapid()
     val repository = mockk<MigreringRepository>()
-    val migreringId = UUID.randomUUID()
-    val behandlingId = UUID.randomUUID()
     val lagretHendelse = slot<String>()
 
     init {
@@ -135,23 +133,15 @@ private class ForslagTilBehandlingsresultatTest {
         )
     }
 
-    fun melding(
-        eventName: String = "forslag_til_behandlingsresultat",
-        hendelseType: String = "Migrering",
-        utenFelt: String? = null,
-    ): String =
-        JsonMessage
-            .newMessage(
-                eventName,
-                mapOf(
-                    "ident" to "testident",
-                    "behandlingId" to behandlingId.toString(),
-                    "behandletHendelse" to
-                        mapOf(
-                            "type" to hendelseType,
-                            "id" to migreringId.toString(),
-                        ).filterKeys { "behandletHendelse.$it" != utenFelt },
-                    "resultat" to mapOf("utfall" to "Innvilget"),
-                ).filterKeys { it != utenFelt },
-            ).toJson()
+    fun melding() =
+        ForslagTilBehandlingsresultatMeldingV1.ny(
+            ident = "test-ident",
+            behandlingId = UUIDv7.ny(),
+            behandletHendelse =
+                ForslagTilBehandlingsresultatMeldingV1.BehandletHendelse(
+                    id = UUIDv7.ny(),
+                    type = "Migrering",
+                ),
+            opplysninger = emptyList(),
+        )
 }

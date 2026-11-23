@@ -11,6 +11,7 @@ import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringKontrollResultatMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringKontrollResultatMeldingV1
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
@@ -45,9 +46,9 @@ class MigreringSimuleringKontrollResultatMottak(
             withLoggingContext(
                 "migreringId" to packet["migreringId"].asString(),
             ) {
-                logger.info { "Mottok ${MigreringSimuleringKontrollResultatMelding.EVENT_NAME} melding" }
+                logger.info { "Mottok ${MigreringSimuleringKontrollResultatMeldingV1.EVENT_NAME} melding" }
                 migreringMediator.håndter(
-                    MigreringSimuleringKontrollResultatMelding(packet),
+                    MigreringSimuleringKontrollResultatMeldingV1.fra(packet),
                 )
             }
         }

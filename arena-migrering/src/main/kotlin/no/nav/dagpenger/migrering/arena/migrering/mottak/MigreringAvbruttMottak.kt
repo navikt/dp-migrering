@@ -11,6 +11,7 @@ import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringAvbruttMeldingV1
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
@@ -49,7 +50,7 @@ class MigreringAvbruttMottak(
             ) {
                 logger.info { "Mottok melding om avbrutt migrering" }
                 migreringMediator.håndter(
-                    MigreringAvbruttMelding(packet),
+                    MigreringAvbruttMeldingV1.fra(packet),
                     context,
                 )
             }
