@@ -104,7 +104,7 @@
 |0194881f-9433-70e9-a85b-c246150c45d6|Omsorgspenger dagsats|Dummy|Fakta|true|
 |0194881f-9433-70e9-a85b-c246150c45cf|Omsorgspenger etter lovens kapittel 9|Dummy|Fakta|true|
 |0194881f-91d1-7df2-ba1d-4533f37fcc74|Ønsker dagpenger fra dato|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a75f|Ønsket arbeidstid|Dummy|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a75f|Ønsket arbeidstid|Alfa|Fakta|true|
 |0194881f-940b-76ff-acf5-ba7bcb367237|Bruker oppfyller kravet til alder|Alfa|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdd|Oppfyller kravet til å være arbeidsfør|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdf|Oppfyller kravet til å ta ethvert arbeid|Dummy|Resultat|true|
