@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.InntektV1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.harSammeInnholdSom
@@ -10,11 +9,7 @@ import java.util.UUID
 class BruttoArbeidsinntekt : OpplysningProdusent<InntektV1> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
-
-    companion object {
-        val logger = KotlinLogging.logger {}
-    }
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9413-77ce-92ec-d29700f04245")
     override val opplysningsNavn: String = "Brutto arbeidsinntekt"

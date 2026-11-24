@@ -3,9 +3,10 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
+// Arena vet ikke dette 🤪
 class OppfyllerVilkaretOmTapAvArbeidsinntektOgArbeidstid : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = true
+    override val aktiv: Boolean = false
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
     override val opplysningsId: UUID = UUID.fromString("0194881f-9435-72a8-b1ce-9575cbc2a76f")
     override val opplysningsNavn: String = "Oppfyller vilkåret om tap av arbeidsinntekt og arbeidstid"

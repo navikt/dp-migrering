@@ -13,7 +13,7 @@ class Inntektsopplysninger : OpplysningProdusent<InntektV1> {
     override val aktiv: Boolean = true
     override val opplysningsId: UUID = UUID.fromString("0194881f-9413-77ce-92ec-d29700f04244")
     override val opplysningsNavn: String = "Inntektsopplysninger"
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     override fun sammenlignVerdier(
         arenaVerdi: Any?,

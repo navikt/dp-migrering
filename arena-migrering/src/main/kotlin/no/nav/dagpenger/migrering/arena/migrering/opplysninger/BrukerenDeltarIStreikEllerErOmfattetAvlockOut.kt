@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -8,11 +7,7 @@ import java.util.UUID
 class BrukerenDeltarIStreikEllerErOmfattetAvlockOut : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
-
-    companion object {
-        val logger = KotlinLogging.logger {}
-    }
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-91df-746a-a8ac-4a6b2b30685d")
     override val opplysningsNavn: String = "Brukeren deltar i streik eller er omfattet av lock-out"

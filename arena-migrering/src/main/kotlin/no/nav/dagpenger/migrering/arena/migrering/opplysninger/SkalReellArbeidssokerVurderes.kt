@@ -1,24 +1,17 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-// Arena: TRUE
+// Denne skal sendes som true fra Arena
 class SkalReellArbeidssokerVurderes : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
-
-    companion object {
-        val logger = KotlinLogging.logger {}
-    }
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     override val opplysningsId: UUID = UUID.fromString("0194ff86-a035-7eb0-9c60-21899f7cc0c1")
     override val opplysningsNavn: String = "Skal reell arbeidssøker vurderes"
 
-// Forventer at den skal være true ? Feil ordlyd
-    // Denne skal alltid være true i Arena.
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,

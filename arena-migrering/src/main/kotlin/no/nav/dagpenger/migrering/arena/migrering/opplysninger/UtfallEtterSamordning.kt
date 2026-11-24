@@ -13,7 +13,7 @@ class UtfallEtterSamordning : OpplysningProdusent<Boolean> {
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = false,
+            verdi = true,
             gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )

@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -8,20 +7,24 @@ import java.util.UUID
 class AntallStonadsuker : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
-
-    companion object {
-        val logger = KotlinLogging.logger {}
-    }
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-943d-77a7-969c-147999f15456")
     override val opplysningsNavn: String = "Antall stønadsuker"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
+        val fakta =
+            kontekst.sakTilMigrering.vedtakfakta.firstOrNull { it.kode == "PER" }
+
+        if (fakta == null) {
+            vedManglendeOpplysning()
+        }
+
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = 104,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = fakta?.verdi?.toInt(),
+            gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
 }

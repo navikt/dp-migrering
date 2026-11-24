@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -10,10 +9,6 @@ class AntallUkerMedSanksjon : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
-
-    companion object {
-        val logger = KotlinLogging.logger {}
-    }
 
     override val opplysningsId: UUID = UUID.fromString("019e82fd-f97c-7395-be5c-7de504871871")
     override val opplysningsNavn: String = "Antall uker med sanksjon"
