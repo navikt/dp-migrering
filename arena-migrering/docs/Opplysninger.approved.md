@@ -142,7 +142,7 @@
 |0194881f-91d1-7df2-ba1d-4533f37fcc76|Prøvingsdato|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877be2|Reell arbeidssøker|Verifisert|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877be0|Registrert som arbeidssøker|Verifisert|Fakta|true|
-|0194881f-9444-7a73-a458-0af81c034d8b|Rettighetstype|Dummy|Resultat|true|
+|0194881f-9444-7a73-a458-0af81c034d8b|Rettighetstype|Alfa|Resultat|true|
 |0194881f-9428-74d5-b160-f63a4c61a250|Er samordning utført|Verifisert|Resultat|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86eb|Samordnet dagsats uten barnetillegg|Alfa|Resultat|true|
 |019d007f-8696-7409-bd51-f4fbfc4babb4|Siste antall dager som gjenstår|Dummy|Fakta|true|
