@@ -111,7 +111,7 @@
 |019c092a-7759-700a-9f7d-f4415b91e8db|Oppfyller kravet til framsatt søknad|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bd8|Bruker oppfyller kravet til heltid- og deltidsarbeid|Verifisert|Resultat|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54d|Oppfyller kravet til medlemskap|Verifisert|Resultat|true|
-|0194881f-9413-77ce-92ec-d29700f0424c|Oppfyller kravet til minsteinntekt|Dummy|Resultat|true|
+|0194881f-9413-77ce-92ec-d29700f0424c|Oppfyller kravet til minsteinntekt|Alfa|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdb|Bruker oppfyller kravet til mobilitet|Verifisert|Resultat|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54b|Oppfyller kravet til opphold i Norge eller unntak|Dummy|Resultat|true|
 |01997b70-6e6e-702a-a296-18ae5fb9621d|Oppfyller kravet til tapt arbeidstid i perioden|Dummy|Resultat|true|
