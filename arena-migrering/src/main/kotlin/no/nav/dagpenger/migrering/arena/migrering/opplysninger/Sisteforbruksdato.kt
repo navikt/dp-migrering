@@ -3,7 +3,6 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.time.LocalDate
-import java.time.YearMonth
 import java.util.UUID
 
 class Sisteforbruksdato : OpplysningProdusent<LocalDate> {
@@ -13,18 +12,11 @@ class Sisteforbruksdato : OpplysningProdusent<LocalDate> {
     override val rolle: OpplysningProdusent.Rolle = OpplysningProdusent.Rolle.Fakta
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> {
-        val vedtakfakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "INTP1SLUTT" }
-        return Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<LocalDate> =
+        Opplysning(
             navn = opplysningsNavn,
-            verdi = verdi(vedtakfakta?.verdi),
-            gyldigFraOgMed = vedtakfakta?.gyldigFra,
+            verdi = kontekst.opprettetTidspunkt.toLocalDate().minusDays(3),
+            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
-    }
-
-    private fun verdi(verdi: String?): LocalDate? =
-        verdi?.let {
-            YearMonth.parse(it).atEndOfMonth()
-        }
 }
