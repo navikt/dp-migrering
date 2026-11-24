@@ -14,39 +14,89 @@ class ArenaMigreringOracleRepository(
         private val logger = KotlinLogging.logger {}
     }
 
-    override fun hentVedtakfakta(sakId: Int): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> =
-        select(
-            // language=oracle
-            """
-            SELECT vedtakfaktakode
-                 , vedtakverdi
-                 , mod_dato
-            FROM   vedtakfakta
-            WHERE  (vedtak_id, vedtakfaktakode) IN (
-                     SELECT FIRST_VALUE( vefa.vedtak_id ) OVER ( PARTITION BY vefa.vedtakfaktakode ORDER BY vedt.fra_dato DESC ) vedtak_id
-                          , vefa.vedtakfaktakode
-                     FROM   vedtak vedt
-                     JOIN   vedtakfakta vefa ON vefa.vedtak_id = vedt.vedtak_id
-                     WHERE  vedt.sak_id = :sakId
-                     AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
-                     AND    vedt.utfallkode = 'JA'
-                     AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
-                     AND    vedt.vedtaktypekode IN ('O','E','G','S')
-                     AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
-                     AND    vefa.vedtakverdi IS NOT NULL
-                   )
-            AND    vedtakverdi IS NOT NULL
-            """.trimIndent(),
-            mapOf("sakId" to sakId),
-        ) { row ->
-            ArenaSakMigrering.ArenaVedtakfaktaMigrering(
-                kode = row.string("vedtakfaktakode"),
-                verdi = row.string("vedtakverdi"),
-                gyldigFra = row.localDate("mod_dato"),
-            )
-        }
+    override fun hentVedtakfakta(
+        sakId: Int,
+        kunSisteVedtakfakta: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> {
+        val vedtakfaktaParams = kunSisteVedtakfakta.mapIndexed { index, _ -> ":kunSisteVedtakfakta$index" }
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT vedtakfaktakode
+                     , vedtakverdi
+                     , mod_dato
+                FROM   vedtakfakta
+                WHERE  (vedtak_id, vedtakfaktakode) IN (
+                         SELECT FIRST_VALUE( vefa.vedtak_id ) OVER ( PARTITION BY vefa.vedtakfaktakode ORDER BY vedt.fra_dato DESC ) vedtak_id
+                              , vefa.vedtakfaktakode
+                         FROM   vedtak vedt
+                         JOIN   vedtakfakta vefa ON vefa.vedtak_id = vedt.vedtak_id
+                         WHERE  vedt.sak_id = :sakId
+                         AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                         AND    vedt.utfallkode = 'JA'
+                         AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
+                         AND    vedt.vedtaktypekode IN ('O','E','G','S')
+                         AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
+                         AND    vefa.vedtakverdi IS NOT NULL
+                         AND    vefa.vedtakfaktakode  NOT IN (${vedtakfaktaParams.joinToString(", ")})
+                       )
+                AND    vedtakverdi IS NOT NULL
+                """.trimIndent(),
+                mapOf(
+                    "sakId" to sakId,
+                ) + kunSisteVedtakfakta.mapIndexed { index, vedtakfakta -> "kunSisteVedtakfakta$index" to vedtakfakta },
+            ) { row ->
+                ArenaSakMigrering.ArenaVedtakfaktaMigrering(
+                    kode = row.string("vedtakfaktakode"),
+                    verdi = row.string("vedtakverdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
 
-    override fun hentVilkaarvurdering(sakId: Int): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
+    override fun hentSisteVedtakfakta(
+        sakId: Int,
+        kunSisteVedtakfakta: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering> {
+        val vedtakfaktaParams = kunSisteVedtakfakta.mapIndexed { index, _ -> ":kunSisteVedtakfakta$index" }
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT vefa.vedtakfaktakode
+                     , vefa.vedtakverdi
+                     , vefa.mod_dato
+                FROM   vedtak vedt
+                JOIN   vedtakfakta vefa ON vefa.vedtak_id = vedt.vedtak_id
+                WHERE  vedt.sak_id = :sakId
+                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                AND    vedt.utfallkode = 'JA'
+                AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
+                AND    vedt.vedtaktypekode IN ('O','E','G')
+                AND    vedt.vedtakstatuskode= 'IVERK'
+                AND    vefa.vedtakverdi IS NOT NULL
+                AND    vefa.vedtakfaktakode  IN (${vedtakfaktaParams.joinToString(", ")})
+                """.trimIndent(),
+                mapOf(
+                    "sakId" to sakId,
+                ) + kunSisteVedtakfakta.mapIndexed { index, vedtakfakta -> "kunSisteVedtakfakta$index" to vedtakfakta },
+            ) { row ->
+                ArenaSakMigrering.ArenaVedtakfaktaMigrering(
+                    kode = row.string("vedtakfaktakode"),
+                    verdi = row.string("vedtakverdi"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    override fun hentVilkaarvurdering(
+        sakId: Int,
+        kunSisteVilkaar: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
+        val vilkaarParams = kunSisteVilkaar.mapIndexed { index, _ -> ":kunSisteVilkaar$index" }
         val select =
             select(
                 // language=oracle
@@ -66,9 +116,48 @@ class ArenaMigreringOracleRepository(
                          AND    vedt.vedtaktypekode IN ('O','E','G','S')
                          AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
                          AND    vilk.vilkaarstatuskode IN ('J', 'N')
+                         AND    vilk.vilkaarkode NOT IN (${vilkaarParams.joinToString(", ")})
                        )
                 """.trimIndent(),
-                mapOf("sakId" to sakId),
+                mapOf(
+                    "sakId" to sakId,
+                ) + kunSisteVilkaar.mapIndexed { index, vilkaar -> "kunSisteVilkaar$index" to vilkaar },
+            ) { row ->
+                ArenaSakMigrering.ArenaVilkaarMigrering(
+                    kode = row.string("vilkaarkode"),
+                    verdi = row.string("vilkaarstatuskode"),
+                    gyldigFra = row.localDate("mod_dato"),
+                )
+            }
+        return select
+    }
+
+    override fun hentSisteVilkaarvurdering(
+        sakId: Int,
+        kunSisteVilkaar: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVilkaarMigrering> {
+        val vilkaarParams = kunSisteVilkaar.mapIndexed { index, _ -> ":kunSisteVilkaar$index" }
+        val select =
+            select(
+                // language=oracle
+                """
+                SELECT vilk.vilkaarkode
+                     , vilk.vilkaarstatuskode
+                     , vilk.mod_dato
+                FROM   vedtak vedt
+                JOIN   vilkaarvurdering vilk ON vilk.vedtak_id = vedt.vedtak_id
+                WHERE  vedt.sak_id = :sakId
+                AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
+                AND    vedt.utfallkode = 'JA'
+                AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
+                AND    vedt.vedtaktypekode IN ('O','E','G')
+                AND    vedt.vedtakstatuskode IN ('IVERK')
+                AND    vilk.vilkaarstatuskode IN ('J', 'N')
+                AND    vilk.vilkaarkode IN (${vilkaarParams.joinToString(", ")})
+                """.trimIndent(),
+                mapOf(
+                    "sakId" to sakId,
+                ) + kunSisteVilkaar.mapIndexed { index, vilkaar -> "kunSisteVilkaar$index" to vilkaar },
             ) { row ->
                 ArenaSakMigrering.ArenaVilkaarMigrering(
                     kode = row.string("vilkaarkode"),
@@ -145,14 +234,14 @@ class ArenaMigreringOracleRepository(
                 """
                 SELECT 'RETTIGHETKODE' AS kolonne
                      , rettighetkode
-                     , mod_dato
+                     , fra_dato
                 FROM   vedtak vedt
                 WHERE  vedt.sak_id = :sakId
                 AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
                 AND    vedt.utfallkode = 'JA'
-                AND    vedt.fra_dato <= NVL(vedt.til_dato, vedt.fra_dato)
-                AND    vedt.vedtaktypekode IN ('O','E','G','S')
-                AND    vedt.vedtakstatuskode IN ('IVERK', 'AVSLU')
+                AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
+                AND    vedt.vedtaktypekode IN ('O','E','G')
+                AND    vedt.vedtakstatuskode = 'IVERK'
                 ORDER BY vedt.til_dato DESC NULLS FIRST,
                          vedt.fra_dato DESC,
                          vedt.mod_dato DESC
@@ -163,7 +252,7 @@ class ArenaMigreringOracleRepository(
                 ArenaSakMigrering.ArenaRetttighetstypeMigrering(
                     kode = row.string("kolonne"),
                     verdi = row.string("rettighetkode"),
-                    gyldigFra = row.localDate("mod_dato"),
+                    gyldigFra = row.localDate("fra_dato"),
                 )
             }
         return select
@@ -368,8 +457,7 @@ class ArenaMigreringOracleRepository(
             AND   vedt.vedtaktypekode IN ('O','E','G')
             AND   vedt.vedtakstatuskode = 'IVERK'
             AND   vedt.utfallkode = 'JA'
-            AND   vedt.fra_dato <= nvl(vedt.til_dato, vedt.fra_dato)
-            AND   NVL( vedt.til_dato, SYSDATE ) >= SYSDATE
+            AND   SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
             """.trimIndent(),
             mapOf("sakId" to sakId),
         ) { row ->
@@ -399,8 +487,10 @@ class ArenaMigreringOracleRepository(
                 AND    EXISTS ( SELECT 1 
                                 FROM   vedtak vedt2 
                                 WHERE  vedt2.sak_id = vedt.sak_id
-                                AND    vedt2.rettighetkode='DAGO'
+                                AND    vedt2.rettighetkode IN ('DAGO','PERM','FISK','LONN')
                                 AND    vedt2.vedtakstatuskode = 'IVERK'
+                                AND    vedt2.utfallkode = 'JA'
+                                AND    vedt2.vedtaktypekode IN ('O','E','G')
                                 AND    SYSDATE BETWEEN vedt2.fra_dato AND NVL( vedt2.til_dato, SYSDATE )
                                 AND    vedt2.aktfasekode='EOS'
                              )
@@ -425,7 +515,7 @@ class ArenaMigreringOracleRepository(
                 WHERE  vedt.sak_id = :sakId
                 AND    vedt.rettighetkode IN ('DAGO','PERM','FISK','LONN')
                 AND    vedt.utfallkode = 'JA'
-                AND    vedt.vedtaktypekode IN ('O','E','G','S')
+                AND    vedt.vedtaktypekode IN ('O','E','G')
                 AND    vedt.vedtakstatuskode IN ('IVERK')
                 AND    SYSDATE BETWEEN vedt.fra_dato AND NVL( vedt.til_dato, SYSDATE )
             """.trimIndent(),

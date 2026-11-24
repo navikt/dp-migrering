@@ -206,6 +206,8 @@ private class StartMigreringTest(
             gjenstaendeTeller = emptyList(),
             initiellTeller = emptyList(),
             aktfase = emptyList(),
+            sisteVedtakfakta = emptyList(),
+            sisteVilkaarVurdering = emptyList(),
         )
 
     init {

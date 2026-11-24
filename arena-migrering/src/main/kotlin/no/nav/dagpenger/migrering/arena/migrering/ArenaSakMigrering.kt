@@ -18,6 +18,8 @@ data class ArenaSakMigrering(
     val gjenstaendeTeller: List<ArenaGjenstaendeTellerMigrering>,
     val initiellTeller: List<ArenaInitiellTellerMigrering>,
     val aktfase: List<ArenaAktfaseMigrering>,
+    val sisteVilkaarVurdering: List<ArenaVilkaarMigrering>,
+    val sisteVedtakfakta: List<ArenaVedtakfaktaMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,
