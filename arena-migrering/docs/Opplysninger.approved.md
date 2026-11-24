@@ -72,7 +72,7 @@
 |01a01e21-17ce-70c4-aac1-d25c30ecfac9|Har gitt alle nødvendige opplysninger?|Dummy|Resultat|true|
 |019bc5f8-fdf3-7240-afaf-52c0486eddc5|Har gitt fullstendige og riktige opplysninger|Dummy|Resultat|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a75e|Har krav på lønn fra arbeidsgiver|Dummy|Fakta|true|
-|01990a09-0eab-7957-b88f-14484a50e194|Har løpende rett på dagpenger|Dummy|Resultat|true|
+|01990a09-0eab-7957-b88f-14484a50e194|Har løpende rett på dagpenger|Alfa|Resultat|true|
 |019a81bf-50e1-7f1d-b23b-f30265b16042|Har meldt seg i tide|Dummy|Resultat|true|
 |01956ab8-126c-7636-803e-a5d87eda2015|Har meldt seg via meldekort|Dummy|Resultat|true|
 |0194881f-9444-7a73-a458-0af81c034d85|Har rett til ordinære dagpenger gjennom arbeidsforhold|Verifisert|Fakta|true|
