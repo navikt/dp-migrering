@@ -25,13 +25,11 @@ import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringOpplysningerMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringKontrollResultat
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringKontrollResultatMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.produsentMap
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -164,32 +162,32 @@ class MigreringMediator(
     ) {
         melding.lagreMelding(migreringRepository)
 
-        val (verifisert, ikkeVerifisert) =
-            melding.simulerteOpplysninger
-                .mapNotNull {
-                    produsentMap[it.uuid]?.verifiser(it, melding.migreringId, migreringRepository)
-                }.partition { it.verifisert }
-
-        logger.info { "Verifisert opplysninger (${verifisert.size}): ${verifisert.map { it.navn }}" }
-        logger.warn { "Ikke verifisert opplysninger (${ikkeVerifisert.size}): ${ikkeVerifisert.map { it.navn }}" }
-        MigreringSimuleringKontrollResultatMelding
-            .fra(
-                MigreringSimuleringKontrollResultat(
-                    migreringId = melding.migreringId,
-                    ident = melding.ident,
-                    sakId = melding.sakId,
-                    initiertAv = melding.initiertAv,
-                    migreringTidspunkt = melding.migreringTidspunkt,
-                    simulering = melding.simulering,
-                    verifisert = verifisert,
-                    ikkeVerifisert = ikkeVerifisert,
-                ),
-            ).also {
-                publiserMelding(
-                    context = context,
-                    melding = it,
-                )
-            }
+//        val (verifisert, ikkeVerifisert) =
+//            melding.simulerteOpplysninger
+//                .mapNotNull {
+//                    produsentMap[it.uuid]?.verifiser(it, melding.migreringId, migreringRepository)
+//                }.partition { it.verifisert }
+//
+//        logger.info { "Verifisert opplysninger (${verifisert.size}): ${verifisert.map { it.navn }}" }
+//        logger.warn { "Ikke verifisert opplysninger (${ikkeVerifisert.size}): ${ikkeVerifisert.map { it.navn }}" }
+//        MigreringSimuleringKontrollResultatMelding
+//            .fra(
+//                MigreringSimuleringKontrollResultat(
+//                    migreringId = melding.migreringId,
+//                    ident = melding.ident,
+//                    sakId = melding.sakId,
+//                    initiertAv = melding.initiertAv,
+//                    migreringTidspunkt = melding.migreringTidspunkt,
+//                    simulering = melding.simulering,
+//                    verifisert = verifisert,
+//                    ikkeVerifisert = ikkeVerifisert,
+//                ),
+//            ).also {
+//                publiserMelding(
+//                    context = context,
+//                    melding = it,
+//                )
+//            }
     }
 
     @WithSpan("migrering.startet")
