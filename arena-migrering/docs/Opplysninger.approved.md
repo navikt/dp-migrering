@@ -125,7 +125,7 @@
 |0194881f-943f-78d9-b874-00a4944c54f1|Oppfyller vilkåret om å ikke motta andre fulle ytelser|Dummy|Resultat|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a76f|Oppfyller vilkåret om tap av arbeidsinntekt og arbeidstid|Dummy|Resultat|false|
 |0194881f-9435-72a8-b1ce-9575cbc2a76e|Oppfyller vilkåret om tap av arbeidstid|Dummy|Resultat|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a761|Oppfyller vilkåret til tap av arbeidsinntekt|Dummy|Resultat|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a761|Oppfyller vilkåret til tap av arbeidsinntekt|Alfa|Resultat|true|
 |0194881f-942e-7cb0-aa59-05ea449d88e0|Oppgitt andre ytelser utenfor NAV|Dummy|Fakta|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54e|Bruker har opphold i Norge|Verifisert|Resultat|true|
 |0194881f-9433-70e9-a85b-c246150c45d7|Opplæringspenger dagsats|Dummy|Fakta|true|
