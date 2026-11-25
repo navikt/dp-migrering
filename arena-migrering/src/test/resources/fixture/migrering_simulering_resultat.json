@@ -1,0 +1,2088 @@
+{
+  "@id": "e1140566-b18d-46fc-91c4-37b6d2055162",
+  "ident": "12345678909",
+  "sakId": 123,
+  "@opprettet": "2026-11-25T08:20:32.894214281",
+  "initiertAv": "Z000000",
+  "simulering": true,
+  "@event_name": "migrering_simulering_resultat",
+  "migreringId": "01a21193-bed4-7293-8851-a5d914c6e653",
+  "opplysninger": [
+    {
+      "navn": "Fødselsdato",
+      "uuid": "0194881f-940b-76ff-acf5-ba7bcb367233",
+      "verdi": "1985-01-26",
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Inntektsopplysninger",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04244",
+      "verdi": {
+        "inntektsId": "01M523KEMZJNQ6T9Q8AX3M6FDC",
+        "inntektsListe": [
+          {
+            "årMåned": "2024-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 360000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "årMåned": "2025-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "årMåned": "2026-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          }
+        ],
+        "hentetTidspunkt": "2026-09-01T12:19:48",
+        "manueltRedigert": false,
+        "sisteAvsluttendeKalenderMåned": "2026-07"
+      },
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Barn fra Arena",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a23b",
+      "verdi": {
+        "barn": []
+      },
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Oppgitt andre ytelser utenfor NAV",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e0",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Sykepenger etter lovens kapittel 8",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45cd",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Pleiepenger etter lovens kapittel 9",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45ce",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Omsorgspenger etter lovens kapittel 9",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45cf",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Opplæringspenger etter lovens kapittel 9",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d0",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Uføretrygd etter lovens kapittel 12",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d1",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Foreldrepenger etter lovens kapittel 14",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d2",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Svangerskapspenger etter lovens kapittel 14",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d3",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Har krav på lønn fra arbeidsgiver",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a75e",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Ønsket arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a75f",
+      "verdi": 30,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Kan jobbe heltid og deltid",
+      "uuid": "0194881f-9441-7d1b-a06a-6727543a141e",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Kan jobbe i hele Norge",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bd9",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Kan ta alle typer arbeid",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bdc",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Villig til å bytte yrke",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bde",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Registrert som arbeidssøker",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877be0",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Har rett til ordinære dagpenger gjennom arbeidsforhold",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d85",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Skal permittering vurderes",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d86",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Forskutterte lønnsgarantimidler i form av dagpenger",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d87",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Skal permittert fra fiskeindustrien vurderes",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d88",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Brukeren er under utdanning eller opplæring",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b522",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Bruker er utestengt fra dagpenger",
+      "uuid": "0194881f-9447-7e36-a569-3e9f42bff9f6",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Avtjent verneplikt",
+      "uuid": "01948d3c-4bea-7802-9d18-5342a5e2be99",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Skal reell arbeidssøker vurderes",
+      "uuid": "0194ff86-a035-7eb0-9c60-21899f7cc0c1",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "BostedslandErNorg",
+      "uuid": "0196ab10-0cff-7301-99d6-65be50a50201",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Antall dager som er forbrukt",
+      "uuid": "01992934-66e4-7606-bdd3-c6c9dd420ffd",
+      "verdi": 49,
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Antall dager som gjenstår",
+      "uuid": "01992956-e349-76b1-8f68-c9d481df3a32",
+      "verdi": 471,
+      "gyldigFraOgMed": "2026-11-23"
+    },
+    {
+      "navn": "Gjenstående egenandel",
+      "uuid": "01997b70-a12c-7622-bff8-82a20687e640",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-10-16"
+    },
+    {
+      "navn": "Siste forbruksdato",
+      "uuid": "019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2",
+      "verdi": "2026-07-31",
+      "gyldigFraOgMed": "2026-09-01"
+    },
+    {
+      "navn": "Skal eksport vurderes",
+      "uuid": "019f608d-f9c5-7ccc-a6f3-c53531d1f00c",
+      "verdi": false,
+      "gyldigFraOgMed": null
+    },
+    {
+      "navn": "Skal etablering vurderes",
+      "uuid": "01a0c316-a2e9-7088-acb1-da5596bd0055",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01"
+    }
+  ],
+  "@forårsaket_av": {
+    "id": "3d206f94-8be5-4702-9a08-d96b800391e1",
+    "opprettet": "2026-11-25T08:20:32.295122184",
+    "event_name": "migrering_opplysninger"
+  },
+  "system_read_count": 2,
+  "migreringTidspunkt": "2026-11-25",
+  "manglendeOpplysninger": [],
+  "simulerteOpplysninger": [
+    {
+      "navn": "Prøvingsdato",
+      "uuid": "0194881f-91d1-7df2-ba1d-4533f37fcc76",
+      "verdi": "2026-11-25",
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "søknadId",
+      "uuid": "0194881f-91d1-7df2-ba1d-4533f37fcc77",
+      "verdi": "7896c2f0-aa8b-4088-93de-5b728de58b94",
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Brukeren deltar i streik eller er omfattet av lock-out",
+      "uuid": "0194881f-91df-746a-a8ac-4a6b2b30685d",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Brukeren er ledig ved samme bedrift eller arbeidsplass, og blir påvirket av utfallet",
+      "uuid": "0194881f-91df-746a-a8ac-4a6b2b30685e",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Brukeren er ikke påvirket av streik eller lock-out",
+      "uuid": "0194881f-91df-746a-a8ac-4a6b2b30685f",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Fødselsdato",
+      "uuid": "0194881f-940b-76ff-acf5-ba7bcb367233",
+      "verdi": "1985-01-26",
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Aldersgrense",
+      "uuid": "0194881f-940b-76ff-acf5-ba7bcb367234",
+      "verdi": 67,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Dato søker når maks alder",
+      "uuid": "0194881f-940b-76ff-acf5-ba7bcb367235",
+      "verdi": "2052-01-26",
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Siste mulige dag bruker kan oppfylle alderskrav",
+      "uuid": "0194881f-940b-76ff-acf5-ba7bcb367236",
+      "verdi": "2052-01-31",
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til alder",
+      "uuid": "0194881f-940b-76ff-acf5-ba7bcb367237",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppjustert inntekt",
+      "uuid": "0194881f-940f-7af9-9387-052e028b29ec",
+      "verdi": {
+        "inntektsId": "01M523KEMZJNQ6T9Q8AX3M6FDC",
+        "inntektsListe": [
+          {
+            "harAvvik": null,
+            "årMåned": "2024-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 396343.08381978265,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2025-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 503561.15550092194,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2026-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          }
+        ],
+        "manueltRedigert": false,
+        "sisteAvsluttendeKalenderMåned": "2026-07"
+      },
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Tellende inntekt",
+      "uuid": "0194881f-940f-7af9-9387-052e028b29ed",
+      "verdi": {
+        "inntektsId": "01M523KEMZJNQ6T9Q8AX3M6FDC",
+        "inntektsListe": [
+          {
+            "harAvvik": null,
+            "årMåned": "2024-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 360000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2025-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2026-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          }
+        ],
+        "manueltRedigert": false,
+        "sisteAvsluttendeKalenderMåned": "2026-07"
+      },
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Grunnbeløp for grunnlag",
+      "uuid": "0194881f-940f-7af9-9387-052e028b29ee",
+      "verdi": 136549,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Faktor for maksimalt mulig grunnlag",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10ca7",
+      "verdi": 6,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "6 ganger grunnbeløp",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10ca8",
+      "verdi": 819294,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall år i 36 måneder",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10ca9",
+      "verdi": 3,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntekt etter avkortning og oppjustering siste 12 måneder",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10caa",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntekt siste 36 måneder",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cab",
+      "verdi": 1379904.2393207045,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Gjennomsnittlig inntekt etter avkortning og oppjustering siste 36 måneder",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cac",
+      "verdi": 459968.0797735682,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Utbetalt inntekt periode 1",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cad",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Utbetalt inntekt periode 2",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cae",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Utbetalt inntekt periode 3",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10caf",
+      "verdi": 360000,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntektperiode 1",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb0",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntektperiode 2",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb1",
+      "verdi": 503561.15550092194,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntektperiode 3",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb2",
+      "verdi": 396343.08381978265,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Avkortet inntektperiode 1",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb3",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Avkortet inntektperiode 2",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb4",
+      "verdi": 503561.15550092194,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Avkortet inntektperiode 3",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb5",
+      "verdi": 396343.08381978265,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har avkortet grunnlaget i periode 1",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb6",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har avkortet grunnlaget i periode 2",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb7",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har avkortet grunnlaget i periode 3",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb8",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har avkortet grunnlag",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cb9",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Brukt beregningsregel",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cba",
+      "verdi": "Inntekt etter avkortning og oppjustering siste 12 måneder",
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Uavrundet grunnlag",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cbb",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Grunnlag ved ordinære dagpenger",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cbc",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Dagpengegrunnlag",
+      "uuid": "0194881f-9410-7481-b263-4606fdd10cbd",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall G for krav til 12 mnd arbeidsinntekt",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f0423f",
+      "verdi": 1.5,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall G for krav til 36 mnd arbeidsinntekt",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04240",
+      "verdi": 3,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Arbeidsinntekt siste 12 måneder",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04241",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Arbeidsinntekt siste 36 måneder",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04242",
+      "verdi": 1320000,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Grunnbeløp",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04243",
+      "verdi": 136549,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntektsopplysninger",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04244",
+      "verdi": {
+        "inntektsId": "01M523KEMZJNQ6T9Q8AX3M6FDC",
+        "inntektsListe": [
+          {
+            "harAvvik": null,
+            "årMåned": "2024-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 360000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2025-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2026-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          }
+        ],
+        "manueltRedigert": false,
+        "sisteAvsluttendeKalenderMåned": "2026-07"
+      },
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Brutto arbeidsinntekt",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04245",
+      "verdi": {
+        "inntektsId": "01M523KEMZJNQ6T9Q8AX3M6FDC",
+        "inntektsListe": [
+          {
+            "harAvvik": null,
+            "årMåned": "2024-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 360000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2025-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          },
+          {
+            "harAvvik": null,
+            "årMåned": "2026-07",
+            "klassifiserteInntekter": [
+              {
+                "beløp": 480000,
+                "inntektKlasse": "ARBEIDSINNTEKT"
+              }
+            ]
+          }
+        ],
+        "manueltRedigert": false,
+        "sisteAvsluttendeKalenderMåned": "2026-07"
+      },
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntektskrav for siste 12 måneder",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04248",
+      "verdi": 204823.5,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Inntektskrav for siste 36 måneder",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f04249",
+      "verdi": 409647,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Arbeidsinntekt er over kravet for siste 12 måneder",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f0424a",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Arbeidsinntekt er over kravet for siste 36 måneder",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f0424b",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til minsteinntekt",
+      "uuid": "0194881f-9413-77ce-92ec-d29700f0424c",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Grunnlag for verneplikt hvis kravet er oppfylt",
+      "uuid": "0194881f-9421-766c-9dc6-41fe6c9a1e03",
+      "verdi": 480000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Grunnlaget for verneplikt er høyere enn dagpengegrunnlaget",
+      "uuid": "0194881f-9421-766c-9dc6-41fe6c9a1e05",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Barn fra register/søknad/saksbehandler",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a23b",
+      "verdi": {
+        "barn": [],
+        "søknadbarnId": null
+      },
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall barn som gir rett til barnetillegg",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a23c",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Barnetilleggets størrelse i kroner per dag for hvert barn",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a23d",
+      "verdi": 38,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Faktor for utregning av dagsats etter dagpengegrunnlaget",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a23e",
+      "verdi": 0.0024,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Dagsats uten barnetillegg før samordning",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a23f",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Avrundet ukessats med barnetillegg før samordning",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a240",
+      "verdi": 5760,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Avrundet dagsats uten barnetillegg før samordning",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a241",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Andel av dagsats med barnetillegg som overstiger maks andel av dagpengegrunnlaget",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a242",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Andel av dagsats uten barnetillegg avkortet til maks andel av dagpengegrunnlaget",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a243",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Sum av barnetillegg",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a244",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Dagsats med barnetillegg før samordning",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a245",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "90% av grunnlag for dagpenger",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a246",
+      "verdi": 0.9,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall arbeidsdager per år",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a247",
+      "verdi": 260,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Maksimalt mulig grunnlag avgrenset til 90% av dagpengegrunnlaget",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a248",
+      "verdi": 432000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall arbeidsdager per uke",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a249",
+      "verdi": 5,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Maksimal mulig dagsats avgrenset til 90% av dagpengegrunnlaget",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a24a",
+      "verdi": 1661.5384615384614,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Avrundet maksimal mulig dagsats avgrenset til 90% av dagpengegrunnlaget",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a24b",
+      "verdi": 1662,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har barnetillegg",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a24c",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Samordnet dagsats med barnetillegg",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a24d",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ukessats med barnetillegg etter samordning",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a24e",
+      "verdi": 5760,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Dagsats med barnetillegg etter samordning og 90 % regel",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a24f",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har samordnet",
+      "uuid": "0194881f-9428-74d5-b160-f63a4c61a250",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppgitt andre ytelser utenfor NAV i søknaden",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e0",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Mottar pensjon fra en offentlig tjenestepensjonsordning",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e1",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Mottar redusert uførepensjon fra offentlig pensjonsordning",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e2",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Mottar vartpenger",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e3",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Mottar ventelønn",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e4",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Mottar etterlønn",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e5",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Mottar garantilott fra Garantikassen for fiskere.",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e6",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Pensjon fra en offentlig tjenestepensjonsordning beløp",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e7",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Uførepensjon fra offentlig pensjonsordning beløp",
+      "uuid": "0194881f-942e-7cb0-aa59-05ea449d88e8",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Vartpenger beløp",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a26",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ventelønn beløp",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a27",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Etterlønn beløp",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a28",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Garantilott fra Garantikassen for fiskere beløp",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a29",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Hvor mange prosent av G skal brukes som terskel ved samordning",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a2b",
+      "verdi": 0.03,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beløp tilsvarende nedre terskel av G",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a2c",
+      "verdi": 4096.47,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Skal samordnes med ytelser utenfor folketrygden",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a2d",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Sum av ytelser utenfor folketrygden",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a2e",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Samordnet ukessats uten barnetillegg",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a2f",
+      "verdi": 5760,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Minste mulige ukessats som som kan brukes",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a30",
+      "verdi": 4096.47,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ukessats trukket ned for ytelser utenfor folketrygden",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a31",
+      "verdi": 5760,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Samordnet ukessats med ytelser utenfor folketrygden",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a32",
+      "verdi": 5760,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Dagsats uten barnetillegg samordnet",
+      "uuid": "0194881f-942f-7bde-ab16-68ffd19e9a33",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Sykepenger etter lovens kapittel 8",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45cd",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Pleiepenger etter lovens kapittel 9",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45ce",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Omsorgspenger etter lovens kapittel 9",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45cf",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Opplæringspenger etter lovens kapittel 9",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d0",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Uføretrygd etter lovens kapittel 12",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d1",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Foreldrepenger etter lovens kapittel 14",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d2",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Svangerskapspenger etter lovens kapittel 14",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d3",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Sykepenger dagsats",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d4",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Pleiepenger dagsats",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d5",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Omsorgspenger dagsats",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d6",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Opplæringspenger dagsats",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d7",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Uføre dagsats",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d8",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Foreldrepenger dagsats",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45d9",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Svangerskapspenger dagsats",
+      "uuid": "0194881f-9433-70e9-a85b-c246150c45da",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Sum andre ytelser",
+      "uuid": "0194881f-9434-79e8-a64d-1a23cc5d86e9",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Medlem har reduserte ytelser fra folketrygden (Samordning)",
+      "uuid": "0194881f-9434-79e8-a64d-1a23cc5d86ea",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Samordnet dagsats uten barnetillegg",
+      "uuid": "0194881f-9434-79e8-a64d-1a23cc5d86eb",
+      "verdi": 1152,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Samordnet dagsats er større enn 0",
+      "uuid": "0194881f-9434-79e8-a64d-1a23cc5d86ec",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall timer arbeidstiden skal samordnes mot",
+      "uuid": "0194881f-9434-79e8-a64d-1a23cc5d86ed",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Samordnet fastsatt arbeidstid",
+      "uuid": "0194881f-9434-79e8-a64d-1a23cc5d86ee",
+      "verdi": 37.5,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Utfall etter samordning",
+      "uuid": "0194881f-9434-79e8-a64d-1a23cc5d86ef",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har krav på lønn fra arbeidsgiver",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a75e",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ønsket arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a75f",
+      "verdi": 30,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller vilkåret til tap av arbeidsinntekt",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a761",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Krav til prosentvis tap av arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a762",
+      "verdi": 50,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beregningsregel: Tapt arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a763",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beregningsregel: Arbeidstid siste 6 måneder",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a764",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beregningsregel: Arbeidstid siste 12 måneder",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a765",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beregningsregel: Arbeidstid siste 36 måneder",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a766",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beregnet vanlig arbeidstid per uke før tap",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a767",
+      "verdi": 37.5,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Maksimal vanlig arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a768",
+      "verdi": 40,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Minimum vanlig arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a769",
+      "verdi": 18.75,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Fastsatt arbeidstid per uke før tap",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a76a",
+      "verdi": 30,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ny arbeidstid per uke",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a76b",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Fastsatt vanlig arbeidstid etter ordinær eller verneplikt",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a76c",
+      "verdi": 37.5,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Villig til å jobbe minimum arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a76d",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller vilkåret om tap av arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a76e",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller vilkåret om tap av arbeidsinntekt og arbeidstid",
+      "uuid": "0194881f-9435-72a8-b1ce-9575cbc2a76f",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall dager som skal regnes med i hver uke",
+      "uuid": "0194881f-943d-77a7-969c-147999f15449",
+      "verdi": 5,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Kort dagpengeperiode",
+      "uuid": "0194881f-943d-77a7-969c-147999f1544a",
+      "verdi": 52,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Lang dagpengeperiode",
+      "uuid": "0194881f-943d-77a7-969c-147999f1544b",
+      "verdi": 104,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Terskel for 12 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f1544c",
+      "verdi": 273098,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Terskel for 36 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f1544d",
+      "verdi": 273098,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Terskelfaktor for 12 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f1544f",
+      "verdi": 2,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Terskelfaktor for 36 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f15450",
+      "verdi": 2,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Snittinntekt siste 36 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f15451",
+      "verdi": 440000,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Stønadsuker ved siste 12 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f15452",
+      "verdi": 104,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Stønadsuker ved siste 36 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f15453",
+      "verdi": 104,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Over terskel for 12 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f15454",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Over terskel for 36 måneder",
+      "uuid": "0194881f-943d-77a7-969c-147999f15455",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall stønadsuker",
+      "uuid": "0194881f-943d-77a7-969c-147999f15456",
+      "verdi": 104,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall stønadsdager",
+      "uuid": "0194881f-943d-77a7-969c-147999f15457",
+      "verdi": 520,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Stønadsuker når kravet til minste arbeidsinntekt ikke er oppfylt",
+      "uuid": "0194881f-943d-77a7-969c-147999f15458",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall stønadsuker (stønadsperiode)",
+      "uuid": "0194881f-943d-77a7-969c-147999f15459",
+      "verdi": 104,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Egenandel",
+      "uuid": "0194881f-943f-78d9-b874-00a4944c54ef",
+      "verdi": 3456,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall dagsats for egenandel",
+      "uuid": "0194881f-943f-78d9-b874-00a4944c54f0",
+      "verdi": 3,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller vilkåret om å ikke motta andre fulle ytelser",
+      "uuid": "0194881f-943f-78d9-b874-00a4944c54f1",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Kan jobbe heltid og deltid",
+      "uuid": "0194881f-9441-7d1b-a06a-6727543a141e",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Det er godkjent at bruker kun søker deltidsarbeid",
+      "uuid": "0194881f-9441-7d1b-a06a-6727543a141f",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til heltid- og deltidsarbeid",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bd8",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Kan jobbe i hele Norge",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bd9",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Det er godkjent at bruker kun søker arbeid lokalt",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bda",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til mobilitet",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bdb",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Kan ta alle typer arbeid",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bdc",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til å være arbeidsfør",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bdd",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Villig til å bytte yrke",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bde",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til å ta ethvert arbeid",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877bdf",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Registrert som arbeidssøker",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877be0",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til å være registrert som arbeidssøker",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877be1",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Reell arbeidssøker",
+      "uuid": "0194881f-9442-707b-a6ee-e96c06877be2",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Bruker oppholder seg i Norge",
+      "uuid": "0194881f-9443-72b4-8b30-5f6cdb24d549",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller unntak for opphold i Norge",
+      "uuid": "0194881f-9443-72b4-8b30-5f6cdb24d54a",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til opphold i Norge eller unntak",
+      "uuid": "0194881f-9443-72b4-8b30-5f6cdb24d54b",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Bruker er medlem av folketrygden",
+      "uuid": "0194881f-9443-72b4-8b30-5f6cdb24d54c",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til medlemskap",
+      "uuid": "0194881f-9443-72b4-8b30-5f6cdb24d54d",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Kravet til opphold i Norge er oppfylt",
+      "uuid": "0194881f-9443-72b4-8b30-5f6cdb24d54e",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har rett til ordinære dagpenger gjennom arbeidsforhold",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d85",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Skal permittering vurderes",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d86",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Forskutterte lønnsgarantimidler i form av dagpenger",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d87",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Skal permittert fra fiskeindustrien vurderes",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d88",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har rett til ordinære dagpenger uten arbeidsforhold",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d89",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ordinære dagpenger",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d8a",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Rettighetstype",
+      "uuid": "0194881f-9444-7a73-a458-0af81c034d8b",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Brukeren er under utdanning eller opplæring",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b522",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Godkjent unntak for utdanning eller opplæring?",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b523",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har svart ja på spørsmål om utdanning eller opplæring",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b524",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har svart nei på spørsmål om utdanning eller opplæring",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b525",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet på unntak for utdanning eller opplæring",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b526",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Deltar i arbeidsmarkedstiltak",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b527",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Deltar i opplæring for innvandrere",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b528",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Deltar i grunnskoleopplæring, videregående opplæring og opplæring i grunnleggende ferdigheter",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b529",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Deltar i høyere yrkesfaglig utdanning",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b52a",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Deltar i høyere utdanning",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b52b",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Deltar på kurs mv",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b52c",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller krav til utdanning eller opplæring",
+      "uuid": "0194881f-9445-734c-a7ee-045edf29b52d",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Bruker er utestengt fra dagpenger",
+      "uuid": "0194881f-9447-7e36-a569-3e9f42bff9f6",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller krav til ikke utestengt",
+      "uuid": "0194881f-9447-7e36-a569-3e9f42bff9f7",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "fagsakId",
+      "uuid": "0194881f-9462-78af-8977-46092bb030eb",
+      "verdi": 13820850,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Avtjent verneplikt",
+      "uuid": "01948d3c-4bea-7802-9d18-5342a5e2be99",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til verneplikt",
+      "uuid": "01948d43-e218-76f1-b29b-7e604241d98a",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har helsemessige begrensninger og kan ikke ta alle typer arbeid",
+      "uuid": "0194929e-2036-7ac1-ada3-5cbe05a83f08",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Skal reell arbeidssøker vurderes",
+      "uuid": "0194ff86-a035-7eb0-9c60-21899f7cc0c1",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ordinært krav til prosentvis tap av arbeidstid",
+      "uuid": "019522d6-846d-7173-a892-67f10016d8d2",
+      "verdi": 50,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Tre ganger dagsats",
+      "uuid": "019523aa-7941-7dd2-8c43-0644d7b43f57",
+      "verdi": 3456,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "hendelseType",
+      "uuid": "01958ef2-e237-77c4-89e1-de91256e2e4a",
+      "verdi": "MigrerYtelseHendelse",
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": "2026-11-25"
+    },
+    {
+      "navn": "Bostedsland er Norge",
+      "uuid": "0196ab10-0cff-7301-99d6-65be50a50201",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Uføretrygden er gitt med virkningstidspunkt i inneværende år eller innenfor de to siste kalenderår",
+      "uuid": "0196afaf-afbd-7079-b2cf-3669ad9d86aa",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Uførebeløp som skal samordnes",
+      "uuid": "0196afbf-e32d-775a-ad10-f476e26dcb6f",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Sum hvis Uføre ikke skal samordnes",
+      "uuid": "0196afc0-6807-7fa3-83e4-cf7f621f3a7e",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Arbeidstidsreduksjonen er ikke brukt tidligere i en full stønadsperiode",
+      "uuid": "0196b4a7-23b5-7b2c-aa95-e4167d900de8",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Skal verneplikt vurderes",
+      "uuid": "01980cf4-9010-7bcf-b578-ca5a825d64ef",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har løpende rett på dagpenger",
+      "uuid": "01990a09-0eab-7957-b88f-14484a50e194",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall dager som er forbrukt",
+      "uuid": "01992934-66e4-7606-bdd3-c6c9dd420ffd",
+      "verdi": 49,
+      "gyldigFraOgMed": "2026-11-24",
+      "gyldigTilOgMed": "2026-11-24"
+    },
+    {
+      "navn": "Antall dager som gjenstår",
+      "uuid": "01992956-e349-76b1-8f68-c9d481df3a32",
+      "verdi": 471,
+      "gyldigFraOgMed": "2026-11-24",
+      "gyldigTilOgMed": "2026-11-24"
+    },
+    {
+      "navn": "Gjenstående egenandel",
+      "uuid": "01997b70-a12c-7622-bff8-82a20687e640",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-24",
+      "gyldigTilOgMed": "2026-11-24"
+    },
+    {
+      "navn": "Mot bedre vitende har gitt uriktige opplysninger",
+      "uuid": "019bc5f8-5c56-7f36-bff1-b10c8165764d",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Holder tilbake opplysninger som er viktige for rettigheter eller plikter etter denne loven",
+      "uuid": "019bc5f8-8af4-73c7-8b15-6feecd7810d2",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Uten rimelig grunn unnlater å etterkomme pålegg som er gitt med hjemmel i denne loven",
+      "uuid": "019bc5f8-c377-740f-9df6-3c743b5144b1",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har gitt fullstendige og riktige opplysninger",
+      "uuid": "019bc5f8-fdf3-7240-afaf-52c0486eddc5",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har satt frem skriftlig søknad",
+      "uuid": "019c091e-e7aa-7e15-b339-b6276276ebf2",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ønsker dagpenger ved framsatt søknad",
+      "uuid": "019c0920-8b11-729a-866d-9f271f03ef2e",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Oppfyller kravet til framsatt søknad",
+      "uuid": "019c092a-7759-700a-9f7d-f4415b91e8db",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Siste forbruksdato",
+      "uuid": "019cf5f9-b3ef-7464-8be7-a0f8c3d8f7b2",
+      "verdi": "2026-07-31",
+      "gyldigFraOgMed": "2026-11-24",
+      "gyldigTilOgMed": "2026-11-24"
+    },
+    {
+      "navn": "Skal gjenopptak vurderes",
+      "uuid": "019d0068-8037-7d91-bfff-de88f9e87fd3",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Vurder rett fra og med",
+      "uuid": "019db9de-afaf-7e46-98b4-2fd20655b80f",
+      "verdi": "2026-11-25",
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall dager med tidsbegrenset bortfall",
+      "uuid": "019df7d6-5156-7785-a6fd-54f5af1244be",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Er ilagt tidsbegrenset bortfall av dagpenger",
+      "uuid": "019df9b1-7052-72e9-9232-547f7cb6ba60",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Barn som gir tillegg",
+      "uuid": "019e2085-a97a-776b-ba2c-4bca8e01a166",
+      "verdi": {
+        "barn": [],
+        "søknadbarnId": "01a21193-dd33-7466-b647-df7fa6eee1d2"
+      },
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Er ilagt sanksjonsperiode ved selvforskyldt arbeidsløshet",
+      "uuid": "019e82fc-04e7-7f8d-bd52-6a7041ebb15f",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall dager med sanksjon",
+      "uuid": "019e82fc-bdd6-77d8-a2bc-4bd7f1d46b25",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall uker med sanksjon",
+      "uuid": "019e82fd-f97c-7395-be5c-7de504871871",
+      "verdi": 18,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Antall uker med tidsbegrenset bortfall",
+      "uuid": "019e8300-20f7-7cba-b8dc-7bebfd86dcf3",
+      "verdi": 18,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Skal eksport vurderes",
+      "uuid": "019f608d-f9c5-7ccc-a6f3-c53531d1f00c",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ønsker å være registrert som arbeidssøker",
+      "uuid": "019ffffa-05bf-7428-ba34-ef848dab0f39",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har gitt alle nødvendige opplysninger?",
+      "uuid": "01a01e21-17ce-70c4-aac1-d25c30ecfac9",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har ikke krav på lønn fra arbeidsgiver",
+      "uuid": "01a03e0b-1dfa-755c-9139-297e3db68a6d",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Skal etablering vurderes",
+      "uuid": "01a0c316-a2e9-7088-acb1-da5596bd0055",
+      "verdi": false,
+      "gyldigFraOgMed": "2026-09-01",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Har gjenstående periode av dagpenger",
+      "uuid": "01a19ba4-7872-7338-8663-f88d45b351bf",
+      "verdi": true,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beregnet antall dager med tidsbegrenset bortfall",
+      "uuid": "022adcbd-aae7-482d-9259-1799cb1f9fbe",
+      "verdi": 90,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Beregnet antall dager med sanksjon",
+      "uuid": "136aeb82-2081-4dde-b443-77bd253f9c0e",
+      "verdi": 90,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ingen dager med tidsbegrenset bortfall",
+      "uuid": "956a3057-d81c-42b0-bc49-156098556d7e",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    },
+    {
+      "navn": "Ingen dager med sanksjon",
+      "uuid": "f13a07fe-0e18-4a3c-bd93-1e4d03d4fee9",
+      "verdi": 0,
+      "gyldigFraOgMed": "2026-11-25",
+      "gyldigTilOgMed": null
+    }
+  ],
+  "system_participating_services": [
+    {
+      "id": "3d206f94-8be5-4702-9a08-d96b800391e1",
+      "time": "2026-11-25T08:20:32.295122184",
+      "image": "europe-north1-docker.pkg.dev/nais-management-233d/teamdagpenger/dp-migrering:2026.11.24-15.07-153049d@sha256:a2b526e5232a7a13e26249c95fbb6c9c5a124dd7e1b91802a1d526ddd3f4c3e5",
+      "service": "dp-migrering",
+      "instance": "dp-migrering-87dd6b797-b654r"
+    },
+    {
+      "id": "3d206f94-8be5-4702-9a08-d96b800391e1",
+      "time": "2026-11-25T08:20:32.806543622",
+      "image": "europe-north1-docker.pkg.dev/nais-management-233d/teamdagpenger/dp-behandling:2026.11.25-05.23-1450160@sha256:3e5fbf6b0f9bbd9003b4220a18ddcc73303914bd9625078c359ce208eb84f856",
+      "service": "dp-behandling",
+      "instance": "dp-behandling-7b9678685d-6vszm"
+    },
+    {
+      "id": "e1140566-b18d-46fc-91c4-37b6d2055162",
+      "time": "2026-11-25T08:20:32.894214281",
+      "image": "europe-north1-docker.pkg.dev/nais-management-233d/teamdagpenger/dp-behandling:2026.11.25-05.23-1450160@sha256:3e5fbf6b0f9bbd9003b4220a18ddcc73303914bd9625078c359ce208eb84f856",
+      "service": "dp-behandling",
+      "instance": "dp-behandling-7b9678685d-6vszm"
+    },
+    {
+      "id": "e1140566-b18d-46fc-91c4-37b6d2055162",
+      "time": "2026-11-25T08:20:32.916280560",
+      "image": "europe-north1-docker.pkg.dev/nais-management-233d/teamdagpenger/dp-migrering:2026.11.24-15.07-153049d@sha256:a2b526e5232a7a13e26249c95fbb6c9c5a124dd7e1b91802a1d526ddd3f4c3e5",
+      "service": "dp-migrering",
+      "instance": "dp-migrering-87dd6b797-b654r"
+    }
+  ]
+}

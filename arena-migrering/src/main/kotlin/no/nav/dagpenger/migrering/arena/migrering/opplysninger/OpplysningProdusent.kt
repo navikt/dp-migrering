@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.prometheus.metrics.core.metrics.Counter
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.math.BigDecimal
 import java.util.UUID
 
 interface OpplysningProdusent<T : Any> {
@@ -59,12 +60,16 @@ interface OpplysningProdusent<T : Any> {
     ): Boolean {
         listOf(arenaVerdi, dpSakVerdi).forEach { verdi ->
             when (verdi) {
-                null, is Boolean, is String, is Int, is Long, is Double -> Unit
-                else ->
+                null, is Boolean, is String, is Int, is Long, is Double, is BigDecimal -> {
+                    Unit
+                }
+
+                else -> {
                     throw UnsupportedOperationException(
                         "Opplysningen $opplysningsNavn ($opplysningsId) krever egen sammenligning for " +
                             "${verdi.javaClass.name}. Overstyr sammenlignVerdier.",
                     )
+                }
             }
         }
         return arenaVerdi == dpSakVerdi
