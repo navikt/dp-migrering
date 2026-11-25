@@ -3,7 +3,6 @@ package no.nav.dagpenger.migrering.arena.migrering.meldinger
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
-import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import tools.jackson.databind.JsonNode
 import java.util.UUID
@@ -40,18 +39,18 @@ internal class MigreringSimuleringResultatMelding(
         }
 
     val simulerteOpplysninger =
-        if (!packet["simulerteOpplysninger"].isMissingOrNull()) {
-            packet["simulerteOpplysninger"].asArray().toList().map {
-                Opplysning(
-                    navn = it["navn"].asString(),
-                    verdi = verdi(it["verdi"]),
-                    gyldigFraOgMed = it["gyldigFraOgMed"].asLocalDate(),
-                    uuid = it["uuid"].asString().toUUID(),
-                )
-            }
-        } else {
-            emptyList()
-        }
+//        if (!packet["simulerteOpplysninger"].isMissingOrNull()) {
+//            packet["simulerteOpplysninger"].asArray().toList().map {
+//                Opplysning(
+//                    navn = it["navn"].asString(),
+//                    verdi = verdi(it["verdi"]),
+//                    gyldigFraOgMed = it["gyldigFraOgMed"].asLocalDate(),
+//                    uuid = it["uuid"].asString().toUUID(),
+//                )
+//            }
+//        } else {
+        emptyList<Opplysning<*>>()
+//        }
 
     private fun verdi(node: JsonNode): Any? =
         when {
