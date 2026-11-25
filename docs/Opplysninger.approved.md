@@ -28,9 +28,9 @@
 |01948d3c-4bea-7802-9d18-5342a5e2be99|Avtjent verneplikt|Verifisert|Fakta|true|
 |0194881f-9428-74d5-b160-f63a4c61a23b|Barn fra Arena|Dummy|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a767|Beregnet vanlig arbeidstid per uke før tap|Alfa|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a765|Beregningsregel: Arbeidstid siste 12 måneder|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a766|Beregningsregel: Arbeidstid siste 36 måneder|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a764|Beregningsregel: Arbeidstid siste 6 måneder|Dummy|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a765|Beregningsregel: Arbeidstid siste 12 måneder|Alfa|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a766|Beregningsregel: Arbeidstid siste 36 måneder|Alfa|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a764|Beregningsregel: Arbeidstid siste 6 måneder|Alfa|Fakta|true|
 |0196ab10-0cff-7301-99d6-65be50a50201|BostedslandErNorg|Dummy|Fakta|true|
 |0194881f-91df-746a-a8ac-4a6b2b30685e|Brukeren er ledig ved samme bedrift eller arbeidsplass, og blir påvirket av utfallet|Verifisert|Fakta|true|
 |0194881f-91df-746a-a8ac-4a6b2b30685d|Brukeren deltar i streik eller er omfattet av lock-out|Verifisert|Fakta|true|
@@ -39,7 +39,7 @@
 |0194881f-9447-7e36-a569-3e9f42bff9f6|Bruker er utestengt fra dagpenger|Dummy|Fakta|true|
 |019f26ec-f7e4-791a-af42-6cb632466cfa|Bruker oppgir selvforskyldt arbeidsløshet|Dummy|Fakta|true|
 |019f608e-807e-758c-80ff-58e95f429f5a|Bruker skal ha eksport av dagpenger til EØS-land|Alfa|Fakta|true|
-|0194881f-9410-7481-b263-4606fdd10cba|Brukt beregningsregel|Dummy|Resultat|true|
+|0194881f-9410-7481-b263-4606fdd10cba|Brukt beregningsregel|Alfa|Resultat|true|
 |0194881f-9413-77ce-92ec-d29700f04245|Brutto arbeidsinntekt|Alfa|Fakta|true|
 |0194881f-9410-7481-b263-4606fdd10cbd|Dagpengegrunnlag for bruker|Alfa|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a33|Dagsats uten barnetillegg samordnet for bruker|Alfa|Resultat|true|
