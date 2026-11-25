@@ -5,6 +5,7 @@ package no.nav.dagpenger.migrering.arena.migrering
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.inntekt.v1.Inntekt
 import no.nav.dagpenger.migrering.objectMapper
+import java.time.LocalDateTime
 import javax.sql.DataSource
 
 class ArenaMigreringOracleRepository(
@@ -525,6 +526,26 @@ class ArenaMigreringOracleRepository(
                 kode = row.string("kolonne"),
                 verdi = row.string("verdi"),
                 gyldigFra = row.localDate("mod_dato"),
+            )
+        }
+
+    override fun hentGrunnbelop(migreringTidspunkt: LocalDateTime): List<ArenaSakMigrering.ArenaSatsMigrering> =
+        select(
+            // language=oracle
+            """
+            SELECT     'GRUNNBELOP'          AS kolonne
+                     , sats.belop            AS verdi
+                     , sats.dato_fra         AS dato_fra
+                FROM   sats
+                WHERE  sats.satskode = 'G'
+                AND    :migreringTidspunkt BETWEEN sats.dato_fra AND NVL( sats.dato_til, :migreringTidspunkt )
+            """.trimIndent(),
+            mapOf("migreringTidspunkt" to migreringTidspunkt),
+        ) { row ->
+            ArenaSakMigrering.ArenaSatsMigrering(
+                kode = row.string("kolonne"),
+                verdi = row.string("verdi"),
+                gyldigFra = row.localDate("dato_fra"),
             )
         }
 }

@@ -20,6 +20,7 @@ data class ArenaSakMigrering(
     val aktfase: List<ArenaAktfaseMigrering>,
     val sisteVilkaarVurdering: List<ArenaVilkaarMigrering>,
     val sisteVedtakfakta: List<ArenaVedtakfaktaMigrering>,
+    val grunnbelop: List<ArenaSatsMigrering>,
 ) {
     data class ArenaVedtakfaktaMigrering(
         val kode: String,
@@ -79,6 +80,12 @@ data class ArenaSakMigrering(
     data class ArenaInitiellTellerMigrering(
         val kode: String,
         val kodetype: String,
+        val verdi: String,
+        val gyldigFra: LocalDate,
+    )
+
+    data class ArenaSatsMigrering(
+        val kode: String,
         val verdi: String,
         val gyldigFra: LocalDate,
     )

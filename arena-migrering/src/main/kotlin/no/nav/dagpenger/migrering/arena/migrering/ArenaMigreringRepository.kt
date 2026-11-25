@@ -7,6 +7,7 @@ import kotliquery.Session
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import no.nav.dagpenger.inntekt.v1.Inntekt
+import java.time.LocalDateTime
 import javax.sql.DataSource
 
 val kunSisteVilkaar: Set<String> = setOf("VILKAR_1", "VILKAR_2", "VILKAR_3")
@@ -64,7 +65,10 @@ interface ArenaMigreringRepository {
 
     fun hentAntallForbrukteDagerPERM(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering>
 
-    fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
+    fun hentSakTilMigrering(
+        sakId: Int,
+        migreringTidspunkt: LocalDateTime,
+    ): ArenaSakMigrering =
         ArenaSakMigrering(
             vilkaarsVurderinger = hentVilkaarvurdering(sakId, kunSisteVilkaar),
             vedtakfakta = hentVedtakfakta(sakId, kunSisteVedtakfakta),
@@ -82,6 +86,7 @@ interface ArenaMigreringRepository {
             aktfase = hentAktfase(sakId),
             sisteVedtakfakta = hentSisteVedtakfakta(sakId, kunSisteVedtakfakta),
             sisteVilkaarVurdering = hentSisteVilkaarvurdering(sakId, kunSisteVilkaar),
+            grunnbelop = hentGrunnbelop(migreringTidspunkt),
         )
 
     fun hentIdentForSak(sakId: Int): String
@@ -91,4 +96,6 @@ interface ArenaMigreringRepository {
     fun hentDeks(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering>
 
     fun hentAktfase(sakId: Int): List<ArenaSakMigrering.ArenaAktfaseMigrering>
+
+    fun hentGrunnbelop(migreringTidspunkt: LocalDateTime): List<ArenaSakMigrering.ArenaSatsMigrering>
 }

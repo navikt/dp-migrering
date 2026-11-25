@@ -11,7 +11,7 @@ class OpplysningProdusentSpec :
     StringSpec({
         val repository = ArenaMigreringOracleRepository(oracleDataSource())
         "Skal ...." {
-            val migreringsdata = repository.hentSakTilMigrering(sakId = 15603478)
+            val migreringsdata = repository.hentSakTilMigrering(sakId = 15603478, migreringTidspunkt = LocalDateTime.now())
             val kontekst =
                 MigreringsKontekst(
                     sakTilMigrering = migreringsdata,

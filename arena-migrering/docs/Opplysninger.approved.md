@@ -66,7 +66,7 @@
 |01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|Alfa|Resultat|true|
 |01a0c30f-87de-7359-b642-e009a91bbda8|Godkjent næringsfaglig vurdering|Dummy|Fakta|true|
 |0194881f-9413-77ce-92ec-d29700f04243|Grunnbeløp|Dummy|Fakta|true|
-|0194881f-940f-7af9-9387-052e028b29ee|Grunnbeløp for grunnlag|Dummy|Resultat|true|
+|0194881f-940f-7af9-9387-052e028b29ee|Grunnbeløp for grunnlag|Alfa|Resultat|true|
 |0194881f-9421-766c-9dc6-41fe6c9a1e05|Grunnlaget for verneplikt er høyere enn dagpengegrunnlaget|Dummy|Resultat|true|
 |0194881f-9410-7481-b263-4606fdd10cb9|Har avkortet grunnlag|Dummy|Resultat|true|
 |01a01e21-17ce-70c4-aac1-d25c30ecfac9|Har gitt alle nødvendige opplysninger?|Dummy|Resultat|true|
