@@ -27,7 +27,7 @@
 |019522b8-0f1b-7536-8691-fd824bca86de|Årsaken til permitteringen fra fiskeindustrien er godkjent|Dummy|Fakta|true|
 |01948d3c-4bea-7802-9d18-5342a5e2be99|Avtjent verneplikt|Verifisert|Fakta|true|
 |0194881f-9428-74d5-b160-f63a4c61a23b|Barn fra Arena|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a767|Beregnet vanlig arbeidstid per uke før tap|Dummy|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a767|Beregnet vanlig arbeidstid per uke før tap|Alfa|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a765|Beregningsregel: Arbeidstid siste 12 måneder|Dummy|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a766|Beregningsregel: Arbeidstid siste 36 måneder|Dummy|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a764|Beregningsregel: Arbeidstid siste 6 måneder|Dummy|Fakta|true|
@@ -72,7 +72,7 @@
 |01a01e21-17ce-70c4-aac1-d25c30ecfac9|Har gitt alle nødvendige opplysninger?|Dummy|Resultat|true|
 |019bc5f8-fdf3-7240-afaf-52c0486eddc5|Har gitt fullstendige og riktige opplysninger|Dummy|Resultat|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a75e|Har krav på lønn fra arbeidsgiver|Dummy|Fakta|true|
-|01990a09-0eab-7957-b88f-14484a50e194|Har løpende rett på dagpenger|Dummy|Resultat|true|
+|01990a09-0eab-7957-b88f-14484a50e194|Har løpende rett på dagpenger|Alfa|Resultat|true|
 |019a81bf-50e1-7f1d-b23b-f30265b16042|Har meldt seg i tide|Dummy|Resultat|true|
 |01956ab8-126c-7636-803e-a5d87eda2015|Har meldt seg via meldekort|Dummy|Resultat|true|
 |0194881f-9444-7a73-a458-0af81c034d85|Har rett til ordinære dagpenger gjennom arbeidsforhold|Verifisert|Fakta|true|
@@ -111,7 +111,7 @@
 |019c092a-7759-700a-9f7d-f4415b91e8db|Oppfyller kravet til framsatt søknad|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bd8|Bruker oppfyller kravet til heltid- og deltidsarbeid|Verifisert|Resultat|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54d|Oppfyller kravet til medlemskap|Verifisert|Resultat|true|
-|0194881f-9413-77ce-92ec-d29700f0424c|Oppfyller kravet til minsteinntekt|Dummy|Resultat|true|
+|0194881f-9413-77ce-92ec-d29700f0424c|Oppfyller kravet til minsteinntekt|Alfa|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877bdb|Bruker oppfyller kravet til mobilitet|Verifisert|Resultat|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54b|Oppfyller kravet til opphold i Norge eller unntak|Dummy|Resultat|true|
 |01997b70-6e6e-702a-a296-18ae5fb9621d|Oppfyller kravet til tapt arbeidstid i perioden|Dummy|Resultat|true|
@@ -125,7 +125,7 @@
 |0194881f-943f-78d9-b874-00a4944c54f1|Oppfyller vilkåret om å ikke motta andre fulle ytelser|Dummy|Resultat|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a76f|Oppfyller vilkåret om tap av arbeidsinntekt og arbeidstid|Dummy|Resultat|false|
 |0194881f-9435-72a8-b1ce-9575cbc2a76e|Oppfyller vilkåret om tap av arbeidstid|Dummy|Resultat|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a761|Oppfyller vilkåret til tap av arbeidsinntekt|Dummy|Resultat|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a761|Oppfyller vilkåret til tap av arbeidsinntekt|Alfa|Resultat|true|
 |0194881f-942e-7cb0-aa59-05ea449d88e0|Oppgitt andre ytelser utenfor NAV|Dummy|Fakta|true|
 |0194881f-9443-72b4-8b30-5f6cdb24d54e|Bruker har opphold i Norge|Verifisert|Resultat|true|
 |0194881f-9433-70e9-a85b-c246150c45d7|Opplæringspenger dagsats|Dummy|Fakta|true|
@@ -142,7 +142,7 @@
 |0194881f-91d1-7df2-ba1d-4533f37fcc76|Prøvingsdato|Dummy|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877be2|Reell arbeidssøker|Verifisert|Resultat|true|
 |0194881f-9442-707b-a6ee-e96c06877be0|Registrert som arbeidssøker|Verifisert|Fakta|true|
-|0194881f-9444-7a73-a458-0af81c034d8b|Rettighetstype|Dummy|Resultat|true|
+|0194881f-9444-7a73-a458-0af81c034d8b|Rettighetstype|Alfa|Resultat|true|
 |0194881f-9428-74d5-b160-f63a4c61a250|Er samordning utført|Verifisert|Resultat|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86eb|Samordnet dagsats uten barnetillegg|Alfa|Resultat|true|
 |019d007f-8696-7409-bd51-f4fbfc4babb4|Siste antall dager som gjenstår|Dummy|Fakta|true|
