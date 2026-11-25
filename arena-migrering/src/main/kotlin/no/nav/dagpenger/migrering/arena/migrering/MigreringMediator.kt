@@ -10,7 +10,6 @@ import io.opentelemetry.api.trace.StatusCode
 import io.opentelemetry.context.Context
 import io.opentelemetry.extension.kotlin.asContextElement
 import io.opentelemetry.instrumentation.annotations.WithSpan
-import io.prometheus.metrics.core.metrics.Counter
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +19,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.BehandlingOpprettetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.KafkaMeldingV1
@@ -46,14 +44,6 @@ class MigreringMediator(
         private val logger = KotlinLogging.logger {}
 
         private val tracer = GlobalOpenTelemetry.getTracer("arena-migrering")
-
-        private val manglendeOpplysninger =
-            Counter
-                .builder()
-                .name("migrering_manglende_opplysninger_forespurt_total")
-                .help("Antall ganger en opplysning mangler blitt forespurt under migrering")
-                .labelNames("id", "navn")
-                .register()
     }
 
     @WithSpan("migrering.start")
@@ -88,10 +78,11 @@ class MigreringMediator(
                 opplysninger = opplysninger,
             )
 
-            publiserMelding(
-                context = rapid,
-                melding = MigreringStartetMelding.fra(migrering),
-            )
+            MigreringStartetMeldingV1.fra(migrering).publiser(context = rapid)
+//            publiserMelding(
+//                context = rapid,
+//                melding = MigreringStartetMeldingV1.fra(migrering),
+//            )
         }
 
         return migrering

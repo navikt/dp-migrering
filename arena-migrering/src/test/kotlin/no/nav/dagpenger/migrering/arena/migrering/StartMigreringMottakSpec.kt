@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
-import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -60,7 +59,7 @@ class StartMigreringMottakSpec :
                     test.repository.lagreMigrering(migrering)
                     test.arenaMigreringRepository.hentSakTilMigrering(migrering.sakId)
                     test.repository.lagreOpplysninger(migrering.migreringId, any())
-                    rapid.publish(any<List<OutgoingMessage>>())
+                    rapid.publish(any<String>())
                 }
 
                 val publisertMelding = rapid.inspektør.message(0).toString()

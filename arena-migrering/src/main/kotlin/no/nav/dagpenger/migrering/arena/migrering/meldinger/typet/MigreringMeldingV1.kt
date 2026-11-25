@@ -4,14 +4,16 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import java.time.LocalDate
 import java.util.UUID
 
-internal interface MigreringMeldingV1 : KafkaMeldingV1 {
-    val migreringId: UUID
+internal interface MigreringMeldingV1 :
+    KafkaMeldingV1,
+    MedMigrering {
+    override val migreringId: UUID
     val sakId: Int
     val initiertAv: String
     val migreringTidspunkt: LocalDate
     val simulering: Boolean
 
-    fun lagreMelding(
+    override fun lagreMelding(
         repository: MigreringRepository,
         opprinnelse: KafkaMeldingV1.KafkaMeldingOpprinnelse,
     ) {
