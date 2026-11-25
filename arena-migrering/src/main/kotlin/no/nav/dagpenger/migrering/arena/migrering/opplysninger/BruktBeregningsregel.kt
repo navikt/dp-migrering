@@ -8,7 +8,7 @@ import java.util.UUID
 class BruktBeregningsregel : OpplysningProdusent<String> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -19,11 +19,14 @@ class BruktBeregningsregel : OpplysningProdusent<String> {
 
 //  Vedtaksfakta. Må nok konverteres til DP-sak sine verdier for beregningsregler. DPGRLGREGL (beregningsregelverk pr node)
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<String> {
+        val fakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { fakta -> fakta.kode == "BERREGEL" }
+
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = "dummy",
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = fakta?.verdi,
+            gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
 }
