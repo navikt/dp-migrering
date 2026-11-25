@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -8,20 +7,17 @@ import java.util.UUID
 class BeregnetVanligArbeidstidPerUkeForTap : OpplysningProdusent<Double> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
-
-    companion object {
-        val logger = KotlinLogging.logger {}
-    }
-
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
     override val opplysningsId: UUID = UUID.fromString("0194881f-9435-72a8-b1ce-9575cbc2a767")
     override val opplysningsNavn: String = "Beregnet vanlig arbeidstid per uke før tap"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Double> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Double> {
+        val fakta = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { fakta -> fakta.kode == "FASTARBTID" }
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = 37.5,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = fakta?.verdi?.toDouble(),
+            gyldigFraOgMed = fakta?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
 }

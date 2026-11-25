@@ -27,7 +27,7 @@
 |019522b8-0f1b-7536-8691-fd824bca86de|Årsaken til permitteringen fra fiskeindustrien er godkjent|Dummy|Fakta|true|
 |01948d3c-4bea-7802-9d18-5342a5e2be99|Avtjent verneplikt|Verifisert|Fakta|true|
 |0194881f-9428-74d5-b160-f63a4c61a23b|Barn fra Arena|Dummy|Fakta|true|
-|0194881f-9435-72a8-b1ce-9575cbc2a767|Beregnet vanlig arbeidstid per uke før tap|Dummy|Fakta|true|
+|0194881f-9435-72a8-b1ce-9575cbc2a767|Beregnet vanlig arbeidstid per uke før tap|Alfa|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a765|Beregningsregel: Arbeidstid siste 12 måneder|Dummy|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a766|Beregningsregel: Arbeidstid siste 36 måneder|Dummy|Fakta|true|
 |0194881f-9435-72a8-b1ce-9575cbc2a764|Beregningsregel: Arbeidstid siste 6 måneder|Dummy|Fakta|true|
