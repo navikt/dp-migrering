@@ -36,7 +36,7 @@ class OpplysningProdusentSpec :
         fun verifiser(
             arena: Opplysning<*>?,
             dpSak: BigDecimal,
-        ): OpplysningVerifisertResultat {
+        ): OpplysningKontrollResultat {
             val repository = mockk<MigreringRepository>()
             every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns arena
             return produsent.verifiser(dpSak, migreringId, repository)
@@ -65,15 +65,15 @@ class OpplysningProdusentSpec :
 
         "beholder null-regelen uten aa godta manglende databaserad" {
             produsent.sammenlignVerdier(null, null) shouldBe true
-            verifiser(opplysning(null), BigDecimal.ONE).verifisert shouldBe false
+            verifiser(opplysning(null), BigDecimal.ONE).ok shouldBe false
             produsent.sammenlignVerdier(1, null) shouldBe false
-            verifiser(null, BigDecimal.ONE).verifisert shouldBe false
+            verifiser(null, BigDecimal.ONE).ok shouldBe false
         }
 
         "verifiserer en typet opplysning" {
             val resultat = verifiser(opplysning(123.toBigDecimal()), 123.toBigDecimal())
 
-            resultat.verifisert shouldBe true
+            resultat.ok shouldBe true
             resultat.uuid shouldBe produsent.opplysningsId
             resultat.navn shouldBe produsent.opplysningsNavn
             resultat.arenaVerdi shouldBe 123.toBigDecimal()
@@ -81,7 +81,7 @@ class OpplysningProdusentSpec :
         }
 
         "avviser ulik UUID selv om verdiene er like" {
-            verifiser(opplysning(BigDecimal.ONE, UUID.randomUUID()), BigDecimal.ONE).verifisert shouldBe false
+            verifiser(opplysning(BigDecimal.ONE, UUID.randomUUID()), BigDecimal.ONE).ok shouldBe false
         }
 
         val dato = LocalDate.of(2026, 11, 1)
@@ -174,7 +174,6 @@ class OpplysningProdusentSpec :
                 intArrayOf(1),
                 objectMapper.readTree("""{"felt":"testverdi"}"""),
                 objectMapper.readTree("""["testverdi"]"""),
-                LocalDate.of(2026, 11, 1),
                 1.toBigInteger(),
                 1.0f,
                 UUID.randomUUID(),

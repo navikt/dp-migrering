@@ -13,8 +13,8 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import no.nav.dagpenger.behandling.api.models.OpplysningerDTO
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringResultatMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringSimuleringResultatMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures

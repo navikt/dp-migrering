@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering.meldinger.typet
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning

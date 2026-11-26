@@ -17,7 +17,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.test.runTest
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringStartetMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures

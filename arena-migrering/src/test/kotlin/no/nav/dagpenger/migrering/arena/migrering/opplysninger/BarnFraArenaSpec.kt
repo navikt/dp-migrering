@@ -123,7 +123,7 @@ class BarnFraArenaSpec :
         fun verifiser(
             arena: Opplysning<*>?,
             dpSak: BarnListe,
-        ): OpplysningVerifisertResultat {
+        ): OpplysningKontrollResultat {
             val repository = mockk<MigreringRepository>()
             every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns arena
             return produsent.verifiser(dpSak, migreringId, repository)
@@ -143,13 +143,13 @@ class BarnFraArenaSpec :
         "sammenligner ferdig deserialiserte barnelister etter innhold" {
             val kopi = barnListe.copy(barn = barnListe.barn.map { it.copy() })
 
-            verifiser(opplysning(barnListe), kopi).verifisert shouldBe true
+            verifiser(opplysning(barnListe), kopi).ok shouldBe true
         }
 
         "ignorerer rekkefolgen paa barna" {
             val omvendt = barnListe.copy(barn = barnListe.barn.reversed())
 
-            verifiser(opplysning(barnListe), omvendt).verifisert shouldBe true
+            verifiser(opplysning(barnListe), omvendt).ok shouldBe true
         }
 
         "bevarer antall forekomster av hvert barn" {
@@ -157,13 +157,13 @@ class BarnFraArenaSpec :
             val dpSak = barnListe.copy(barn = listOf(barn, annetBarn, annetBarn))
             val omvendt = arena.copy(barn = arena.barn.reversed())
 
-            verifiser(opplysning(arena), dpSak).verifisert shouldBe false
-            verifiser(opplysning(arena), omvendt).verifisert shouldBe true
+            verifiser(opplysning(arena), dpSak).ok shouldBe false
+            verifiser(opplysning(arena), omvendt).ok shouldBe true
         }
 
         "sammenligner soknadbarnId" {
-            verifiser(opplysning(barnListe), barnListe.copy(søknadbarnId = null)).verifisert shouldBe false
-            verifiser(opplysning(barnListe), barnListe.copy(søknadbarnId = UUID.randomUUID())).verifisert shouldBe false
+            verifiser(opplysning(barnListe), barnListe.copy(søknadbarnId = null)).ok shouldBe false
+            verifiser(opplysning(barnListe), barnListe.copy(søknadbarnId = UUID.randomUUID())).ok shouldBe false
         }
 
         "sammenligner alle feltene paa hvert barn" {
@@ -184,31 +184,31 @@ class BarnFraArenaSpec :
             endringer.forEach { (felt, endretBarn) ->
                 withClue(felt) {
                     val endretListe = barnListe.copy(barn = listOf(endretBarn, annetBarn))
-                    verifiser(opplysning(barnListe), endretListe).verifisert shouldBe false
+                    verifiser(opplysning(barnListe), endretListe).ok shouldBe false
                 }
             }
         }
 
         "avviser ulikt antall barn" {
-            verifiser(opplysning(barnListe), barnListe.copy(barn = listOf(barn))).verifisert shouldBe false
+            verifiser(opplysning(barnListe), barnListe.copy(barn = listOf(barn))).ok shouldBe false
         }
 
         "sammenligner tomme barnelister" {
             val tom = BarnListe(barn = emptyList())
 
-            verifiser(opplysning(tom), tom.copy()).verifisert shouldBe true
-            verifiser(opplysning(barnListe), barnListe.copy(barn = emptyList())).verifisert shouldBe false
+            verifiser(opplysning(tom), tom.copy()).ok shouldBe true
+            verifiser(opplysning(barnListe), barnListe.copy(barn = emptyList())).ok shouldBe false
         }
 
         "beholder null-regelen uten aa forveksle null med en tom barneliste" {
             val tom = BarnListe(barn = emptyList())
 
             produsent.sammenlignVerdier(null, null) shouldBe true
-            verifiser(opplysning(null), barnListe).verifisert shouldBe false
+            verifiser(opplysning(null), barnListe).ok shouldBe false
             produsent.sammenlignVerdier(barnListe, null) shouldBe false
-            verifiser(opplysning(null), tom).verifisert shouldBe false
+            verifiser(opplysning(null), tom).ok shouldBe false
             produsent.sammenlignVerdier(tom, null) shouldBe false
-            verifiser(null, barnListe).verifisert shouldBe false
+            verifiser(null, barnListe).ok shouldBe false
         }
 
         "lar ugyldig barneliste gi konverteringsfeil" {

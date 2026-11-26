@@ -63,7 +63,7 @@ class InntektsopplysningerSpec :
                             repository,
                         )
 
-                    resultat.verifisert shouldBe true
+                    resultat.ok shouldBe true
                     resultat.arenaVerdi shouldBe inntekt.inntektsId
                     resultat.dpSakVerdi shouldBe inntekt.inntektsId
                 }
@@ -84,15 +84,15 @@ class InntektsopplysningerSpec :
 
                 produsent
                     .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
-                    .verifisert shouldBe true
+                    .ok shouldBe true
                 produsent
                     .verifiserDto(TekstVerdiDTO("annen-inntekts-ID"), migreringId, repository)
-                    .verifisert shouldBe false
+                    .ok shouldBe false
 
                 every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns null
                 produsent
                     .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
-                    .verifisert shouldBe false
+                    .ok shouldBe false
             }
 
             "bevarer innholdssammenligning utenom DTO for ${produsent::class.simpleName}" {
@@ -100,10 +100,10 @@ class InntektsopplysningerSpec :
                     objectMapper.readValue(inntekt1.replace("480000", "480001"), InntektV1::class.java)
                 val repository = repositoryFor(produsent, produsent.produser(kontekst(inntekt)))
 
-                produsent.verifiser(endretInntekt, migreringId, repository).verifisert shouldBe false
+                produsent.verifiser(endretInntekt, migreringId, repository).ok shouldBe false
                 produsent
                     .verifiserDto(TekstVerdiDTO(endretInntekt.inntektsId), migreringId, repository)
-                    .verifisert shouldBe true
+                    .ok shouldBe true
             }
 
             "verifiserer lagret JSON-inntekt mot ID for ${produsent::class.simpleName}" {
@@ -114,7 +114,7 @@ class InntektsopplysningerSpec :
 
                 produsent
                     .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
-                    .verifisert shouldBe true
+                    .ok shouldBe true
             }
 
             "avviser manglende inntektsverdi for ${produsent::class.simpleName}" {
@@ -122,7 +122,7 @@ class InntektsopplysningerSpec :
 
                 produsent
                     .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
-                    .verifisert shouldBe false
+                    .ok shouldBe false
             }
 
             "avviser feil opplysnings-ID for ${produsent::class.simpleName}" {
@@ -137,7 +137,7 @@ class InntektsopplysningerSpec :
 
                 produsent
                     .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
-                    .verifisert shouldBe false
+                    .ok shouldBe false
             }
 
             "avviser ugyldig lagret inntekt uten aa vise verdien for ${produsent::class.simpleName}" {

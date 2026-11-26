@@ -11,9 +11,9 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.KafkaMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringAvbruttMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.ForslagTilBehandlingsresultatMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures

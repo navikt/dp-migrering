@@ -16,7 +16,7 @@ import no.nav.dagpenger.inntekt.v1.Inntekt
 import no.nav.dagpenger.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.inntekt.v1.KlassifisertInntektMåned
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringManglendeOpplysningerMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringManglendeOpplysningerMottak
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.konfigurasjon.Feature

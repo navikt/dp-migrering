@@ -6,6 +6,7 @@ import no.nav.dagpenger.behandling.api.models.OpplysningsverdiDTO
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.util.UUID
 
 interface OpplysningProdusent<T : Any> {
@@ -39,7 +40,7 @@ interface OpplysningProdusent<T : Any> {
         // opplysning: Opplysning<Any>,
         migreringId: UUID,
         repository: MigreringRepository,
-    ): OpplysningVerifisertResultat {
+    ): OpplysningKontrollResultat {
         val arenaOpplysning =
             repository.hentOpplysning(
                 migreringId = migreringId,
@@ -47,10 +48,10 @@ interface OpplysningProdusent<T : Any> {
             )
         val sammeVerdi = sammenlignVerdier(arenaOpplysning?.verdi, verdi)
 
-        return OpplysningVerifisertResultat(
+        return OpplysningKontrollResultat(
             uuid = opplysningsId,
             navn = opplysningsNavn,
-            verifisert = sammeVerdi && arenaOpplysning?.uuid == opplysningsId,
+            ok = sammeVerdi && arenaOpplysning?.uuid == opplysningsId,
             dpSakVerdi = verdi,
             arenaVerdi = arenaOpplysning?.verdi,
         )
@@ -62,7 +63,7 @@ interface OpplysningProdusent<T : Any> {
     ): Boolean {
         listOf(arenaVerdi, dpSakVerdi).forEach { verdi ->
             when (verdi) {
-                null, is Boolean, is String, is Int, is Long, is Double, is BigDecimal -> {
+                null, is Boolean, is String, is Int, is Long, is Double, is BigDecimal, is LocalDate -> {
                 }
 
                 else -> {
@@ -80,7 +81,7 @@ interface OpplysningProdusent<T : Any> {
         verdi: OpplysningsverdiDTO,
         migreringId: UUID,
         repository: MigreringRepository,
-    ): OpplysningVerifisertResultat
+    ): OpplysningKontrollResultat
 
     fun vedManglendeOpplysning() {
         manglendeOpplysninger.labelValues(opplysningsId.toString(), opplysningsNavn, status.name).inc()

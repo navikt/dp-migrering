@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering.meldinger.typet
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -46,7 +46,6 @@ internal class MigreringSimuleringResultatMeldingV1(
                     .with(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
                     .readValue(packet.toJson()) as MigreringSimuleringResultatMeldingV1
             return melding
-            // .withTypedOpplysninger()
         }
 
         fun ny(
@@ -84,12 +83,12 @@ internal class MigreringSimuleringResultatMeldingV1(
                         migreringId = migreringId,
                         repository = migreringRepository,
                     )
-                }.partition { it.verifisert }
+                }.partition { it.ok }
 
         return MigreringSimuleringKontrollResultatMeldingV1.fra(
             kilde = this,
-            verifisert = verifisert,
-            ikkeVerifisert = ikkeVerifisert,
+            ok = verifisert,
+            feilet = ikkeVerifisert,
         )
     }
 }

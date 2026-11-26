@@ -1,9 +1,9 @@
-package no.nav.dagpenger.migrering.arena.migrering.meldinger.typet
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningVerifisertResultat
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.OpplysningKontrollResultat
 import no.nav.dagpenger.migrering.objectMapper
 import tools.jackson.databind.DeserializationFeature
 import java.time.LocalDate
@@ -27,8 +27,8 @@ internal data class MigreringSimuleringKontrollResultatMeldingV1(
     override val initiertAv: String,
     override val migreringTidspunkt: LocalDate,
     override val simulering: Boolean = false,
-    val verifisert: List<OpplysningVerifisertResultat>,
-    val ikkeVerifisert: List<OpplysningVerifisertResultat>,
+    val ok: List<OpplysningKontrollResultat>,
+    val feilet: List<OpplysningKontrollResultat>,
 ) : MigreringMeldingV1 {
     init {
         require(navn == EVENT_NAME) { "Forventet eventnavn $EVENT_NAME" }
@@ -45,8 +45,8 @@ internal data class MigreringSimuleringKontrollResultatMeldingV1(
 
         fun fra(
             kilde: MigreringSimuleringResultatMeldingV1,
-            verifisert: List<OpplysningVerifisertResultat>,
-            ikkeVerifisert: List<OpplysningVerifisertResultat>,
+            ok: List<OpplysningKontrollResultat>,
+            feilet: List<OpplysningKontrollResultat>,
         ): MigreringSimuleringKontrollResultatMeldingV1 =
             MigreringSimuleringKontrollResultatMeldingV1(
                 id = UUID.randomUUID(),
@@ -58,8 +58,8 @@ internal data class MigreringSimuleringKontrollResultatMeldingV1(
                 initiertAv = kilde.initiertAv,
                 migreringTidspunkt = kilde.migreringTidspunkt,
                 simulering = kilde.simulering,
-                verifisert = verifisert,
-                ikkeVerifisert = ikkeVerifisert,
+                ok = ok,
+                feilet = feilet,
             )
     }
 }

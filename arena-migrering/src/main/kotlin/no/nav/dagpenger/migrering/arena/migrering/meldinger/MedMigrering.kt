@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering.meldinger.typet
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import java.util.UUID

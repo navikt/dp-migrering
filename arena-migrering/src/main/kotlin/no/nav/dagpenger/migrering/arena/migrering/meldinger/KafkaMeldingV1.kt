@@ -1,4 +1,4 @@
-package no.nav.dagpenger.migrering.arena.migrering.meldinger.typet
+package no.nav.dagpenger.migrering.arena.migrering.meldinger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import no.nav.dagpenger.migrering.objectMapper

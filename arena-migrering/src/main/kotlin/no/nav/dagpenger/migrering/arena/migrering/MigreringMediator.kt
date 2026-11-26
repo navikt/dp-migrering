@@ -17,15 +17,15 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.BehandlingOpprettetMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.KafkaMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringAvbruttMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringManglendeOpplysningerMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringOpplysningerMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringKontrollResultatMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringResultatMeldingV1
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringOpplysningerMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringKontrollResultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
 import java.time.LocalDate
@@ -77,10 +77,6 @@ class MigreringMediator(
             )
 
             MigreringStartetMeldingV1.fra(migrering).publiser(context = rapid)
-//            publiserMelding(
-//                context = rapid,
-//                melding = MigreringStartetMeldingV1.fra(migrering),
-//            )
         }
 
         return migrering
@@ -140,9 +136,17 @@ class MigreringMediator(
         melding.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Ekstern)
 
         melding.kontroll(migreringRepository).also {
-            logger.info { "Verifisert opplysninger (${it.verifisert.size}): ${it.verifisert.map { it.navn }}" }
-            logger.warn { "Ikke verifisert opplysninger (${it.ikkeVerifisert.size}): ${it.ikkeVerifisert.map { it.navn }}" }
-            context.publish(it.toJson())
+            logger.info {
+                "Verifisert opplysninger (${it.ok.size}): ${it.ok.map { verifisertResultat ->
+                    verifisertResultat.navn
+                }}"
+            }
+            logger.warn {
+                "Ikke verifisert opplysninger (${it.feilet.size}): ${it.feilet.map { ikkeVerifisertResultat ->
+                    ikkeVerifisertResultat.navn
+                }}"
+            }
+            it.publiser(context)
         }
     }
 

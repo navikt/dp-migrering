@@ -30,7 +30,7 @@ interface DtoOpplysningProdusent<T : Any> : OpplysningProdusent<T> {
         verdi: OpplysningsverdiDTO,
         migreringId: UUID,
         repository: MigreringRepository,
-    ): OpplysningVerifisertResultat =
+    ): OpplysningKontrollResultat =
         verifiser(
             verdi = verdiFraDto(verdi),
             migreringId = migreringId,
@@ -106,7 +106,7 @@ interface InntektsOpplysningProdusent : OpplysningProdusent<InntektV1> {
         verdi: OpplysningsverdiDTO,
         migreringId: UUID,
         repository: MigreringRepository,
-    ): OpplysningVerifisertResultat {
+    ): OpplysningKontrollResultat {
         // Behandlingsapi-et sender inntektsreferanser som tekstverdier.
         require(
             verdi is TekstVerdiDTO &&
@@ -123,10 +123,10 @@ interface InntektsOpplysningProdusent : OpplysningProdusent<InntektV1> {
             }
         val arenaInntektsId = arenaInntekt?.inntektsId
 
-        return OpplysningVerifisertResultat(
+        return OpplysningKontrollResultat(
             uuid = opplysningsId,
             navn = opplysningsNavn,
-            verifisert = arenaOpplysning?.uuid == opplysningsId && arenaInntektsId == verdi.verdi,
+            ok = arenaOpplysning?.uuid == opplysningsId && arenaInntektsId == verdi.verdi,
             dpSakVerdi = verdi.verdi,
             arenaVerdi = arenaInntektsId,
         )

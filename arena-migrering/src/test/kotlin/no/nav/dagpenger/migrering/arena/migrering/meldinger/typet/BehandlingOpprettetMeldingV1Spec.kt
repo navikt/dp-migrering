@@ -5,6 +5,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.toUUID
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMeldingV1
 
 class BehandlingOpprettetMeldingV1Spec :
     StringSpec({

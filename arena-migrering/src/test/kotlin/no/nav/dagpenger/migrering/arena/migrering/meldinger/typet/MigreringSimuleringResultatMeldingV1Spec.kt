@@ -3,6 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering.meldinger.typet
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.migrering.arena.migrering.jsonMessageFromResource
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMeldingV1
 
 class MigreringSimuleringResultatMeldingV1Spec :
     StringSpec({
