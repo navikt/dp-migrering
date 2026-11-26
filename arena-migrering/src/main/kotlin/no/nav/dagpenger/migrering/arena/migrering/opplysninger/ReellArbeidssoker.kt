@@ -5,7 +5,7 @@ import java.util.UUID
 
 // Denne opplysningen settes til true for alle som migreres, da alle som migreres er reelle arbeidssøkere.
 // Opplysningen finnes ikke direkte i Arena, men utledes fra andre verdier.
-class ReellArbeidssoker : OpplysningProdusent<Boolean> {
+class ReellArbeidssoker : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

@@ -2,10 +2,11 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.math.BigDecimal
 import java.util.UUID
 
 // Arena: ? vedtakfakta GRUNN ???
-class Grunnbelop : OpplysningProdusent<Int> {
+class Grunnbelop : PengeOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
@@ -17,10 +18,10 @@ class Grunnbelop : OpplysningProdusent<Int> {
     override val opplysningsId: UUID = UUID.fromString("0194881f-9413-77ce-92ec-d29700f04243")
     override val opplysningsNavn: String = "Grunnbeløp"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<BigDecimal> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = 136549,
+            verdi = 136549.toBigDecimal(),
             gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )

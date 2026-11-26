@@ -1,16 +1,19 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.dagpenger.migrering.arena.migrering.ArenaSakMigrering
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMelding
+import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.BarnListe
 import no.nav.dagpenger.migrering.objectMapper
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
 
@@ -20,9 +23,9 @@ class OpplysningProdusentSpec :
         val migreringId = UUID.randomUUID()
 
         fun opplysning(
-            verdi: Any?,
+            verdi: BigDecimal?,
             uuid: UUID = produsent.opplysningsId,
-        ): Opplysning<Any> =
+        ): Opplysning<BigDecimal> =
             Opplysning(
                 navn = produsent.opplysningsNavn,
                 verdi = verdi,
@@ -32,22 +35,16 @@ class OpplysningProdusentSpec :
 
         fun verifiser(
             arena: Opplysning<*>?,
-            dpSak: Any?,
+            dpSak: BigDecimal,
         ): OpplysningVerifisertResultat {
             val repository = mockk<MigreringRepository>()
             every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns arena
-            return produsent.verifiser(opplysning(dpSak), migreringId, repository)
+            return produsent.verifiser(dpSak, migreringId, repository)
         }
 
-        listOf(true, false, "tekst", 123, 123L, 123.5).forEach { verdi ->
+        listOf(true, false, "tekst", 123, 123L, 123.5, 1.toBigDecimal()).forEach { verdi ->
             "verifiserer like verdier av typen ${verdi.javaClass.simpleName}: $verdi" {
-                val resultat = verifiser(opplysning(verdi), verdi)
-
-                resultat.verifisert shouldBe true
-                resultat.uuid shouldBe produsent.opplysningsId
-                resultat.navn shouldBe produsent.opplysningsNavn
-                resultat.arenaVerdi shouldBe verdi
-                resultat.dpSakVerdi shouldBe verdi
+                produsent.sammenlignVerdier(verdi, verdi) shouldBe true
             }
         }
 
@@ -62,20 +59,110 @@ class OpplysningProdusentSpec :
             "1" to 1,
         ).forEach { (arena, dpSak) ->
             "avviser ulik verdi eller type: $arena (${arena.javaClass.simpleName}) og $dpSak (${dpSak.javaClass.simpleName})" {
-                verifiser(opplysning(arena), dpSak).verifisert shouldBe false
+                produsent.sammenlignVerdier(arena, dpSak) shouldBe false
             }
         }
 
         "beholder null-regelen uten aa godta manglende databaserad" {
-            verifiser(opplysning(null), null).verifisert shouldBe true
-            verifiser(opplysning(null), 1).verifisert shouldBe false
-            verifiser(opplysning(1), null).verifisert shouldBe false
-            verifiser(null, null).verifisert shouldBe false
-            verifiser(null, 1).verifisert shouldBe false
+            produsent.sammenlignVerdier(null, null) shouldBe true
+            verifiser(opplysning(null), BigDecimal.ONE).verifisert shouldBe false
+            produsent.sammenlignVerdier(1, null) shouldBe false
+            verifiser(null, BigDecimal.ONE).verifisert shouldBe false
+        }
+
+        "verifiserer en typet opplysning" {
+            val resultat = verifiser(opplysning(123.toBigDecimal()), 123.toBigDecimal())
+
+            resultat.verifisert shouldBe true
+            resultat.uuid shouldBe produsent.opplysningsId
+            resultat.navn shouldBe produsent.opplysningsNavn
+            resultat.arenaVerdi shouldBe 123.toBigDecimal()
+            resultat.dpSakVerdi shouldBe 123.toBigDecimal()
         }
 
         "avviser ulik UUID selv om verdiene er like" {
-            verifiser(opplysning(1, UUID.randomUUID()), 1).verifisert shouldBe false
+            verifiser(opplysning(BigDecimal.ONE, UUID.randomUUID()), BigDecimal.ONE).verifisert shouldBe false
+        }
+
+        val dato = LocalDate.of(2026, 11, 1)
+
+        fun kontekst(
+            kode: String? = null,
+            verdi: String = "9007199254740993.123456789",
+        ): MigreringsKontekst {
+            val sak = mockk<ArenaSakMigrering>()
+            every { sak.vedtakfakta } returns
+                listOfNotNull(kode?.let { ArenaSakMigrering.ArenaVedtakfaktaMigrering(it, verdi, dato) })
+            every { sak.gjenstaendeTeller } returns
+                listOfNotNull(
+                    kode?.let { ArenaSakMigrering.ArenaGjenstaendeTellerMigrering("GJENNTELLER", it, verdi, dato) },
+                )
+            return MigreringsKontekst(sak, "testbruker", opprettetTidspunkt = dato.atStartOfDay())
+        }
+
+        val pengeprodusenterFraArena =
+            listOf(
+                Dagpengegrunnlag() to "GRUNN",
+                Dagsats() to "DAGS",
+                Egenandel() to "EGENANDDP",
+                InntektPeriode1() to "INTSISTE",
+                InntektPeriode2() to "INTNESTS",
+                InntektPeriode3() to "INTTREDS",
+                SamordnetDagsatsUtenBarnetillegg() to "DAGS",
+                UkessatsEtterSamordning() to "UKES",
+                UkessatsForSamordning() to "UKESFSAM",
+                GjenstaendeEgenandel() to "EGENA",
+            )
+
+        pengeprodusenterFraArena.forEach { (pengeprodusent, kode) ->
+            "bevarer alle desimaler fra Arena for ${pengeprodusent::class.simpleName}" {
+                val resultat = pengeprodusent.produser(kontekst(kode))
+
+                resultat.verdi.shouldBeInstanceOf<BigDecimal>() shouldBe BigDecimal("9007199254740993.123456789")
+                resultat.gyldigFraOgMed shouldBe dato
+                resultat.uuid shouldBe pengeprodusent.opplysningsId
+            }
+
+            "bevarer manglende verdi for ${pengeprodusent::class.simpleName}" {
+                pengeprodusent.produser(kontekst()).verdi shouldBe
+                    if (pengeprodusent is GjenstaendeEgenandel) BigDecimal.ZERO else null
+            }
+        }
+
+        val fastePengeverdier =
+            listOf(
+                DagsatsMedBarnetilleggEtterSamordningOg90Regel() to 1500,
+                EtterlonnBelop() to 0,
+                ForbruktEgenandel() to 25000,
+                ForeldrepengerDagsats() to 1000,
+                GarantilottFraGarantikassenForFiskereBelop() to 0,
+                Grunnbelop() to 136549,
+                OmsorgspengerDagsats() to 0,
+                OppleringspengerDagsats() to 0,
+                PleiepengerDagsats() to 0,
+                SvangerskapspengerDagsats() to 0,
+                SykepengerDagsats() to 0,
+                UforeDagsats() to 0,
+                UforepensjonFraOffentligPensjonsordningBelop() to 0,
+                VartpengerBelop() to 0,
+                VentelonnBelop() to 0,
+            )
+
+        fastePengeverdier.forEach { (pengeprodusent, forventet) ->
+            "bevarer fast beløp som BigDecimal for ${pengeprodusent::class.simpleName}" {
+                pengeprodusent.produser(kontekst()).verdi.shouldBeInstanceOf<BigDecimal>() shouldBe forventet.toBigDecimal()
+            }
+        }
+
+        "bruker manglende pengeverdi for grunnbeløp for grunnlag" {
+            val grunnbelop = GrunnbelopForGrunnlag()
+
+            grunnbelop.produser(kontekst()).verdi shouldBe null
+            grunnbelop.status shouldBe OpplysningProdusent.Status.Dummy
+        }
+
+        "bruker desimaltall for minimum vanlig arbeidstid" {
+            MinimumVanligArbeidstid().produser(kontekst()).verdi.shouldBeInstanceOf<Double>() shouldBe 0.0
         }
 
         val komplekseVerdier =
@@ -88,7 +175,6 @@ class OpplysningProdusentSpec :
                 objectMapper.readTree("""{"felt":"testverdi"}"""),
                 objectMapper.readTree("""["testverdi"]"""),
                 LocalDate.of(2026, 11, 1),
-                1.toBigDecimal(),
                 1.toBigInteger(),
                 1.0f,
                 UUID.randomUUID(),
@@ -106,7 +192,7 @@ class OpplysningProdusentSpec :
                 ).forEach { (arena, dpSak) ->
                     val feil =
                         shouldThrow<UnsupportedOperationException> {
-                            verifiser(opplysning(arena), dpSak)
+                            produsent.sammenlignVerdier(arena, dpSak)
                         }
 
                     feil.message shouldContain produsent.opplysningsNavn
@@ -120,47 +206,30 @@ class OpplysningProdusentSpec :
 
         "avviser ukjent datatype selv om databaseraden mangler" {
             shouldThrow<UnsupportedOperationException> {
-                verifiser(null, emptyList<String>())
+                produsent.sammenlignVerdier(null, emptyList<String>())
             }
         }
 
-        "bevarer JSON-arrays fra meldingen slik at de ikke forveksles med null" {
-            val packet =
-                JsonMessage.newMessage(
-                    MigreringSimuleringResultatMelding.EVENT_NAME,
-                    mapOf(
-                        "ident" to "testident",
-                        "migreringId" to migreringId.toString(),
-                        "simulerteOpplysninger" to listOf(opplysning(listOf("testverdi"))),
-                        "sakId" to 123,
-                        "migreringTidspunkt" to "2026-11-01",
-                        "simulering" to true,
-                        "initiertAv" to "testbruker",
-                    ),
+        "bevarer verditype og metadata i fabrikkmetodene" {
+            val dato = LocalDate.of(2026, 11, 1)
+            val uuid = UUID.randomUUID()
+            val opplysninger =
+                listOf(
+                    Opplysning("Desimaltall", 1.toBigDecimal(), dato, uuid),
+                    Opplysning("Tekst", "tekst", dato, uuid),
+                    Opplysning("Dato", dato, dato, uuid),
+                    Opplysning("Boolsk", true, dato, uuid),
+                    Opplysning("Heltall", 1, dato, uuid),
+                    Opplysning("Flyttall", 1.5, dato, uuid),
+                    Opplysning("Barn", BarnListe(barn = emptyList()), dato, uuid),
                 )
-//            val verdi = MigreringSimuleringResultatMelding(packet).simulerteOpplysninger.single().verdi
-//
-//            shouldThrow<UnsupportedOperationException> {
-//                verifiser(opplysning(null), verdi)
-//            }
-        }
+            val verdier = listOf(1.toBigDecimal(), "tekst", dato, true, 1, 1.5, BarnListe(barn = emptyList()))
 
-        "bevarer null fra simuleringsmeldingen" {
-            val packet =
-                JsonMessage.newMessage(
-                    MigreringSimuleringResultatMelding.EVENT_NAME,
-                    mapOf(
-                        "ident" to "testident",
-                        "migreringId" to migreringId.toString(),
-                        "simulerteOpplysninger" to listOf(opplysning(null)),
-                        "sakId" to 123,
-                        "migreringTidspunkt" to "2026-11-01",
-                        "simulering" to true,
-                        "initiertAv" to "testbruker",
-                    ),
-                )
-//            val verdi = MigreringSimuleringResultatMelding(packet).simulerteOpplysninger.single().verdi
-//
-//            verifiser(opplysning(null), verdi).verifisert shouldBe true
+            opplysninger.zip(verdier).forEach { (opplysning, verdi) ->
+                opplysning.verdi shouldBe verdi
+                opplysning.verdi?.javaClass shouldBe verdi.javaClass
+                opplysning.gyldigFraOgMed shouldBe dato
+                opplysning.uuid shouldBe uuid
+            }
         }
     })

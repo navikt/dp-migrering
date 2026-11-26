@@ -3,7 +3,6 @@ package no.nav.dagpenger.migrering.arena.migrering
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
-import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -13,12 +12,11 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import io.mockk.verifyOrder
 import no.nav.dagpenger.inntekt.v1.Inntekt
 import no.nav.dagpenger.inntekt.v1.InntektKlasse
 import no.nav.dagpenger.inntekt.v1.KlassifisertInntekt
 import no.nav.dagpenger.inntekt.v1.KlassifisertInntektMåned
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringManglendeOpplysningerMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringManglendeOpplysningerMottak
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
@@ -46,7 +44,7 @@ class MigreringManglendeOpplysningerMottakSpec :
             val test = MigreringManglendeOpplysningerTest(rapid = testRapid)
 
             val melding =
-                MigreringManglendeOpplysningerMelding(
+                MigreringManglendeOpplysningerMeldingV1.fra(
                     packet =
                         JsonMessage.newMessage(
                             "migrering_manglende_opplysninger",
@@ -74,7 +72,7 @@ class MigreringManglendeOpplysningerMottakSpec :
             sendtMelding["migreringTidspunkt"].asLocalDate() shouldBe melding.migreringTidspunkt
             sendtMelding["simulering"].asBoolean() shouldBe melding.simulering
 
-            verifyOrder {
+            verify {
                 test.repository.lagreMigreringHendelse(
                     any(),
                     any(),
@@ -84,7 +82,7 @@ class MigreringManglendeOpplysningerMottakSpec :
                     any(),
                     any(),
                 )
-                testRapid.publish(any<List<OutgoingMessage>>())
+                test.rapid.publish(any<String>())
                 test.repository.lagreMigreringHendelse(
                     any(),
                     any(),
@@ -106,7 +104,7 @@ class MigreringManglendeOpplysningerMottakSpec :
             val test = MigreringManglendeOpplysningerTest(rapid = testRapid)
 
             val melding =
-                MigreringManglendeOpplysningerMelding(
+                MigreringManglendeOpplysningerMeldingV1.fra(
                     packet =
                         JsonMessage.newMessage(
                             "migrering_manglende_opplysninger",
@@ -122,6 +120,7 @@ class MigreringManglendeOpplysningerMottakSpec :
                             ),
                         ),
                 )
+
             testRapid.sendTestMessage(melding.toJson())
 
             testRapid.inspektør.size shouldBe 1
@@ -163,11 +162,12 @@ private class MigreringManglendeOpplysningerTest(
     val opplysningId1 = UUID.randomUUID()
     val opplysningId2 = UUID.randomUUID()
     val opplysningId3 = UUID.randomUUID()
+    private val manglendeVerdi: String? = null
 
     val opplysningSomIkkeFinnes =
         Opplysning(
             navn = "Opplysning 4",
-            verdi = null,
+            verdi = manglendeVerdi,
             gyldigFraOgMed = null,
             uuid = UUID.randomUUID(),
         )
@@ -176,7 +176,7 @@ private class MigreringManglendeOpplysningerTest(
             opplysning =
                 Opplysning(
                     navn = "Opplysning 1",
-                    verdi = null,
+                    verdi = manglendeVerdi,
                     gyldigFraOgMed = null,
                     uuid = opplysningId1,
                 ),

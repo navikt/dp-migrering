@@ -1,16 +1,17 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.math.BigDecimal
 import java.util.UUID
 
-class Egenandel : OpplysningProdusent<Int> {
+class Egenandel : PengeOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val opplysningsId: UUID = UUID.fromString("0194881f-943f-78d9-b874-00a4944c54ef")
     override val opplysningsNavn: String = "Egenandel"
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<BigDecimal> {
         val opplysning = kontekst.sakTilMigrering.vedtakfakta.firstOrNull { it.kode == "EGENANDDP" }
 
         if (opplysning == null) {
@@ -19,7 +20,7 @@ class Egenandel : OpplysningProdusent<Int> {
 
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = opplysning?.verdi?.toInt(),
+            verdi = opplysning?.verdi?.toBigDecimal(),
             gyldigFraOgMed = opplysning?.gyldigFra,
             uuid = opplysningsId,
         )

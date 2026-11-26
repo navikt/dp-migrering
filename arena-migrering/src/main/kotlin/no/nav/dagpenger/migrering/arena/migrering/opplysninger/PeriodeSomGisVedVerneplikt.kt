@@ -5,7 +5,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: PER hvis verneplikt på siste vedtak, sjekk perioder som er valgt
-class PeriodeSomGisVedVerneplikt : OpplysningProdusent<Int> {
+class PeriodeSomGisVedVerneplikt : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

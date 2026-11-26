@@ -10,7 +10,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
@@ -48,7 +48,7 @@ class MigreringStartetMottak(
             ) {
                 logger.info { "Mottok melding om manglende opplysninger for migrering" }
                 migreringMediator.håndter(
-                    MigreringStartetMelding(packet),
+                    MigreringStartetMeldingV1.fra(packet),
                     context,
                 )
             }

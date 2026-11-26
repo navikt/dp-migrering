@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: Vedtakfakta ARBTIDREG og verdi "Siste arbeidsforhold" eller bedre Vedtakfakta ARBTREGKOD og verdi ARBFORSIST
-class BeregningsregelArbeidstidSiste6Maneder : OpplysningProdusent<Boolean> {
+class BeregningsregelArbeidstidSiste6Maneder : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa

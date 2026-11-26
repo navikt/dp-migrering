@@ -3,7 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-class Rettighetstype : OpplysningProdusent<Boolean> {
+class Rettighetstype : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa

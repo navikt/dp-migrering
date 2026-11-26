@@ -5,7 +5,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: kvotebruk BORT vedtak F (T?)
-class AntallDagerMedSanksjonSomGjenstar : OpplysningProdusent<Int> {
+class AntallDagerMedSanksjonSomGjenstar : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

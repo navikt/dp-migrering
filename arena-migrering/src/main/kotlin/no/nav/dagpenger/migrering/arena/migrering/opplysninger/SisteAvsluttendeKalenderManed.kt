@@ -1,20 +1,15 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
 // Arena: vedtakfakta INTP1SLUTT
-class SisteAvsluttendeKalenderManed : OpplysningProdusent<LocalDate> {
+class SisteAvsluttendeKalenderManed : DatoOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
-
-    companion object {
-        val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
-    }
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9414-7823-8d29-0e25b7feb7d0")
     override val opplysningsNavn: String = "SisteAvsluttendeKalendrmåned for bruker"

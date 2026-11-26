@@ -6,6 +6,11 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.dagpenger.behandling.api.models.BarnVerdiDTO
+import no.nav.dagpenger.behandling.api.models.BarnVerdiDTOKildeDTO
+import no.nav.dagpenger.behandling.api.models.BarnelisteDTO
+import no.nav.dagpenger.behandling.api.models.DataTypeDTO
+import no.nav.dagpenger.behandling.api.models.TekstVerdiDTO
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.Barn
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.BarnListe
@@ -39,7 +44,75 @@ class BarnFraArenaSpec :
                 barn = listOf(barn, annetBarn),
             )
 
-        fun opplysning(verdi: Any?): Opplysning<Any> =
+        "bevarer alle barnefeltene og soknadsbarn-ID fra behandlingsapi" {
+            val dto =
+                BarnelisteDTO(
+                    søknadBarnId = barnListe.søknadbarnId,
+                    verdi =
+                        listOf(
+                            BarnVerdiDTO(
+                                kilde = BarnVerdiDTOKildeDTO.REGISTER,
+                                ident = barn.ident,
+                                fødselsdato = barn.fødselsdato,
+                                fornavnOgMellomnavn = barn.fornavnOgMellomnavn,
+                                etternavn = barn.etternavn,
+                                statsborgerskap = barn.statsborgerskap,
+                                oppholdsland = barn.oppholdsland,
+                                forsørgeransvar = barn.forsørgeransvar,
+                                kvalifiserer = barn.kvalifiserer,
+                                begrunnelse = barn.begrunnelse,
+                            ),
+                        ),
+                )
+
+            produsent.verdiFraDto(dto) shouldBe barnListe.copy(barn = listOf(barn))
+        }
+
+        val kilder =
+            listOf(
+                BarnVerdiDTOKildeDTO.REGISTER to Barnekilde.Register,
+                BarnVerdiDTOKildeDTO.SØKNAD to Barnekilde.Søknad,
+                BarnVerdiDTOKildeDTO.SAKSBEHANDLER to Barnekilde.Saksbehandler,
+                null to null,
+            )
+
+        kilder.forEach { (dtoKilde, forventetKilde) ->
+            "bevarer barnekilde $dtoKilde fra behandlingsapi" {
+                val dto =
+                    BarnelisteDTO(
+                        verdi =
+                            listOf(
+                                BarnVerdiDTO(
+                                    kilde = dtoKilde,
+                                    fødselsdato = barn.fødselsdato,
+                                    forsørgeransvar = false,
+                                    kvalifiserer = false,
+                                ),
+                            ),
+                    )
+
+                produsent
+                    .verdiFraDto(dto)
+                    .barn
+                    .single()
+                    .kilde shouldBe forventetKilde
+            }
+        }
+
+        "bevarer tom barneliste fra behandlingsapi" {
+            produsent.verdiFraDto(BarnelisteDTO(verdi = emptyList())) shouldBe BarnListe(barn = emptyList())
+        }
+
+        "avviser feil DTO-type eller datatype for barn" {
+            shouldThrow<IllegalArgumentException> {
+                produsent.verdiFraDto(TekstVerdiDTO("ikke en barneliste"))
+            }
+            shouldThrow<IllegalArgumentException> {
+                produsent.verdiFraDto(BarnelisteDTO(verdi = emptyList(), datatype = DataTypeDTO.TEKST))
+            }
+        }
+
+        fun opplysning(verdi: BarnListe?): Opplysning<BarnListe> =
             Opplysning(
                 navn = produsent.opplysningsNavn,
                 verdi = verdi,
@@ -49,11 +122,11 @@ class BarnFraArenaSpec :
 
         fun verifiser(
             arena: Opplysning<*>?,
-            dpSak: Any?,
+            dpSak: BarnListe,
         ): OpplysningVerifisertResultat {
             val repository = mockk<MigreringRepository>()
             every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns arena
-            return produsent.verifiser(opplysning(dpSak), migreringId, repository)
+            return produsent.verifiser(dpSak, migreringId, repository)
         }
 
         "sammenligner databaseverdien med JSON-objektet fra simuleringsmeldingen" {
@@ -64,11 +137,7 @@ class BarnFraArenaSpec :
                     objectMapper.writeValueAsString(barnListe.copy(barn = barnListe.barn.reversed())),
                 )
 
-            val resultat = verifiser(arena, dpSak)
-
-            resultat.verifisert shouldBe true
-            resultat.arenaVerdi shouldBe arena.verdi
-            resultat.dpSakVerdi shouldBe dpSak
+            produsent.sammenlignVerdier(arena.verdi, dpSak) shouldBe true
         }
 
         "sammenligner ferdig deserialiserte barnelister etter innhold" {
@@ -134,20 +203,20 @@ class BarnFraArenaSpec :
         "beholder null-regelen uten aa forveksle null med en tom barneliste" {
             val tom = BarnListe(barn = emptyList())
 
-            verifiser(opplysning(null), null).verifisert shouldBe true
+            produsent.sammenlignVerdier(null, null) shouldBe true
             verifiser(opplysning(null), barnListe).verifisert shouldBe false
-            verifiser(opplysning(barnListe), null).verifisert shouldBe false
+            produsent.sammenlignVerdier(barnListe, null) shouldBe false
             verifiser(opplysning(null), tom).verifisert shouldBe false
-            verifiser(opplysning(tom), null).verifisert shouldBe false
-            verifiser(null, null).verifisert shouldBe false
+            produsent.sammenlignVerdier(tom, null) shouldBe false
+            verifiser(null, barnListe).verifisert shouldBe false
         }
 
         "lar ugyldig barneliste gi konverteringsfeil" {
             shouldThrow<MismatchedInputException> {
-                verifiser(opplysning(barnListe), mapOf("barn" to "ikke-en-liste"))
+                produsent.sammenlignVerdier(barnListe, mapOf("barn" to "ikke-en-liste"))
             }
             shouldThrow<MismatchedInputException> {
-                verifiser(opplysning(mapOf("barn" to "ikke-en-liste")), barnListe)
+                produsent.sammenlignVerdier(mapOf("barn" to "ikke-en-liste"), barnListe)
             }
         }
     })

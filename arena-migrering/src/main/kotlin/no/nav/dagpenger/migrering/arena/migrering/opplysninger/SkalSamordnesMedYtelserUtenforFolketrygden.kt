@@ -3,7 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-class SkalSamordnesMedYtelserUtenforFolketrygden : OpplysningProdusent<Boolean> {
+class SkalSamordnesMedYtelserUtenforFolketrygden : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

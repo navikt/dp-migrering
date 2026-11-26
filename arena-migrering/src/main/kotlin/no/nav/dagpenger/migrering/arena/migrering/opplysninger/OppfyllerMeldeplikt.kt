@@ -6,7 +6,7 @@ import java.util.UUID
 
 // TODO Trengs denne?
 // Arena: ?
-class OppfyllerMeldeplikt : OpplysningProdusent<Boolean> {
+class OppfyllerMeldeplikt : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Denne skal sendes som true fra Arena
-class SkalReellArbeidssokerVurderes : OpplysningProdusent<Boolean> {
+class SkalReellArbeidssokerVurderes : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

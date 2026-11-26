@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
-import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
@@ -10,7 +9,6 @@ import io.opentelemetry.api.trace.StatusCode
 import io.opentelemetry.context.Context
 import io.opentelemetry.extension.kotlin.asContextElement
 import io.opentelemetry.instrumentation.annotations.WithSpan
-import io.prometheus.metrics.core.metrics.Counter
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -19,15 +17,15 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.ForslagTilBehandlingsresultatMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringAvbruttMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringOpplysningerMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringKontrollResultatMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMelding
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.BehandlingOpprettetMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.KafkaMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringAvbruttMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringManglendeOpplysningerMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringOpplysningerMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringKontrollResultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringResultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysninger.aktiveProdusenter
 import java.time.LocalDate
@@ -44,14 +42,6 @@ class MigreringMediator(
         private val logger = KotlinLogging.logger {}
 
         private val tracer = GlobalOpenTelemetry.getTracer("arena-migrering")
-
-        private val manglendeOpplysninger =
-            Counter
-                .builder()
-                .name("migrering_manglende_opplysninger_forespurt_total")
-                .help("Antall ganger en opplysning mangler blitt forespurt under migrering")
-                .labelNames("id", "navn")
-                .register()
     }
 
     @WithSpan("migrering.start")
@@ -86,10 +76,11 @@ class MigreringMediator(
                 opplysninger = opplysninger,
             )
 
-            publiserMelding(
-                context = rapid,
-                melding = MigreringStartetMelding.fra(migrering),
-            )
+            MigreringStartetMeldingV1.fra(migrering).publiser(context = rapid)
+//            publiserMelding(
+//                context = rapid,
+//                melding = MigreringStartetMeldingV1.fra(migrering),
+//            )
         }
 
         return migrering
@@ -97,57 +88,43 @@ class MigreringMediator(
 
     @WithSpan("migrering.manglende_opplysninger")
     internal fun håndter(
-        melding: MigreringManglendeOpplysningerMelding,
+        melding: MigreringManglendeOpplysningerMeldingV1,
         context: MessageContext,
     ) {
-        melding.lagreMelding(migreringRepository)
+        melding.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Ekstern)
 
         val opplysninger =
             migreringRepository
                 .hentManglendeOpplysningerForMigrering(
                     melding.migreringId,
-                    melding.manglendeOpplysninger().map { it.uuid },
+                    melding.manglendeOpplysninger.map { it.uuid },
                 ).map { it.opplysning }
 
         val opplysningsIderViHar = opplysninger.map { it.uuid }.toSet()
         val opplysningerViIkkeFinner =
-            melding.manglendeOpplysninger().filterNot { it.uuid in opplysningsIderViHar }
+            melding.manglendeOpplysninger.filterNot { it.uuid in opplysningsIderViHar }
         val viHarIkkeAlleNodvendigeOpplysninger = opplysningerViIkkeFinner.isNotEmpty()
 
         if (viHarIkkeAlleNodvendigeOpplysninger) {
-            MigreringAvbruttMelding
-                .ny(
-                    migreringId = melding.migreringId,
-                    sakId = melding.sakId,
-                    ident = melding.ident,
-                    initiertAv = melding.initiertAv,
-                    årsak =
-                        mapOf(
-                            "kode" to "FINNER_IKKE_MANGLENDE_OPPLYSNINGER",
-                            "beskrivelse" to opplysningerViIkkeFinner.joinToString { "${it.navn} (${it.uuid})" },
-                        ),
-                ).also {
-                    rapid.publish(it.toJson())
-                }
+            MigreringAvbruttMeldingV1
+                .fra(
+                    melding,
+                    mapOf(
+                        "kode" to "FINNER_IKKE_MANGLENDE_OPPLYSNINGER",
+                        "beskrivelse" to opplysningerViIkkeFinner.joinToString { "${it.navn} (${it.uuid})" },
+                    ),
+                ).publiser(context)
 
             return
         }
 
-        MigreringOpplysningerMelding
+        MigreringOpplysningerMeldingV1
             .fra(
-                migreringId = melding.migreringId,
-                sakId = melding.sakId,
-                initiertAv = melding.initiertAv,
-                ident = melding.ident,
-                migreringTidspunkt = melding.migreringTidspunkt,
+                kilde = melding,
                 opplysninger = opplysninger,
-                simulering = melding.simulering,
             ).also {
-                publiserMelding(
-                    context = context,
-                    melding = it,
-                )
-                it.lagreMelding(migreringRepository)
+                it.publiser(context)
+                it.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Intern)
                 migreringRepository.markereOpplysningerSomMigrert(
                     migreringId = melding.migreringId,
                     opplysninger = opplysninger,
@@ -157,75 +134,54 @@ class MigreringMediator(
 
     @WithSpan("migrering.simulering_resultat")
     internal fun håndter(
-        melding: MigreringSimuleringResultatMelding,
+        melding: MigreringSimuleringResultatMeldingV1,
         context: MessageContext,
     ) {
-        melding.lagreMelding(migreringRepository)
+        melding.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Ekstern)
 
-//        val (verifisert, ikkeVerifisert) =
-//            melding.simulerteOpplysninger
-//                .mapNotNull {
-//                    produsentMap[it.uuid]?.verifiser(it, melding.migreringId, migreringRepository)
-//                }.partition { it.verifisert }
-//
-//        logger.info { "Verifisert opplysninger (${verifisert.size}): ${verifisert.map { it.navn }}" }
-//        logger.warn { "Ikke verifisert opplysninger (${ikkeVerifisert.size}): ${ikkeVerifisert.map { it.navn }}" }
-//        MigreringSimuleringKontrollResultatMelding
-//            .fra(
-//                MigreringSimuleringKontrollResultat(
-//                    migreringId = melding.migreringId,
-//                    ident = melding.ident,
-//                    sakId = melding.sakId,
-//                    initiertAv = melding.initiertAv,
-//                    migreringTidspunkt = melding.migreringTidspunkt,
-//                    simulering = melding.simulering,
-//                    verifisert = verifisert,
-//                    ikkeVerifisert = ikkeVerifisert,
-//                ),
-//            ).also {
-//                publiserMelding(
-//                    context = context,
-//                    melding = it,
-//                )
-//            }
+        melding.kontroll(migreringRepository).also {
+            logger.info { "Verifisert opplysninger (${it.verifisert.size}): ${it.verifisert.map { it.navn }}" }
+            logger.warn { "Ikke verifisert opplysninger (${it.ikkeVerifisert.size}): ${it.ikkeVerifisert.map { it.navn }}" }
+            context.publish(it.toJson())
+        }
     }
 
     @WithSpan("migrering.startet")
     internal fun håndter(
-        melding: MigreringStartetMelding,
+        melding: MigreringStartetMeldingV1,
         context: MessageContext,
     ) {
         withLoggingContext("migreringId" to melding.migreringId.toString()) {
             logger.info { "Mottok start migrering melding" }
-            melding.lagreMelding(migreringRepository)
+            melding.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Intern)
         }
     }
 
     @WithSpan("migrering.avbrutt")
     internal fun håndter(
-        melding: MigreringAvbruttMelding,
+        melding: MigreringAvbruttMeldingV1,
         context: MessageContext,
     ) {
         logger.warn {
             "Migrering ${melding.migreringId} stoppes fordi følgende opplysninger mangler i databasen: ${melding.årsak}"
         }
-        melding.lagreMelding(migreringRepository)
+        melding.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Intern)
     }
 
     @WithSpan("migrering.behandling_opprettet")
-    internal fun håndter(melding: BehandlingOpprettetMelding) {
-        melding.lagreMelding(migreringRepository)
+    internal fun håndter(melding: BehandlingOpprettetMeldingV1) {
+        melding.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Ekstern)
         migreringRepository.markereBehandlingOpprettet(melding.migreringId, melding.behandlingId)
     }
 
     @WithSpan("migrering.forslag_til_behandlingsresultat")
-    internal fun håndter(medling: ForslagTilBehandlingsresultatMelding) {
-        medling.lagreMelding(migreringRepository)
+    internal fun håndter(medling: ForslagTilBehandlingsresultatMeldingV1) {
+        medling.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Ekstern)
     }
 
     @WithSpan("migrering.simulering_kontroll_resultat")
-    internal fun håndter(medling: MigreringSimuleringKontrollResultatMelding) {
-        medling.lagreMelding(migreringRepository)
+    internal fun håndter(medling: MigreringSimuleringKontrollResultatMeldingV1) {
+        medling.lagreMelding(migreringRepository, KafkaMeldingV1.KafkaMeldingOpprinnelse.Intern)
     }
 
     @WithSpan("migrering.hent_opplysninger")
@@ -276,16 +232,6 @@ class MigreringMediator(
 
             deferredOpplysninger.awaitAll()
         }
-
-    private fun publiserMelding(
-        context: MessageContext,
-        melding: KafkaMelding,
-    ) {
-        val (sendte, feilede) = context.publish(listOf(OutgoingMessage(melding.toJson())))
-        if (feilede.isNotEmpty()) {
-            throw IllegalStateException("Kunne ikke publisere migreringshendelse", feilede.first().error)
-        }
-    }
 
     fun hentMigrering(migreringId: UUID): Migrering? = migreringRepository.hentMigrering(migreringId)
 

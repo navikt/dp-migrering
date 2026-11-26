@@ -6,7 +6,7 @@ import java.util.UUID
 
 // Arena: Settes til true i db-behandling Antar at gyldig fra blir arvet fra skal vurderes-opplysningen Sender ingenting
 //   ?
-class PermitteringenFraFiskeindustrienErMidlertidigDriftsinnskrenkningEllerDriftsstans : OpplysningProdusent<Boolean> {
+class PermitteringenFraFiskeindustrienErMidlertidigDriftsinnskrenkningEllerDriftsstans : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

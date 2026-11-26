@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: vedtaktype T (vedtaktype F)
-class ErIlagtTidsbegrensetBortfallAvDagpenger : OpplysningProdusent<Boolean> {
+class ErIlagtTidsbegrensetBortfallAvDagpenger : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

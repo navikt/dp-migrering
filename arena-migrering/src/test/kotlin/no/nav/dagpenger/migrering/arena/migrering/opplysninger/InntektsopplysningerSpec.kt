@@ -1,13 +1,163 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.every
+import io.mockk.mockk
+import no.nav.dagpenger.behandling.api.models.DataTypeDTO
+import no.nav.dagpenger.behandling.api.models.HeltallVerdiDTO
+import no.nav.dagpenger.behandling.api.models.TekstVerdiDTO
+import no.nav.dagpenger.migrering.arena.migrering.ArenaSakMigrering
+import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
+import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.InntektV1
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.harSammeInnholdSom
 import no.nav.dagpenger.migrering.objectMapper
+import java.util.UUID
 
 class InntektsopplysningerSpec :
     StringSpec({
+        val inntekt = objectMapper.readValue(inntekt1, InntektV1::class.java)
+        val migreringId = UUID.randomUUID()
+
+        fun kontekst(verdi: InntektV1?): MigreringsKontekst {
+            val sak = mockk<ArenaSakMigrering>()
+            every { sak.inntekt } returns verdi
+            return MigreringsKontekst(sakTilMigrering = sak, initiertAv = "testbruker")
+        }
+
+        fun repositoryFor(
+            produsent: OpplysningProdusent<*>,
+            opplysning: Opplysning<*>?,
+        ): MigreringRepository {
+            val repository = mockk<MigreringRepository>()
+            every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns opplysning
+            return repository
+        }
+
+        listOf(Inntektsopplysninger(), BruttoArbeidsinntekt()).forEach { produsent ->
+            "produserer hele inntekten for ${produsent::class.simpleName}" {
+                val opplysning = produsent.produser(kontekst(inntekt))
+
+                opplysning.verdi.shouldBeInstanceOf<InntektV1>() shouldBe inntekt
+                opplysning.gyldigFraOgMed shouldBe inntekt.hentetTidspunkt?.toLocalDate()
+                opplysning.uuid shouldBe produsent.opplysningsId
+            }
+
+            "bevarer manglende inntekt for ${produsent::class.simpleName}" {
+                produsent.produser(kontekst(null)).verdi shouldBe null
+            }
+
+            "leser inntektsreferanse fra tekst- og inntekts-DTO for ${produsent::class.simpleName}" {
+                val repository = repositoryFor(produsent, produsent.produser(kontekst(inntekt)))
+
+                listOf(DataTypeDTO.TEKST, DataTypeDTO.INNTEKT).forEach { datatype ->
+                    val resultat =
+                        produsent.verifiserDto(
+                            TekstVerdiDTO(inntekt.inntektsId, datatype),
+                            migreringId,
+                            repository,
+                        )
+
+                    resultat.verifisert shouldBe true
+                    resultat.arenaVerdi shouldBe inntekt.inntektsId
+                    resultat.dpSakVerdi shouldBe inntekt.inntektsId
+                }
+            }
+
+            "avviser feil datatype for ${produsent::class.simpleName}" {
+                val repository = mockk<MigreringRepository>()
+                shouldThrow<IllegalArgumentException> {
+                    produsent.verifiserDto(HeltallVerdiDTO(1), migreringId, repository)
+                }
+                shouldThrow<IllegalArgumentException> {
+                    produsent.verifiserDto(TekstVerdiDTO("referanse", DataTypeDTO.ULID), migreringId, repository)
+                }
+            }
+
+            "verifiserer kun inntekts-ID for ${produsent::class.simpleName}" {
+                val repository = repositoryFor(produsent, produsent.produser(kontekst(inntekt)))
+
+                produsent
+                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .verifisert shouldBe true
+                produsent
+                    .verifiserDto(TekstVerdiDTO("annen-inntekts-ID"), migreringId, repository)
+                    .verifisert shouldBe false
+
+                every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns null
+                produsent
+                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .verifisert shouldBe false
+            }
+
+            "bevarer innholdssammenligning utenom DTO for ${produsent::class.simpleName}" {
+                val endretInntekt =
+                    objectMapper.readValue(inntekt1.replace("480000", "480001"), InntektV1::class.java)
+                val repository = repositoryFor(produsent, produsent.produser(kontekst(inntekt)))
+
+                produsent.verifiser(endretInntekt, migreringId, repository).verifisert shouldBe false
+                produsent
+                    .verifiserDto(TekstVerdiDTO(endretInntekt.inntektsId), migreringId, repository)
+                    .verifisert shouldBe true
+            }
+
+            "verifiserer lagret JSON-inntekt mot ID for ${produsent::class.simpleName}" {
+                val opplysning = produsent.produser(kontekst(inntekt))
+                val lagretOpplysning =
+                    objectMapper.readValue(objectMapper.writeValueAsString(opplysning), Opplysning::class.java)
+                val repository = repositoryFor(produsent, lagretOpplysning)
+
+                produsent
+                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .verifisert shouldBe true
+            }
+
+            "avviser manglende inntektsverdi for ${produsent::class.simpleName}" {
+                val repository = repositoryFor(produsent, produsent.produser(kontekst(null)))
+
+                produsent
+                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .verifisert shouldBe false
+            }
+
+            "avviser feil opplysnings-ID for ${produsent::class.simpleName}" {
+                val feilOpplysning =
+                    Opplysning(
+                        navn = produsent.opplysningsNavn,
+                        verdi = inntekt,
+                        gyldigFraOgMed = null,
+                        uuid = UUID.randomUUID(),
+                    )
+                val repository = repositoryFor(produsent, feilOpplysning)
+
+                produsent
+                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .verifisert shouldBe false
+            }
+
+            "avviser ugyldig lagret inntekt uten aa vise verdien for ${produsent::class.simpleName}" {
+                val feilOpplysning =
+                    Opplysning(
+                        navn = produsent.opplysningsNavn,
+                        verdi = "ugyldig-inntektsverdi",
+                        gyldigFraOgMed = null,
+                        uuid = produsent.opplysningsId,
+                    )
+                val repository = repositoryFor(produsent, feilOpplysning)
+                val feil =
+                    shouldThrow<IllegalArgumentException> {
+                        produsent.verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    }
+
+                feil.message shouldContain produsent.opplysningsId.toString()
+                feil.message shouldNotContain "ugyldig-inntektsverdi"
+            }
+        }
 
         "skal kunne sammenligne inntekter" {
             val inntekt1 = objectMapper.readValue(inntekt1, InntektV1::class.java)

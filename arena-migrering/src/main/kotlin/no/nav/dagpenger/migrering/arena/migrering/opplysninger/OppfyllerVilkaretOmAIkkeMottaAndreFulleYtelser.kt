@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: vilkaar IFYT IFSYKEP IFUFTRY IFFODSP IFGAFISK IFAFP IKKEFERIE hvis penger igjen så ikke fulle
-class OppfyllerVilkaretOmAIkkeMottaAndreFulleYtelser : OpplysningProdusent<Boolean> {
+class OppfyllerVilkaretOmAIkkeMottaAndreFulleYtelser : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

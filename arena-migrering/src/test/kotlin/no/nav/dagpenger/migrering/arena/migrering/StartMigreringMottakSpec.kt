@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
-import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -18,7 +17,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.test.runTest
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringStartetMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
@@ -58,9 +57,12 @@ class StartMigreringMottakSpec :
                 rapid.inspektør.message(0)["migreringId"].asString() shouldBe migrering.migreringId.toString()
                 verifyOrder {
                     test.repository.lagreMigrering(migrering)
-                    test.arenaMigreringRepository.hentSakTilMigrering(migrering.sakId, migrering.migreringTidspunkt.atStartOfDay())
+                    test.arenaMigreringRepository.hentSakTilMigrering(
+                        migrering.sakId,
+                        migrering.migreringTidspunkt.atStartOfDay(),
+                    )
                     test.repository.lagreOpplysninger(migrering.migreringId, any())
-                    rapid.publish(any<List<OutgoingMessage>>())
+                    rapid.publish(any<String>())
                 }
 
                 val publisertMelding = rapid.inspektør.message(0).toString()
@@ -246,7 +248,7 @@ private class StartMigreringTest(
 
     fun sendTestMigreringStartet() =
         rapid.sendTestMessage(
-            MigreringStartetMelding
+            MigreringStartetMeldingV1
                 .fra(
                     Migrering(
                         migreringId = UUID.randomUUID(),

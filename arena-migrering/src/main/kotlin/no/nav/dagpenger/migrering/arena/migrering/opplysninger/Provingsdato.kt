@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 // Arena: dp-behandling setter dette fra migreringsdato
-class Provingsdato : OpplysningProdusent<LocalDate> {
+class Provingsdato : DatoOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

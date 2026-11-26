@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: vilkår MININT2003
-class OppfyllerKravetTilMinsteinntekt : OpplysningProdusent<Boolean> {
+class OppfyllerKravetTilMinsteinntekt : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa

@@ -3,7 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 
-class AntallGjenstaendeDagerForAKunneGjenoppta : OpplysningProdusent<Int> {
+class AntallGjenstaendeDagerForAKunneGjenoppta : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

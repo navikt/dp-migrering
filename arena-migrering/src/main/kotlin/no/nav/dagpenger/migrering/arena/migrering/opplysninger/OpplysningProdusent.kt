@@ -2,8 +2,10 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.prometheus.metrics.core.metrics.Counter
+import no.nav.dagpenger.behandling.api.models.OpplysningsverdiDTO
 import no.nav.dagpenger.migrering.arena.migrering.MigreringRepository
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.math.BigDecimal
 import java.util.UUID
 
 interface OpplysningProdusent<T : Any> {
@@ -33,22 +35,23 @@ interface OpplysningProdusent<T : Any> {
     suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>
 
     fun verifiser(
-        opplysning: Opplysning<Any>,
+        verdi: T,
+        // opplysning: Opplysning<Any>,
         migreringId: UUID,
         repository: MigreringRepository,
     ): OpplysningVerifisertResultat {
         val arenaOpplysning =
             repository.hentOpplysning(
                 migreringId = migreringId,
-                opplysningId = opplysning.uuid,
+                opplysningId = opplysningsId,
             )
-        val sammeVerdi = sammenlignVerdier(arenaOpplysning?.verdi, opplysning.verdi)
+        val sammeVerdi = sammenlignVerdier(arenaOpplysning?.verdi, verdi)
 
         return OpplysningVerifisertResultat(
             uuid = opplysningsId,
             navn = opplysningsNavn,
-            verifisert = sammeVerdi && arenaOpplysning?.uuid == opplysning.uuid,
-            dpSakVerdi = opplysning.verdi,
+            verifisert = sammeVerdi && arenaOpplysning?.uuid == opplysningsId,
+            dpSakVerdi = verdi,
             arenaVerdi = arenaOpplysning?.verdi,
         )
     }
@@ -59,16 +62,25 @@ interface OpplysningProdusent<T : Any> {
     ): Boolean {
         listOf(arenaVerdi, dpSakVerdi).forEach { verdi ->
             when (verdi) {
-                null, is Boolean, is String, is Int, is Long, is Double -> Unit
-                else ->
+                null, is Boolean, is String, is Int, is Long, is Double, is BigDecimal -> {
+                }
+
+                else -> {
                     throw UnsupportedOperationException(
                         "Opplysningen $opplysningsNavn ($opplysningsId) krever egen sammenligning for " +
                             "${verdi.javaClass.name}. Overstyr sammenlignVerdier.",
                     )
+                }
             }
         }
         return arenaVerdi == dpSakVerdi
     }
+
+    fun verifiserDto(
+        verdi: OpplysningsverdiDTO,
+        migreringId: UUID,
+        repository: MigreringRepository,
+    ): OpplysningVerifisertResultat
 
     fun vedManglendeOpplysning() {
         manglendeOpplysninger.labelValues(opplysningsId.toString(), opplysningsNavn, status.name).inc()

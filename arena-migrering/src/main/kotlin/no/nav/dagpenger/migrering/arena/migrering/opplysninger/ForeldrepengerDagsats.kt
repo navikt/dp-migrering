@@ -1,21 +1,27 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.math.BigDecimal
 import java.util.UUID
 
 // Arena: sjekk
-class ForeldrepengerDagsats : OpplysningProdusent<Int> {
+class ForeldrepengerDagsats : PengeOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
 
+    companion object {
+        val logger = KotlinLogging.logger {}
+    }
+
     override val opplysningsId: UUID = UUID.fromString("0194881f-9433-70e9-a85b-c246150c45d9")
     override val opplysningsNavn: String = "Foreldrepenger dagsats"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> =
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<BigDecimal> =
         Opplysning(
             navn = opplysningsNavn,
-            verdi = 0,
+            verdi = 1000.toBigDecimal(),
             gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )

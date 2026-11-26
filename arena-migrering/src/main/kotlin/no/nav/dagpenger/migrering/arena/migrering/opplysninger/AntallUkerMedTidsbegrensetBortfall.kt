@@ -5,7 +5,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: SANKLENGDE?
-class AntallUkerMedTidsbegrensetBortfall : OpplysningProdusent<Int> {
+class AntallUkerMedTidsbegrensetBortfall : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

@@ -9,7 +9,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.BehandlingOpprettetMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.BehandlingOpprettetMeldingV1
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
@@ -52,7 +52,7 @@ class BehandlingOpprettetMottak(
                 "migreringId" to packet["behandletHendelse"]["id"].asString(),
             ) {
                 logger.info { "Mottok behandling_opprettet melding" }
-                migreringMediator.håndter(BehandlingOpprettetMelding(packet))
+                migreringMediator.håndter(BehandlingOpprettetMeldingV1.fra(packet))
             }
         }
     }

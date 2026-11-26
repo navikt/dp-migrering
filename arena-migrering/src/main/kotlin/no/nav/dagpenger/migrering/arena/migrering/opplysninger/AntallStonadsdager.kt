@@ -5,7 +5,7 @@ import java.util.UUID
 
 // QA OK
 
-class AntallStonadsdager : OpplysningProdusent<Int> {
+class AntallStonadsdager : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

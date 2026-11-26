@@ -10,7 +10,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringSimuleringResultatMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringResultatMeldingV1
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
 
@@ -25,7 +25,7 @@ class MigreringSimuleringResultatMottak(
     init {
         River(rapidsConnection)
             .apply {
-                precondition { it.requireValue("@event_name", MigreringSimuleringResultatMelding.EVENT_NAME) }
+                precondition { it.requireValue("@event_name", MigreringSimuleringResultatMeldingV1.EVENT_NAME) }
                 validate {
                     it.requireKey(
                         "migreringId",
@@ -50,7 +50,7 @@ class MigreringSimuleringResultatMottak(
             ) {
                 logger.info { "Mottok melding om simulering resultat migrering" }
                 migreringMediator.håndter(
-                    MigreringSimuleringResultatMelding(packet),
+                    MigreringSimuleringResultatMeldingV1.fra(packet),
                     context,
                 )
             }

@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 // Arena: person fodselsdato
-class Fodselsdato : OpplysningProdusent<LocalDate> {
+class Fodselsdato : DatoOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
