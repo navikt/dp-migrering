@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: formidling ARBS edge-case hvis bruker på tiltak og ikke er arbeidssøker
-class RegistrertSomArbeidssoker : OpplysningProdusent<Boolean> {
+class RegistrertSomArbeidssoker : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

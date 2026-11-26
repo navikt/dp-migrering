@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: rettighetkode DEKS
-class BrukerSkalHaEksportAvDagpengerTilEOSLand : OpplysningProdusent<Boolean> {
+class BrukerSkalHaEksportAvDagpengerTilEOSLand : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa

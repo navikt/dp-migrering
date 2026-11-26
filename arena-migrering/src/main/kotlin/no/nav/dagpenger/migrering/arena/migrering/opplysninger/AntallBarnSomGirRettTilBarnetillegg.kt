@@ -5,7 +5,7 @@ import java.util.UUID
 
 // QA OK
 
-class AntallBarnSomGirRettTilBarnetillegg : OpplysningProdusent<Int> {
+class AntallBarnSomGirRettTilBarnetillegg : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa

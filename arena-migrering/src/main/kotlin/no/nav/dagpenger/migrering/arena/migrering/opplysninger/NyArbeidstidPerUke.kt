@@ -3,7 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
-class NyArbeidstidPerUke : OpplysningProdusent<Double> {
+class NyArbeidstidPerUke : DesimaltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

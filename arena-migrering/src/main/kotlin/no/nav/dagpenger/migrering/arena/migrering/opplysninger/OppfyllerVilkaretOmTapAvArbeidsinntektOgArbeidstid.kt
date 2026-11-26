@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena vet ikke dette 🤪
-class OppfyllerVilkaretOmTapAvArbeidsinntektOgArbeidstid : OpplysningProdusent<Boolean> {
+class OppfyllerVilkaretOmTapAvArbeidsinntektOgArbeidstid : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = false
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

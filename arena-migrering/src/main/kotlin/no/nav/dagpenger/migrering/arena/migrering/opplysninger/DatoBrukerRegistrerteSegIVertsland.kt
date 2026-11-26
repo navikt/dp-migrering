@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 // Arena: Sjekk
-class DatoBrukerRegistrerteSegIVertsland : OpplysningProdusent<LocalDate> {
+class DatoBrukerRegistrerteSegIVertsland : DatoOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

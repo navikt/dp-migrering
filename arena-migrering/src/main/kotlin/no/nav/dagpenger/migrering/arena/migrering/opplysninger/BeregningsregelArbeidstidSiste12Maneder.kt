@@ -5,7 +5,7 @@ import java.util.UUID
 
 // Arena: Vedtakfakta ARBTIDREG og verdi "12 måneder gjennomsnittsberegning" eller bedre Vedtakfakta ARBTREGKOD og verdi
 //   GJSNITT12MND
-class BeregningsregelArbeidstidSiste12Maneder : OpplysningProdusent<Boolean> {
+class BeregningsregelArbeidstidSiste12Maneder : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa

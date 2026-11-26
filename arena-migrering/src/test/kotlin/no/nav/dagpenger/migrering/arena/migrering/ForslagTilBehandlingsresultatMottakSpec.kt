@@ -11,8 +11,8 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.Hendelse
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.KafkaMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringAvbruttMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.ForslagTilBehandlingsresultatMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
@@ -45,7 +45,7 @@ class ForslagTilBehandlingsresultatMottakSpec :
                     hendelse = melding.navn,
                     ident = melding.ident,
                     jsonData = any(),
-                    opprinnelse = Hendelse.Opprinnelse.Ekstern.name,
+                    opprinnelse = KafkaMeldingV1.KafkaMeldingOpprinnelse.Ekstern.name,
                     tidspunkt = melding.opprettet,
                 )
             }

@@ -1,10 +1,11 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.math.BigDecimal
 import java.util.UUID
 
 // Arena: ? vedtakfakta GRUNN
-class Dagpengegrunnlag : OpplysningProdusent<Int> {
+class Dagpengegrunnlag : PengeOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
@@ -12,7 +13,7 @@ class Dagpengegrunnlag : OpplysningProdusent<Int> {
     override val opplysningsId: UUID = UUID.fromString("0194881f-9410-7481-b263-4606fdd10cbd")
     override val opplysningsNavn: String = "Dagpengegrunnlag for bruker"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<BigDecimal> {
         val vedtakfakta =
             kontekst.sakTilMigrering.vedtakfakta.firstOrNull { vedtakfakta -> vedtakfakta.kode == "GRUNN" }
 
@@ -28,5 +29,5 @@ class Dagpengegrunnlag : OpplysningProdusent<Int> {
         )
     }
 
-    private fun verdi(verdi: String?): Int? = verdi?.toInt()
+    private fun verdi(verdi: String?): BigDecimal? = verdi?.toBigDecimal()
 }

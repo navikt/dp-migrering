@@ -5,7 +5,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: kvotebruk MAXFT
-class AntallFritaksperiodedagerSomErForbrukt : OpplysningProdusent<Int> {
+class AntallFritaksperiodedagerSomErForbrukt : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = false
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

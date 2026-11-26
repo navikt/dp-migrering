@@ -5,7 +5,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: ?sjekk?
-class OppfyllerVilkareneTilEtableringAvEgenVirksomhet : OpplysningProdusent<Boolean> {
+class OppfyllerVilkareneTilEtableringAvEgenVirksomhet : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

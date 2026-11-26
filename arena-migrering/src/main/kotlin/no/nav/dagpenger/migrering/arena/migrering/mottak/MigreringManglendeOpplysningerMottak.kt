@@ -10,7 +10,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.migrering.arena.migrering.MigreringMediator
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringManglendeOpplysningerMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringManglendeOpplysningerMeldingV1
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.unleash
@@ -26,7 +25,7 @@ class MigreringManglendeOpplysningerMottak(
     init {
         River(rapidsConnection)
             .apply {
-                precondition { it.requireValue("@event_name", MigreringManglendeOpplysningerMelding.EVENT_NAME) }
+                precondition { it.requireValue("@event_name", MigreringManglendeOpplysningerMeldingV1.EVENT_NAME) }
                 validate {
                     it.requireKey(
                         "migreringId",

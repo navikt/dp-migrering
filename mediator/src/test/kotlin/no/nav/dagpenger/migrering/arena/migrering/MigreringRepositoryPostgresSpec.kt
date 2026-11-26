@@ -109,6 +109,7 @@ class MigreringRepositoryPostgresSpec :
             val migrering = nyMigrering()
             repository.lagreMigrering(migrering)
             val gyldigFraOgMed = LocalDate.of(2026, 11, 5)
+            val manglendeVerdi: String? = null
             val opplysninger =
                 listOf(
                     Opplysning("Tekst", "test'\"verdi", gyldigFraOgMed, UUID.randomUUID()),
@@ -121,7 +122,7 @@ class MigreringRepositoryPostgresSpec :
                     ),
                     Opplysning("Boolsk", false, gyldigFraOgMed, UUID.randomUUID()),
                     Opplysning("Dato", gyldigFraOgMed, gyldigFraOgMed, UUID.randomUUID()),
-                    Opplysning("Uten verdi", null, null, UUID.randomUUID()),
+                    Opplysning("Uten verdi", manglendeVerdi, null, UUID.randomUUID()),
                 )
 
             repository.lagreOpplysninger(migrering.migreringId, opplysninger)

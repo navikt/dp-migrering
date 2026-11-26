@@ -5,7 +5,7 @@ import java.util.UUID
 
 // TODO Endre fra OppholdINorge? Hva med grensearbeidere, asylsøkere mm
 // Arena: spør noen voksne vilkår INORGE evt freg i Norge personforhold
-class BostedslandErNorge : OpplysningProdusent<Boolean> {
+class BostedslandErNorge : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

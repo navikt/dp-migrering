@@ -1,7 +1,6 @@
 package no.nav.dagpenger.migrering.arena.migrering
 
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
-import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
@@ -18,7 +17,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.KafkaMelding
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.BehandlingOpprettetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.ForslagTilBehandlingsresultatMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.KafkaMeldingV1
@@ -234,16 +232,6 @@ class MigreringMediator(
 
             deferredOpplysninger.awaitAll()
         }
-
-    private fun publiserMelding(
-        context: MessageContext,
-        melding: KafkaMelding,
-    ) {
-        val (sendte, feilede) = context.publish(listOf(OutgoingMessage(melding.toJson())))
-        if (feilede.isNotEmpty()) {
-            throw IllegalStateException("Kunne ikke publisere migreringshendelse", feilede.first().error)
-        }
-    }
 
     fun hentMigrering(migreringId: UUID): Migrering? = migreringRepository.hentMigrering(migreringId)
 

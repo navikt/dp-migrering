@@ -5,7 +5,7 @@ import java.util.UUID
 
 // Ikke mappet
 // Arena: vilkår MEDLFOLKT
-class MedlemAvFolketrygden : OpplysningProdusent<Boolean> {
+class MedlemAvFolketrygden : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

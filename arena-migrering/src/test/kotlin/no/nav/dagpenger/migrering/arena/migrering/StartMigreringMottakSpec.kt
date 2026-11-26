@@ -17,7 +17,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.test.runTest
-import no.nav.dagpenger.migrering.arena.migrering.meldinger.MigreringStartetMelding
+import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringStartetMottak
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
@@ -57,7 +57,10 @@ class StartMigreringMottakSpec :
                 rapid.inspektør.message(0)["migreringId"].asString() shouldBe migrering.migreringId.toString()
                 verifyOrder {
                     test.repository.lagreMigrering(migrering)
-                    test.arenaMigreringRepository.hentSakTilMigrering(migrering.sakId, migrering.migreringTidspunkt.atStartOfDay())
+                    test.arenaMigreringRepository.hentSakTilMigrering(
+                        migrering.sakId,
+                        migrering.migreringTidspunkt.atStartOfDay(),
+                    )
                     test.repository.lagreOpplysninger(migrering.migreringId, any())
                     rapid.publish(any<String>())
                 }
@@ -245,7 +248,7 @@ private class StartMigreringTest(
 
     fun sendTestMigreringStartet() =
         rapid.sendTestMessage(
-            MigreringStartetMelding
+            MigreringStartetMeldingV1
                 .fra(
                     Migrering(
                         migreringId = UUID.randomUUID(),

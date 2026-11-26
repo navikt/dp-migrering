@@ -7,7 +7,7 @@ import no.nav.dagpenger.migrering.objectMapper
 import java.util.UUID
 
 // Arena: registrerte barn saksopplysning/attributt BARN FNR/FDATO/FNAVN/STONA
-class BarnFraArena : OpplysningProdusent<BarnListe> {
+class BarnFraArena : BarnOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

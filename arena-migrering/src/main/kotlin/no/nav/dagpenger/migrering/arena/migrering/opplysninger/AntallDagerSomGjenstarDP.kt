@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: kvotebruk DPTEL
-class AntallDagerSomGjenstarDP : OpplysningProdusent<Int> {
+class AntallDagerSomGjenstarDP : HeltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

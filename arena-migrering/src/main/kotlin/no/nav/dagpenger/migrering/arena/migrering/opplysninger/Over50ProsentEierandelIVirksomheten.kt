@@ -5,7 +5,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: sjekk
-class Over50ProsentEierandelIVirksomheten : OpplysningProdusent<Boolean> {
+class Over50ProsentEierandelIVirksomheten : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

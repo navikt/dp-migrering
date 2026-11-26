@@ -162,11 +162,12 @@ private class MigreringManglendeOpplysningerTest(
     val opplysningId1 = UUID.randomUUID()
     val opplysningId2 = UUID.randomUUID()
     val opplysningId3 = UUID.randomUUID()
+    private val manglendeVerdi: String? = null
 
     val opplysningSomIkkeFinnes =
         Opplysning(
             navn = "Opplysning 4",
-            verdi = null,
+            verdi = manglendeVerdi,
             gyldigFraOgMed = null,
             uuid = UUID.randomUUID(),
         )
@@ -175,7 +176,7 @@ private class MigreringManglendeOpplysningerTest(
             opplysning =
                 Opplysning(
                     navn = "Opplysning 1",
-                    verdi = null,
+                    verdi = manglendeVerdi,
                     gyldigFraOgMed = null,
                     uuid = opplysningId1,
                 ),

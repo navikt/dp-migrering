@@ -12,10 +12,10 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import no.nav.dagpenger.behandling.api.models.OpplysningerDTO
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringSimuleringResultatMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.meldinger.typet.MigreringStartetMeldingV1
 import no.nav.dagpenger.migrering.arena.migrering.mottak.MigreringSimuleringResultatMottak
-import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.konfigurasjon.Feature
 import no.nav.dagpenger.migrering.konfigurasjon.skruAvFeatures
 import no.nav.dagpenger.migrering.konfigurasjon.skruPåFeature
@@ -126,7 +126,7 @@ private class MigreringSimuleringResultatTest {
     }
 
     fun melding(
-        simulerteOpplysninger: List<Opplysning<Any>> = emptyList(),
+        simulerteOpplysninger: List<OpplysningerDTO> = emptyList(),
         simulering: Boolean = true,
     ) = MigreringSimuleringResultatMeldingV1.ny(
         migreringId = migreringId,

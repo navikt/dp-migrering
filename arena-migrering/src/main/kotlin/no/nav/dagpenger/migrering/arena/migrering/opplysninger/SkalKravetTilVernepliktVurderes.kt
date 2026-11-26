@@ -4,7 +4,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
 // Arena: vedtakfakta VERN3AV12
-class SkalKravetTilVernepliktVurderes : OpplysningProdusent<Boolean> {
+class SkalKravetTilVernepliktVurderes : BoolskOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy

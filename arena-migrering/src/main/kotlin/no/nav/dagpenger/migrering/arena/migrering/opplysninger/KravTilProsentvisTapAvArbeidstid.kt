@@ -3,7 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import java.util.UUID
 
 // Arena: vedtakfakta TARBTID
-class KravTilProsentvisTapAvArbeidstid : OpplysningProdusent<Double> {
+class KravTilProsentvisTapAvArbeidstid : DesimaltallsOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert

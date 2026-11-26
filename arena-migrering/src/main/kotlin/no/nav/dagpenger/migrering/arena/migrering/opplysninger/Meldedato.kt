@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 // Arena: meldedato
-class Meldedato : OpplysningProdusent<LocalDate> {
+class Meldedato : DatoOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
