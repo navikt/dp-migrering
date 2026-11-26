@@ -8,6 +8,7 @@ import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
+import kotlin.reflect.KClass
 
 interface OpplysningProdusent<T : Any> {
     companion object {
@@ -23,6 +24,7 @@ interface OpplysningProdusent<T : Any> {
 
     val opplysningsId: UUID
     val opplysningsNavn: String
+    val verdiType: KClass<T>
     val aktiv: Boolean
     val rolle: Rolle
 
@@ -45,6 +47,7 @@ interface OpplysningProdusent<T : Any> {
             repository.hentOpplysning(
                 migreringId = migreringId,
                 opplysningId = opplysningsId,
+                verdiType = verdiType,
             )
         val sammeVerdi = sammenlignVerdier(arenaOpplysning?.verdi, verdi)
 
@@ -74,7 +77,11 @@ interface OpplysningProdusent<T : Any> {
                 }
             }
         }
-        return arenaVerdi == dpSakVerdi
+        return if (arenaVerdi is BigDecimal && dpSakVerdi is BigDecimal) {
+            arenaVerdi.compareTo(dpSakVerdi) == 0
+        } else {
+            arenaVerdi == dpSakVerdi
+        }
     }
 
     fun verifiserDto(

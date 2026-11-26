@@ -121,11 +121,11 @@ class BarnFraArenaSpec :
             )
 
         fun verifiser(
-            arena: Opplysning<*>?,
+            arena: Opplysning<BarnListe>?,
             dpSak: BarnListe,
         ): OpplysningKontrollResultat {
             val repository = mockk<MigreringRepository>()
-            every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns arena
+            every { repository.hentOpplysning(migreringId, produsent.opplysningsId, produsent.verdiType) } returns arena
             return produsent.verifiser(dpSak, migreringId, repository)
         }
 

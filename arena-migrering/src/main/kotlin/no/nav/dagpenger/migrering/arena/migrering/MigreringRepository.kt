@@ -3,6 +3,7 @@ package no.nav.dagpenger.migrering.arena.migrering
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import java.time.LocalDateTime
 import java.util.UUID
+import kotlin.reflect.KClass
 
 interface MigreringRepository {
     fun lagreMigrering(message: Migrering)
@@ -14,10 +15,11 @@ interface MigreringRepository {
         opplysninger: List<Opplysning<*>>,
     )
 
-    fun hentOpplysning(
+    fun <T : Any> hentOpplysning(
         migreringId: UUID,
         opplysningId: UUID,
-    ): Opplysning<*>?
+        verdiType: KClass<T>,
+    ): Opplysning<T>?
 
     fun markereOpplysningerSomMigrert(
         migreringId: UUID,

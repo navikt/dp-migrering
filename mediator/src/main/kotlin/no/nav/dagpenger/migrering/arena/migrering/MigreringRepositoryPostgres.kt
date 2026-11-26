@@ -6,8 +6,10 @@ import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
 import no.nav.dagpenger.migrering.db.DatabaseSession
 import no.nav.dagpenger.migrering.objectMapper
 import org.postgresql.util.PGobject
+import tools.jackson.databind.exc.MismatchedInputException
 import java.time.LocalDateTime
 import java.util.UUID
+import kotlin.reflect.KClass
 
 class MigreringRepositoryPostgres(
     val databaseSession: DatabaseSession,
@@ -108,11 +110,17 @@ class MigreringRepositoryPostgres(
         }
     }
 
-    override fun hentOpplysning(
+    override fun <T : Any> hentOpplysning(
         migreringId: UUID,
         opplysningId: UUID,
-    ): Opplysning<*>? =
+        verdiType: KClass<T>,
+    ): Opplysning<T>? =
         databaseSession.session { session ->
+            val opplysningType =
+                objectMapper.typeFactory.constructParametricType(
+                    Opplysning::class.java,
+                    verdiType.javaObjectType,
+                )
             session.run(
                 queryOf(
                     //language=postgresql
@@ -125,7 +133,14 @@ class MigreringRepositoryPostgres(
                     paramMap = mapOf("migrering_id" to migreringId, "opplysning_id" to opplysningId),
                 ).map { row ->
                     val opplysningJson = row.string("opplysning")
-                    objectMapper.readValue(opplysningJson, Opplysning::class.java)
+                    try {
+                        objectMapper.readerFor(opplysningType).readValue<Opplysning<T>>(opplysningJson)
+                    } catch (_: MismatchedInputException) {
+                        // Jacksons feilmelding kan inneholde selve opplysningsverdien.
+                        throw IllegalStateException(
+                            "Opplysning $opplysningId har ugyldig verdi for ${verdiType.simpleName}",
+                        )
+                    }
                 }.asSingle,
             )
         }

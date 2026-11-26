@@ -34,11 +34,11 @@ class OpplysningProdusentSpec :
             )
 
         fun verifiser(
-            arena: Opplysning<*>?,
+            arena: Opplysning<BigDecimal>?,
             dpSak: BigDecimal,
         ): OpplysningKontrollResultat {
             val repository = mockk<MigreringRepository>()
-            every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns arena
+            every { repository.hentOpplysning(migreringId, produsent.opplysningsId, produsent.verdiType) } returns arena
             return produsent.verifiser(dpSak, migreringId, repository)
         }
 
@@ -46,6 +46,21 @@ class OpplysningProdusentSpec :
             "verifiserer like verdier av typen ${verdi.javaClass.simpleName}: $verdi" {
                 produsent.sammenlignVerdier(verdi, verdi) shouldBe true
             }
+        }
+
+        "sammenligner pengetall uten aa kreve lik skala" {
+            produsent.sammenlignVerdier(BigDecimal("1.00"), BigDecimal("1.0")) shouldBe true
+            produsent.sammenlignVerdier(BigDecimal("0"), BigDecimal("0.000")) shouldBe true
+            produsent.sammenlignVerdier(BigDecimal("1.00"), BigDecimal("1.01")) shouldBe false
+            produsent.sammenlignVerdier(BigDecimal.ONE, 1) shouldBe false
+        }
+
+        "sammenligner LocalDate uten aa konvertere tekstverdier" {
+            val dato = LocalDate.of(2026, 11, 26)
+
+            produsent.sammenlignVerdier(dato, LocalDate.of(2026, 11, 26)) shouldBe true
+            produsent.sammenlignVerdier(dato, dato.plusDays(1)) shouldBe false
+            produsent.sammenlignVerdier(dato, dato.toString()) shouldBe false
         }
 
         listOf(

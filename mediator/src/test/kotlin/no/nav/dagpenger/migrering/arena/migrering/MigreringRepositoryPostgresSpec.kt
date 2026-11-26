@@ -5,8 +5,15 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotliquery.queryOf
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Dagsats
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Fodselsdato
 import no.nav.dagpenger.migrering.arena.migrering.opplysninger.Opplysning
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.BarnListe
+import no.nav.dagpenger.migrering.arena.migrering.opplysninger.verdier.InntektV1
 import no.nav.dagpenger.migrering.db.DatabaseSession
 import no.nav.dagpenger.migrering.objectMapper
 import org.flywaydb.core.Flyway
@@ -15,6 +22,7 @@ import java.math.BigDecimal
 import java.sql.SQLException
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.util.UUID
 
 class MigreringRepositoryPostgresSpec :
@@ -136,6 +144,99 @@ class MigreringRepositoryPostgresSpec :
                     objectMapper.readTree(objectMapper.writeValueAsString(forventet))
                 hentet.migrert shouldBe false
                 hentet.migrertTidspunkt shouldBe null
+            }
+        }
+
+        "henter dato som LocalDate og verifiserer den etter JSONB-innlesing" {
+            val migrering = nyMigrering()
+            val produsent = Fodselsdato()
+            val dato = LocalDate.of(1980, 1, 1)
+            val opplysning = Opplysning(produsent.opplysningsNavn, dato, dato, produsent.opplysningsId)
+            repository.lagreMigrering(migrering)
+            repository.lagreOpplysninger(migrering.migreringId, listOf(opplysning))
+
+            val hentet =
+                repository.hentOpplysning(migrering.migreringId, opplysning.uuid, produsent.verdiType).shouldNotBeNull()
+
+            hentet.verdi.shouldBeInstanceOf<LocalDate>() shouldBe dato
+            hentet.gyldigFraOgMed shouldBe dato
+            produsent.verifiser(dato, migrering.migreringId, repository).ok shouldBe true
+            produsent.verifiser(dato.plusDays(1), migrering.migreringId, repository).ok shouldBe false
+        }
+
+        "henter penger som BigDecimal uten presisjonstap" {
+            val migrering = nyMigrering()
+            val produsent = Dagsats()
+            val belop = BigDecimal("9007199254740993.123456789")
+            val opplysning = Opplysning(produsent.opplysningsNavn, belop, null, produsent.opplysningsId)
+            repository.lagreMigrering(migrering)
+            repository.lagreOpplysninger(migrering.migreringId, listOf(opplysning))
+
+            val hentet =
+                repository.hentOpplysning(migrering.migreringId, opplysning.uuid, produsent.verdiType).shouldNotBeNull()
+
+            hentet.verdi.shouldBeInstanceOf<BigDecimal>() shouldBe belop
+            produsent.verifiser(belop, migrering.migreringId, repository).ok shouldBe true
+            produsent.verifiser(belop + BigDecimal.ONE, migrering.migreringId, repository).ok shouldBe false
+        }
+
+        "henter barneliste og hele inntekten som domenetyper" {
+            val migrering = nyMigrering()
+            val barn = BarnListe(søknadbarnId = UUID.randomUUID(), barn = emptyList())
+            val inntekt =
+                InntektV1(
+                    inntektsId = "test-inntekt",
+                    inntektsListe = emptyList(),
+                    sisteAvsluttendeKalenderMåned = YearMonth.of(2026, 10),
+                    hentetTidspunkt = LocalDateTime.of(2026, 11, 1, 12, 0),
+                )
+            val barneOpplysning = Opplysning("Barn", barn, null, UUID.randomUUID())
+            val inntektsOpplysning = Opplysning("Inntekt", inntekt, null, UUID.randomUUID())
+            repository.lagreMigrering(migrering)
+            repository.lagreOpplysninger(migrering.migreringId, listOf(barneOpplysning, inntektsOpplysning))
+
+            val hentetBarn =
+                repository.hentOpplysning(migrering.migreringId, barneOpplysning.uuid, BarnListe::class).shouldNotBeNull()
+            val hentetInntekt =
+                repository.hentOpplysning(migrering.migreringId, inntektsOpplysning.uuid, InntektV1::class).shouldNotBeNull()
+
+            hentetBarn.verdi.shouldBeInstanceOf<BarnListe>() shouldBe barn
+            hentetInntekt.verdi.shouldBeInstanceOf<InntektV1>().inntektsId shouldBe inntekt.inntektsId
+            hentetInntekt.verdi?.inntektsListe shouldBe inntekt.inntektsListe
+            hentetInntekt.verdi?.hentetTidspunkt shouldBe inntekt.hentetTidspunkt
+        }
+
+        "skiller mellom manglende rad og en opplysning uten verdi" {
+            val migrering = nyMigrering()
+            val verdi: LocalDate? = null
+            val opplysning = Opplysning("Dato", verdi, null, UUID.randomUUID())
+            repository.lagreMigrering(migrering)
+            repository.lagreOpplysninger(migrering.migreringId, listOf(opplysning))
+
+            repository.hentOpplysning(migrering.migreringId, UUID.randomUUID(), LocalDate::class) shouldBe null
+            repository
+                .hentOpplysning(migrering.migreringId, opplysning.uuid, LocalDate::class)
+                .shouldNotBeNull()
+                .verdi shouldBe null
+        }
+
+        "avviser ugyldig lagret verdi uten aa eksponere den i feilmeldingen" {
+            val migrering = nyMigrering()
+            val feilVerdi = "ugyldig-opplysningsverdi"
+            val datoverdi = Opplysning("Dato", feilVerdi, null, UUID.randomUUID())
+            val inntektsverdi = Opplysning("Inntekt", feilVerdi, null, UUID.randomUUID())
+            repository.lagreMigrering(migrering)
+            repository.lagreOpplysninger(migrering.migreringId, listOf(datoverdi, inntektsverdi))
+
+            listOf(datoverdi to LocalDate::class, inntektsverdi to InntektV1::class).forEach { (opplysning, verdiType) ->
+                val feil =
+                    shouldThrow<IllegalStateException> {
+                        repository.hentOpplysning(migrering.migreringId, opplysning.uuid, verdiType)
+                    }
+
+                feil.message shouldContain opplysning.uuid.toString()
+                feil.message shouldNotContain feilVerdi
+                feil.cause shouldBe null
             }
         }
 

@@ -3,8 +3,6 @@ package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
@@ -30,12 +28,14 @@ class InntektsopplysningerSpec :
             return MigreringsKontekst(sakTilMigrering = sak, initiertAv = "testbruker")
         }
 
-        fun repositoryFor(
-            produsent: OpplysningProdusent<*>,
-            opplysning: Opplysning<*>?,
+        fun <T : Any> repositoryFor(
+            produsent: OpplysningProdusent<T>,
+            opplysning: Opplysning<T>?,
         ): MigreringRepository {
             val repository = mockk<MigreringRepository>()
-            every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns opplysning
+            every {
+                repository.hentOpplysning(migreringId, produsent.opplysningsId, produsent.verdiType)
+            } returns opplysning
             return repository
         }
 
@@ -89,7 +89,9 @@ class InntektsopplysningerSpec :
                     .verifiserDto(TekstVerdiDTO("annen-inntekts-ID"), migreringId, repository)
                     .ok shouldBe false
 
-                every { repository.hentOpplysning(migreringId, produsent.opplysningsId) } returns null
+                every {
+                    repository.hentOpplysning(migreringId, produsent.opplysningsId, produsent.verdiType)
+                } returns null
                 produsent
                     .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
                     .ok shouldBe false
@@ -108,8 +110,15 @@ class InntektsopplysningerSpec :
 
             "verifiserer lagret JSON-inntekt mot ID for ${produsent::class.simpleName}" {
                 val opplysning = produsent.produser(kontekst(inntekt))
+                val opplysningType =
+                    objectMapper.typeFactory.constructParametricType(
+                        Opplysning::class.java,
+                        produsent.verdiType.javaObjectType,
+                    )
                 val lagretOpplysning =
-                    objectMapper.readValue(objectMapper.writeValueAsString(opplysning), Opplysning::class.java)
+                    objectMapper
+                        .readerFor(opplysningType)
+                        .readValue<Opplysning<InntektV1>>(objectMapper.writeValueAsString(opplysning))
                 val repository = repositoryFor(produsent, lagretOpplysning)
 
                 produsent
@@ -138,24 +147,6 @@ class InntektsopplysningerSpec :
                 produsent
                     .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
                     .ok shouldBe false
-            }
-
-            "avviser ugyldig lagret inntekt uten aa vise verdien for ${produsent::class.simpleName}" {
-                val feilOpplysning =
-                    Opplysning(
-                        navn = produsent.opplysningsNavn,
-                        verdi = "ugyldig-inntektsverdi",
-                        gyldigFraOgMed = null,
-                        uuid = produsent.opplysningsId,
-                    )
-                val repository = repositoryFor(produsent, feilOpplysning)
-                val feil =
-                    shouldThrow<IllegalArgumentException> {
-                        produsent.verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
-                    }
-
-                feil.message shouldContain produsent.opplysningsId.toString()
-                feil.message shouldNotContain "ugyldig-inntektsverdi"
             }
         }
 
