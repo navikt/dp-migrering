@@ -39,7 +39,7 @@
 |0194881f-9447-7e36-a569-3e9f42bff9f6|Bruker er utestengt fra dagpenger|Dummy|Fakta|true|
 |019f26ec-f7e4-791a-af42-6cb632466cfa|Bruker oppgir selvforskyldt arbeidsløshet|Dummy|Fakta|true|
 |019f608e-807e-758c-80ff-58e95f429f5a|Bruker skal ha eksport av dagpenger til EØS-land|Alfa|Fakta|true|
-|0194881f-9410-7481-b263-4606fdd10cba|Brukt beregningsregel|Alfa|Resultat|true|
+|0194881f-9410-7481-b263-4606fdd10cba|Brukt beregningsregel|Alfa|Resultat|false|
 |0194881f-9413-77ce-92ec-d29700f04245|Brutto arbeidsinntekt|Alfa|Fakta|true|
 |0194881f-9410-7481-b263-4606fdd10cbd|Dagpengegrunnlag for bruker|Alfa|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a33|Dagsats uten barnetillegg samordnet for bruker|Alfa|Resultat|true|
