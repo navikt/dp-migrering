@@ -17,13 +17,10 @@ class AntallUkerMedSanksjon : HeltallsOpplysningProdusent {
         val fakta =
             kontekst.sakTilMigrering.vedtakfakta.firstOrNull { it.kode == "SANKLENGDE" }
 
-        if (fakta == null) {
-            vedManglendeOpplysning()
-        }
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = verdi(fakta?.verdi),
-            gyldigFraOgMed = fakta?.gyldigFra,
+            verdi = verdi(fakta?.verdi) ?: 0,
+            gyldigFraOgMed = fakta?.gyldigFra ?: kontekst.opprettetTidspunkt.toLocalDate(),
             uuid = opplysningsId,
         )
     }

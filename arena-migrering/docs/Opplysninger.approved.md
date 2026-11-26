@@ -21,7 +21,7 @@
 |0194881f-943d-77a7-969c-147999f15459|Antall stønadsuker (stønadsperiode)|Verifisert|Resultat|true|
 |0194881f-9434-79e8-a64d-1a23cc5d86ed|Antall timer arbeidstiden skal samordnes mot|Dummy|Fakta|true|
 |019e82fd-f97c-7395-be5c-7de504871871|Antall uker med sanksjon|Alfa|Fakta|true|
-|019e8300-20f7-7cba-b8dc-7bebfd86dcf3|Antall uker med tidsbegrenset bortfall|Dummy|Fakta|true|
+|019e8300-20f7-7cba-b8dc-7bebfd86dcf3|Antall uker med tidsbegrenset bortfall|Alfa|Fakta|true|
 |01a0c30f-60d5-778a-a749-ff5f5f55f98d|Antas å føre til selvforsørgelse|Dummy|Fakta|true|
 |0194d105-bd54-7b2b-9dc6-6e6664951894|Årsaken til permitteringen er godkjent|Dummy|Fakta|true|
 |019522b8-0f1b-7536-8691-fd824bca86de|Årsaken til permitteringen fra fiskeindustrien er godkjent|Dummy|Fakta|true|
@@ -43,7 +43,7 @@
 |0194881f-9413-77ce-92ec-d29700f04245|Brutto arbeidsinntekt|Alfa|Fakta|true|
 |0194881f-9410-7481-b263-4606fdd10cbd|Dagpengegrunnlag for bruker|Alfa|Resultat|true|
 |0194881f-942f-7bde-ab16-68ffd19e9a33|Dagsats uten barnetillegg samordnet for bruker|Alfa|Resultat|true|
-|0194881f-9428-74d5-b160-f63a4c61a24f|Dagsats med barnetillegg etter samordning og 90 % regel|Dummy|Fakta|true|
+|0194881f-9428-74d5-b160-f63a4c61a24f|Dagsats med barnetillegg etter samordning og 90 % regel|Alfa|Fakta|true|
 |019f60cc-dea0-7028-878c-2845f58a6133|Dato bruker registrerte seg i vertsland|Dummy|Fakta|true|
 |019f60cb-737b-70c2-8d9f-779dea0b6e3f|Dato eksport skal gjelde fra|Dummy|Fakta|true|
 |0194881f-9445-734c-a7ee-045edf29b527|Deltar i arbeidsmarkedstiltak|Dummy|Fakta|true|
@@ -65,8 +65,8 @@
 |0194881f-942f-7bde-ab16-68ffd19e9a29|Garantilott fra Garantikassen for fiskere beløp|Dummy|Fakta|true|
 |01997b70-a12c-7622-bff8-82a20687e640|Gjenstående egenandel|Alfa|Resultat|true|
 |01a0c30f-87de-7359-b642-e009a91bbda8|Godkjent næringsfaglig vurdering|Dummy|Fakta|true|
-|0194881f-9413-77ce-92ec-d29700f04243|Grunnbeløp|Dummy|Fakta|true|
-|0194881f-940f-7af9-9387-052e028b29ee|Grunnbeløp for grunnlag|Alfa|Resultat|true|
+|0194881f-9413-77ce-92ec-d29700f04243|Grunnbeløp|Alfa|Fakta|true|
+|0194881f-940f-7af9-9387-052e028b29ee|Grunnbeløp for grunnlag|Dummy|Resultat|true|
 |0194881f-9421-766c-9dc6-41fe6c9a1e05|Grunnlaget for verneplikt er høyere enn dagpengegrunnlaget|Dummy|Resultat|true|
 |0194881f-9410-7481-b263-4606fdd10cb9|Har avkortet grunnlag|Dummy|Resultat|true|
 |01a01e21-17ce-70c4-aac1-d25c30ecfac9|Har gitt alle nødvendige opplysninger?|Dummy|Resultat|true|

@@ -9,7 +9,7 @@ import java.util.UUID
 class Grunnbelop : PengeOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Dummy
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
         val logger = KotlinLogging.logger {}
@@ -18,11 +18,13 @@ class Grunnbelop : PengeOpplysningProdusent {
     override val opplysningsId: UUID = UUID.fromString("0194881f-9413-77ce-92ec-d29700f04243")
     override val opplysningsNavn: String = "Grunnbeløp"
 
-    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<BigDecimal> =
-        Opplysning(
+    override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<BigDecimal> {
+        val grunnbelop = kontekst.sakTilMigrering.grunnbelop.firstOrNull { grunnbelop -> grunnbelop.kode == "GRUNNBELOP" }
+        return Opplysning(
             navn = opplysningsNavn,
-            verdi = 136549.toBigDecimal(),
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = grunnbelop?.verdi?.toBigDecimal(),
+            gyldigFraOgMed = grunnbelop?.gyldigFra,
             uuid = opplysningsId,
         )
+    }
 }
