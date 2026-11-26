@@ -92,7 +92,7 @@ class OpplysningerSpec :
             utypedeProdusenter.map { it.javaClass.simpleName }.sorted() shouldBe emptyList()
         }
 
-        val konverteringer: List<Triple<DtoOpplysningProdusent<*>, OpplysningsverdiDTO, Any>> =
+        val konverteringer: List<Triple<OpplysningProdusent<*>, OpplysningsverdiDTO, Any>> =
             listOf(
                 Triple(Aldersgrense(), HeltallVerdiDTO(67), 67),
                 Triple(AvtjentVerneplikt(), BoolskVerdiDTO(false), false),
@@ -108,23 +108,23 @@ class OpplysningerSpec :
 
         konverteringer.forEach { (produsent, dto, forventetVerdi) ->
             "bevarer verdi og Kotlin-type fra ${dto::class.simpleName}" {
-                val verdi = produsent.verdiFraDto(dto)
+                val verdi = produsent.verdiFraResultat(dto)
 
                 verdi shouldBe forventetVerdi
-                verdi.javaClass shouldBe forventetVerdi.javaClass
+                verdi?.javaClass shouldBe forventetVerdi.javaClass
             }
 
             "avviser andre DTO-typer for ${produsent::class.simpleName}" {
                 konverteringer.filter { it.second::class != dto::class }.forEach { (_, feilDto, _) ->
                     shouldThrow<IllegalArgumentException> {
-                        produsent.verdiFraDto(feilDto)
+                        produsent.verdiFraResultat(feilDto)
                     }
                 }
             }
         }
 
         "avviser feil datatype selv om DTO-klassen stemmer" {
-            val feilaktigeVerdier: List<Pair<DtoOpplysningProdusent<*>, OpplysningsverdiDTO>> =
+            val feilaktigeVerdier: List<Pair<OpplysningProdusent<*>, OpplysningsverdiDTO>> =
                 listOf(
                     Aldersgrense() to HeltallVerdiDTO(67, datatype = DataTypeDTO.PENGER),
                     AvtjentVerneplikt() to BoolskVerdiDTO(false, datatype = DataTypeDTO.TEKST),
@@ -137,7 +137,7 @@ class OpplysningerSpec :
 
             feilaktigeVerdier.forEach { (produsent, dto) ->
                 shouldThrow<IllegalArgumentException> {
-                    produsent.verdiFraDto(dto)
+                    produsent.verdiFraResultat(dto)
                 }
             }
         }

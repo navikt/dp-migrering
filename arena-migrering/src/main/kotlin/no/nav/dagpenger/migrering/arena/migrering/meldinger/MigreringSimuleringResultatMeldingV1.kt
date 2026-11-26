@@ -78,7 +78,7 @@ internal class MigreringSimuleringResultatMeldingV1(
                     val produsent = produsentMap[opplysning.opplysningTypeId] ?: return@mapNotNull null
                     val verdi = opplysning.perioder.first().verdi
 
-                    produsent.verifiserDto(
+                    produsent.kontrollerResultat(
                         verdi = verdi,
                         migreringId = migreringId,
                         repository = migreringRepository,

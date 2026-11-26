@@ -37,7 +37,7 @@ interface OpplysningProdusent<T : Any> {
 
     suspend fun produser(kontekst: MigreringsKontekst): Opplysning<T>
 
-    fun verifiser(
+    fun kontroller(
         verdi: T,
         // opplysning: Opplysning<Any>,
         migreringId: UUID,
@@ -84,11 +84,21 @@ interface OpplysningProdusent<T : Any> {
         }
     }
 
-    fun verifiserDto(
+    fun kontrollerResultat(
         verdi: OpplysningsverdiDTO,
         migreringId: UUID,
         repository: MigreringRepository,
-    ): OpplysningKontrollResultat
+    ): OpplysningKontrollResultat =
+        kontroller(
+            verdi =
+                verdiFraResultat(verdi) ?: throw IllegalArgumentException(
+                    "Opplysning $opplysningsId forventer verdi av type ${verdiType.simpleName}",
+                ),
+            migreringId = migreringId,
+            repository = repository,
+        )
+
+    fun verdiFraResultat(verdi: OpplysningsverdiDTO): T?
 
     fun vedManglendeOpplysning() {
         manglendeOpplysninger.labelValues(opplysningsId.toString(), opplysningsNavn, status.name).inc()

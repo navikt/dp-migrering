@@ -65,7 +65,7 @@ class BarnFraArenaSpec :
                         ),
                 )
 
-            produsent.verdiFraDto(dto) shouldBe barnListe.copy(barn = listOf(barn))
+            produsent.verdiFraResultat(dto) shouldBe barnListe.copy(barn = listOf(barn))
         }
 
         val kilder =
@@ -92,7 +92,7 @@ class BarnFraArenaSpec :
                     )
 
                 produsent
-                    .verdiFraDto(dto)
+                    .verdiFraResultat(dto)
                     .barn
                     .single()
                     .kilde shouldBe forventetKilde
@@ -100,15 +100,15 @@ class BarnFraArenaSpec :
         }
 
         "bevarer tom barneliste fra behandlingsapi" {
-            produsent.verdiFraDto(BarnelisteDTO(verdi = emptyList())) shouldBe BarnListe(barn = emptyList())
+            produsent.verdiFraResultat(BarnelisteDTO(verdi = emptyList())) shouldBe BarnListe(barn = emptyList())
         }
 
         "avviser feil DTO-type eller datatype for barn" {
             shouldThrow<IllegalArgumentException> {
-                produsent.verdiFraDto(TekstVerdiDTO("ikke en barneliste"))
+                produsent.verdiFraResultat(TekstVerdiDTO("ikke en barneliste"))
             }
             shouldThrow<IllegalArgumentException> {
-                produsent.verdiFraDto(BarnelisteDTO(verdi = emptyList(), datatype = DataTypeDTO.TEKST))
+                produsent.verdiFraResultat(BarnelisteDTO(verdi = emptyList(), datatype = DataTypeDTO.TEKST))
             }
         }
 
@@ -126,7 +126,7 @@ class BarnFraArenaSpec :
         ): OpplysningKontrollResultat {
             val repository = mockk<MigreringRepository>()
             every { repository.hentOpplysning(migreringId, produsent.opplysningsId, produsent.verdiType) } returns arena
-            return produsent.verifiser(dpSak, migreringId, repository)
+            return produsent.kontroller(dpSak, migreringId, repository)
         }
 
         "sammenligner databaseverdien med JSON-objektet fra simuleringsmeldingen" {

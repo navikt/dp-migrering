@@ -160,8 +160,8 @@ class MigreringRepositoryPostgresSpec :
 
             hentet.verdi.shouldBeInstanceOf<LocalDate>() shouldBe dato
             hentet.gyldigFraOgMed shouldBe dato
-            produsent.verifiser(dato, migrering.migreringId, repository).ok shouldBe true
-            produsent.verifiser(dato.plusDays(1), migrering.migreringId, repository).ok shouldBe false
+            produsent.kontroller(dato, migrering.migreringId, repository).ok shouldBe true
+            produsent.kontroller(dato.plusDays(1), migrering.migreringId, repository).ok shouldBe false
         }
 
         "henter penger som BigDecimal uten presisjonstap" {
@@ -176,8 +176,8 @@ class MigreringRepositoryPostgresSpec :
                 repository.hentOpplysning(migrering.migreringId, opplysning.uuid, produsent.verdiType).shouldNotBeNull()
 
             hentet.verdi.shouldBeInstanceOf<BigDecimal>() shouldBe belop
-            produsent.verifiser(belop, migrering.migreringId, repository).ok shouldBe true
-            produsent.verifiser(belop + BigDecimal.ONE, migrering.migreringId, repository).ok shouldBe false
+            produsent.kontroller(belop, migrering.migreringId, repository).ok shouldBe true
+            produsent.kontroller(belop + BigDecimal.ONE, migrering.migreringId, repository).ok shouldBe false
         }
 
         "henter barneliste og hele inntekten som domenetyper" {

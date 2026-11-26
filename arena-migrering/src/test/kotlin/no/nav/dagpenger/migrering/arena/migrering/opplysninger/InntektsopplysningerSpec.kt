@@ -57,7 +57,7 @@ class InntektsopplysningerSpec :
 
                 listOf(DataTypeDTO.TEKST, DataTypeDTO.INNTEKT).forEach { datatype ->
                     val resultat =
-                        produsent.verifiserDto(
+                        produsent.kontrollerResultat(
                             TekstVerdiDTO(inntekt.inntektsId, datatype),
                             migreringId,
                             repository,
@@ -72,10 +72,10 @@ class InntektsopplysningerSpec :
             "avviser feil datatype for ${produsent::class.simpleName}" {
                 val repository = mockk<MigreringRepository>()
                 shouldThrow<IllegalArgumentException> {
-                    produsent.verifiserDto(HeltallVerdiDTO(1), migreringId, repository)
+                    produsent.kontrollerResultat(HeltallVerdiDTO(1), migreringId, repository)
                 }
                 shouldThrow<IllegalArgumentException> {
-                    produsent.verifiserDto(TekstVerdiDTO("referanse", DataTypeDTO.ULID), migreringId, repository)
+                    produsent.kontrollerResultat(TekstVerdiDTO("referanse", DataTypeDTO.ULID), migreringId, repository)
                 }
             }
 
@@ -83,17 +83,17 @@ class InntektsopplysningerSpec :
                 val repository = repositoryFor(produsent, produsent.produser(kontekst(inntekt)))
 
                 produsent
-                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .kontrollerResultat(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
                     .ok shouldBe true
                 produsent
-                    .verifiserDto(TekstVerdiDTO("annen-inntekts-ID"), migreringId, repository)
+                    .kontrollerResultat(TekstVerdiDTO("annen-inntekts-ID"), migreringId, repository)
                     .ok shouldBe false
 
                 every {
                     repository.hentOpplysning(migreringId, produsent.opplysningsId, produsent.verdiType)
                 } returns null
                 produsent
-                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .kontrollerResultat(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
                     .ok shouldBe false
             }
 
@@ -102,9 +102,9 @@ class InntektsopplysningerSpec :
                     objectMapper.readValue(inntekt1.replace("480000", "480001"), InntektV1::class.java)
                 val repository = repositoryFor(produsent, produsent.produser(kontekst(inntekt)))
 
-                produsent.verifiser(endretInntekt, migreringId, repository).ok shouldBe false
+                produsent.kontroller(endretInntekt, migreringId, repository).ok shouldBe false
                 produsent
-                    .verifiserDto(TekstVerdiDTO(endretInntekt.inntektsId), migreringId, repository)
+                    .kontrollerResultat(TekstVerdiDTO(endretInntekt.inntektsId), migreringId, repository)
                     .ok shouldBe true
             }
 
@@ -122,7 +122,7 @@ class InntektsopplysningerSpec :
                 val repository = repositoryFor(produsent, lagretOpplysning)
 
                 produsent
-                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .kontrollerResultat(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
                     .ok shouldBe true
             }
 
@@ -130,7 +130,7 @@ class InntektsopplysningerSpec :
                 val repository = repositoryFor(produsent, produsent.produser(kontekst(null)))
 
                 produsent
-                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .kontrollerResultat(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
                     .ok shouldBe false
             }
 
@@ -145,7 +145,7 @@ class InntektsopplysningerSpec :
                 val repository = repositoryFor(produsent, feilOpplysning)
 
                 produsent
-                    .verifiserDto(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
+                    .kontrollerResultat(TekstVerdiDTO(inntekt.inntektsId), migreringId, repository)
                     .ok shouldBe false
             }
         }

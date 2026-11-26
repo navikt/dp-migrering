@@ -23,25 +23,10 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
 
-interface DtoOpplysningProdusent<T : Any> : OpplysningProdusent<T> {
-    fun verdiFraDto(verdi: OpplysningsverdiDTO): T
-
-    override fun verifiserDto(
-        verdi: OpplysningsverdiDTO,
-        migreringId: UUID,
-        repository: MigreringRepository,
-    ): OpplysningKontrollResultat =
-        verifiser(
-            verdi = verdiFraDto(verdi),
-            migreringId = migreringId,
-            repository = repository,
-        )
-}
-
-interface HeltallsOpplysningProdusent : DtoOpplysningProdusent<Int> {
+interface HeltallsOpplysningProdusent : OpplysningProdusent<Int> {
     override val verdiType get() = Int::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): Int {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): Int {
         require(verdi is HeltallVerdiDTO && verdi.datatype == DataTypeDTO.HELTALL) {
             "Opplysning $opplysningsId forventer datatype heltall"
         }
@@ -49,10 +34,10 @@ interface HeltallsOpplysningProdusent : DtoOpplysningProdusent<Int> {
     }
 }
 
-interface BoolskOpplysningProdusent : DtoOpplysningProdusent<Boolean> {
+interface BoolskOpplysningProdusent : OpplysningProdusent<Boolean> {
     override val verdiType get() = Boolean::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): Boolean {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): Boolean {
         require(verdi is BoolskVerdiDTO && verdi.datatype == DataTypeDTO.BOOLSK) {
             "Opplysning $opplysningsId forventer datatype boolsk"
         }
@@ -60,10 +45,10 @@ interface BoolskOpplysningProdusent : DtoOpplysningProdusent<Boolean> {
     }
 }
 
-interface DatoOpplysningProdusent : DtoOpplysningProdusent<LocalDate> {
+interface DatoOpplysningProdusent : OpplysningProdusent<LocalDate> {
     override val verdiType get() = LocalDate::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): LocalDate {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): LocalDate {
         require(verdi is DatoVerdiDTO && verdi.datatype == DataTypeDTO.DATO) {
             "Opplysning $opplysningsId forventer datatype dato"
         }
@@ -71,10 +56,10 @@ interface DatoOpplysningProdusent : DtoOpplysningProdusent<LocalDate> {
     }
 }
 
-interface DesimaltallsOpplysningProdusent : DtoOpplysningProdusent<Double> {
+interface DesimaltallsOpplysningProdusent : OpplysningProdusent<Double> {
     override val verdiType get() = Double::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): Double {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): Double {
         require(verdi is DesimaltallVerdiDTO && verdi.datatype == DataTypeDTO.DESIMALTALL) {
             "Opplysning $opplysningsId forventer datatype desimaltall"
         }
@@ -82,10 +67,10 @@ interface DesimaltallsOpplysningProdusent : DtoOpplysningProdusent<Double> {
     }
 }
 
-interface PengeOpplysningProdusent : DtoOpplysningProdusent<BigDecimal> {
+interface PengeOpplysningProdusent : OpplysningProdusent<BigDecimal> {
     override val verdiType get() = BigDecimal::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): BigDecimal {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): BigDecimal {
         require(verdi is PengeVerdiDTO && verdi.datatype == DataTypeDTO.PENGER) {
             "Opplysning $opplysningsId forventer datatype penger"
         }
@@ -93,10 +78,10 @@ interface PengeOpplysningProdusent : DtoOpplysningProdusent<BigDecimal> {
     }
 }
 
-interface TekstOpplysningProdusent : DtoOpplysningProdusent<String> {
+interface TekstOpplysningProdusent : OpplysningProdusent<String> {
     override val verdiType get() = String::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): String {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): String {
         require(verdi is TekstVerdiDTO && verdi.datatype == DataTypeDTO.TEKST) {
             "Opplysning $opplysningsId forventer datatype tekst"
         }
@@ -116,7 +101,9 @@ interface InntektsOpplysningProdusent : OpplysningProdusent<InntektV1> {
         return dpSakInntekt?.harSammeInnholdSom(arenaInntekt) ?: false
     }
 
-    override fun verifiserDto(
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): InntektV1? = null
+
+    override fun kontrollerResultat(
         verdi: OpplysningsverdiDTO,
         migreringId: UUID,
         repository: MigreringRepository,
@@ -141,10 +128,10 @@ interface InntektsOpplysningProdusent : OpplysningProdusent<InntektV1> {
     }
 }
 
-interface UlidOpplysningProdusent : DtoOpplysningProdusent<String> {
+interface UlidOpplysningProdusent : OpplysningProdusent<String> {
     override val verdiType get() = String::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): String {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): String {
         require(verdi is UlidVerdiDTO && verdi.datatype == DataTypeDTO.ULID) {
             "Opplysning $opplysningsId forventer datatype ulid"
         }
@@ -152,10 +139,10 @@ interface UlidOpplysningProdusent : DtoOpplysningProdusent<String> {
     }
 }
 
-interface BarnOpplysningProdusent : DtoOpplysningProdusent<BarnListe> {
+interface BarnOpplysningProdusent : OpplysningProdusent<BarnListe> {
     override val verdiType get() = BarnListe::class
 
-    override fun verdiFraDto(verdi: OpplysningsverdiDTO): BarnListe {
+    override fun verdiFraResultat(verdi: OpplysningsverdiDTO): BarnListe {
         require(verdi is BarnelisteDTO && verdi.datatype == DataTypeDTO.BARN) {
             "Opplysning $opplysningsId forventer datatype barn"
         }

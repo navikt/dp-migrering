@@ -39,7 +39,7 @@ class OpplysningProdusentSpec :
         ): OpplysningKontrollResultat {
             val repository = mockk<MigreringRepository>()
             every { repository.hentOpplysning(migreringId, produsent.opplysningsId, produsent.verdiType) } returns arena
-            return produsent.verifiser(dpSak, migreringId, repository)
+            return produsent.kontroller(dpSak, migreringId, repository)
         }
 
         listOf(true, false, "tekst", 123, 123L, 123.5, 1.toBigDecimal()).forEach { verdi ->
