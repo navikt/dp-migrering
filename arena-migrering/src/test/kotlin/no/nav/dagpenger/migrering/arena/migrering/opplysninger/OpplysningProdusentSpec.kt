@@ -108,6 +108,8 @@ class OpplysningProdusentSpec :
             val sak = mockk<ArenaSakMigrering>()
             every { sak.vedtakfakta } returns
                 listOfNotNull(kode?.let { ArenaSakMigrering.ArenaVedtakfaktaMigrering(it, verdi, dato) })
+            every { sak.grunnbelop } returns
+                listOfNotNull(kode?.let { ArenaSakMigrering.ArenaSatsMigrering(it, verdi, dato) })
             every { sak.gjenstaendeTeller } returns
                 listOfNotNull(
                     kode?.let { ArenaSakMigrering.ArenaGjenstaendeTellerMigrering("GJENNTELLER", it, verdi, dato) },
@@ -119,7 +121,9 @@ class OpplysningProdusentSpec :
             listOf(
                 Dagpengegrunnlag() to "GRUNN",
                 Dagsats() to "DAGS",
+                DagsatsMedBarnetilleggEtterSamordningOg90Regel() to "DAGS",
                 Egenandel() to "EGENANDDP",
+                Grunnbelop() to "GRUNNBELOP",
                 InntektPeriode1() to "INTSISTE",
                 InntektPeriode2() to "INTNESTS",
                 InntektPeriode3() to "INTTREDS",
@@ -146,12 +150,10 @@ class OpplysningProdusentSpec :
 
         val fastePengeverdier =
             listOf(
-                DagsatsMedBarnetilleggEtterSamordningOg90Regel() to 1500,
                 EtterlonnBelop() to 0,
                 ForbruktEgenandel() to 25000,
                 ForeldrepengerDagsats() to 1000,
                 GarantilottFraGarantikassenForFiskereBelop() to 0,
-                Grunnbelop() to 136549,
                 OmsorgspengerDagsats() to 0,
                 OppleringspengerDagsats() to 0,
                 PleiepengerDagsats() to 0,
