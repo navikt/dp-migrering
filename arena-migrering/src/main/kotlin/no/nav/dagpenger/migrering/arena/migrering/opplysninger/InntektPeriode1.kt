@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -8,11 +7,7 @@ import java.util.UUID
 class InntektPeriode1 : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
-
-    companion object {
-        val sikkerlogg = KotlinLogging.logger("tjenestekall.DpTilgangProvider")
-    }
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     override val opplysningsId: UUID = UUID.fromString("0194881f-9410-7481-b263-4606fdd10cad")
     override val opplysningsNavn: String = "Utbetalt inntekt periode 1"

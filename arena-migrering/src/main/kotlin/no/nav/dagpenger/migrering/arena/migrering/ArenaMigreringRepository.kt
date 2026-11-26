@@ -7,7 +7,11 @@ import kotliquery.Session
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import no.nav.dagpenger.inntekt.v1.Inntekt
+import java.time.LocalDateTime
 import javax.sql.DataSource
+
+val kunSisteVilkaar: Set<String> = setOf("VILKAR_1", "VILKAR_2", "VILKAR_3")
+val kunSisteVedtakfakta: Set<String> = setOf("VEDTAK_1", "VEDTAK_2", "VEDTAK_3")
 
 interface ArenaMigreringRepository {
     val dataSource: Lazy<DataSource>
@@ -25,9 +29,25 @@ interface ArenaMigreringRepository {
             )
         }
 
-    fun hentVedtakfakta(sakId: Int): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering>
+    fun hentVedtakfakta(
+        sakId: Int,
+        kunSisteVedtakfakta: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering>
 
-    fun hentVilkaarvurdering(sakId: Int): List<ArenaSakMigrering.ArenaVilkaarMigrering>
+    fun hentSisteVedtakfakta(
+        sakId: Int,
+        kunSisteVedtakfakta: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVedtakfaktaMigrering>
+
+    fun hentVilkaarvurdering(
+        sakId: Int,
+        kunSisteVilkaar: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVilkaarMigrering>
+
+    fun hentSisteVilkaarvurdering(
+        sakId: Int,
+        kunSisteVilkaar: Set<String>,
+    ): List<ArenaSakMigrering.ArenaVilkaarMigrering>
 
     fun hentPersonInfo(sakId: Int): List<ArenaSakMigrering.ArenaPersonMigrering>
 
@@ -45,10 +65,13 @@ interface ArenaMigreringRepository {
 
     fun hentAntallForbrukteDagerPERM(sakId: Int): List<ArenaSakMigrering.ArenaForbrukteDagerMigrering>
 
-    fun hentSakTilMigrering(sakId: Int): ArenaSakMigrering =
+    fun hentSakTilMigrering(
+        sakId: Int,
+        migreringTidspunkt: LocalDateTime,
+    ): ArenaSakMigrering =
         ArenaSakMigrering(
-            vilkaarsVurderinger = hentVilkaarvurdering(sakId),
-            vedtakfakta = hentVedtakfakta(sakId),
+            vilkaarsVurderinger = hentVilkaarvurdering(sakId, kunSisteVilkaar),
+            vedtakfakta = hentVedtakfakta(sakId, kunSisteVedtakfakta),
             personopplysninger = hentPersonInfo(sakId),
             personFodselsdatoMigrering = hentFodselsdatoPerson(sakId),
             tidsbegrensetVedtak = emptyList(),
@@ -61,6 +84,9 @@ interface ArenaMigreringRepository {
             gjenstaendeTeller = hentGjenstaendeTeller(sakId),
             initiellTeller = hentInitiellTeller(sakId),
             aktfase = hentAktfase(sakId),
+            sisteVedtakfakta = hentSisteVedtakfakta(sakId, kunSisteVedtakfakta),
+            sisteVilkaarVurdering = hentSisteVilkaarvurdering(sakId, kunSisteVilkaar),
+            grunnbelop = hentGrunnbelop(migreringTidspunkt),
         )
 
     fun hentIdentForSak(sakId: Int): String
@@ -70,4 +96,6 @@ interface ArenaMigreringRepository {
     fun hentDeks(sakId: Int): List<ArenaSakMigrering.ArenaRetttighetstypeMigrering>
 
     fun hentAktfase(sakId: Int): List<ArenaSakMigrering.ArenaAktfaseMigrering>
+
+    fun hentGrunnbelop(migreringTidspunkt: LocalDateTime): List<ArenaSakMigrering.ArenaSatsMigrering>
 }

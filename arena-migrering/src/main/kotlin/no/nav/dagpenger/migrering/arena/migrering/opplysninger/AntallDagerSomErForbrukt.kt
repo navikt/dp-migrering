@@ -1,6 +1,5 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.util.UUID
 
@@ -8,18 +7,16 @@ import java.util.UUID
 class AntallDagerSomErForbrukt : OpplysningProdusent<Int> {
     override val rolle = OpplysningProdusent.Rolle.Resultat
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
-
-    companion object {
-        val logger = KotlinLogging.logger {}
-    }
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     override val opplysningsId: UUID = UUID.fromString("01992934-66e4-7606-bdd3-c6c9dd420ffd")
     override val opplysningsNavn: String = "Antall dager som er forbrukt"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Int> {
-        val opplysningGjen = kontekst.sakTilMigrering.gjenstaendeTeller.firstOrNull { it.kode == "GJENNTELLER" && it.kodetype == "DPTEL" }
-        val opplysningInit = kontekst.sakTilMigrering.initiellTeller.firstOrNull { it.kode == "INITTELLER" && it.kodetype == "DPTEL" }
+        val opplysningGjen =
+            kontekst.sakTilMigrering.gjenstaendeTeller.firstOrNull { it.kode == "GJENNTELLER" && it.kodetype == "DPTEL" }
+        val opplysningInit =
+            kontekst.sakTilMigrering.initiellTeller.firstOrNull { it.kode == "INITTELLER" && it.kodetype == "DPTEL" }
 
         if (opplysningGjen == null || opplysningInit == null) {
             vedManglendeOpplysning()

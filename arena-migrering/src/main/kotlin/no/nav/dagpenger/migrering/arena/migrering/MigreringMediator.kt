@@ -193,7 +193,7 @@ class MigreringMediator(
         migreringTidspunkt: LocalDateTime,
     ): List<Opplysning<*>> =
         coroutineScope {
-            val sakTilMigrering = arenaMigreringRepository.hentSakTilMigrering(sakId)
+            val sakTilMigrering = arenaMigreringRepository.hentSakTilMigrering(sakId, migreringTidspunkt)
 
             val parentContext = Context.current()
             val deferredOpplysninger =

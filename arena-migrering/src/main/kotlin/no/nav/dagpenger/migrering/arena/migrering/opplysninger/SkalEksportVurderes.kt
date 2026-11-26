@@ -9,7 +9,7 @@ class SkalEksportVurderes : OpplysningProdusent<Boolean> {
     override val aktiv: Boolean = true
     override val opplysningsId: UUID = UUID.fromString("019f608d-f9c5-7ccc-a6f3-c53531d1f00c")
     override val opplysningsNavn: String = "Skal eksport vurderes"
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {
         val opplysning = kontekst.sakTilMigrering.erDeks.firstOrNull { erDeks -> erDeks.kode == "ERDEKS" }
@@ -31,6 +31,7 @@ class SkalEksportVurderes : OpplysningProdusent<Boolean> {
             "DEKS" -> {
                 true
             }
+
             else -> {
                 false
             }

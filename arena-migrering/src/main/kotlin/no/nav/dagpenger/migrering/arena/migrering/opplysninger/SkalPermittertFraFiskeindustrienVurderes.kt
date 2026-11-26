@@ -1,14 +1,15 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
 import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
+import java.util.UUID
 
 // Arena: rettighetkode FISK
 class SkalPermittertFraFiskeindustrienVurderes : OpplysningProdusent<Boolean> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
 
-    override val opplysningsId: java.util.UUID = java.util.UUID.fromString("0194881f-9444-7a73-a458-0af81c034d88")
+    override val opplysningsId: UUID = UUID.fromString("0194881f-9444-7a73-a458-0af81c034d88")
     override val opplysningsNavn: String = "Skal permittert fra fiskeindustrien vurderes"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<Boolean> {

@@ -5,6 +5,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import no.nav.dagpenger.migrering.db.OracleDataSource.oracleDataSource
+import java.time.LocalDateTime
 
 class ArenaMigreringOracleRepositorySpec :
     StringSpec({
@@ -15,7 +16,7 @@ class ArenaMigreringOracleRepositorySpec :
 
             shouldNotThrowAny {
 
-                val migreringsdata = repository.hentSakTilMigrering(sakId = 15603478)
+                val migreringsdata = repository.hentSakTilMigrering(sakId = 15603478, migreringTidspunkt = LocalDateTime.now())
 
                 migreringsdata.inntekt shouldNotBe null
                 migreringsdata.vilkaarsVurderinger.isNotEmpty() shouldBe true

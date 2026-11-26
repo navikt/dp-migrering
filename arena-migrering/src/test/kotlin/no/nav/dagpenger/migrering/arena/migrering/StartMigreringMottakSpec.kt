@@ -46,7 +46,7 @@ class StartMigreringMottakSpec :
 
                 verify(exactly = 1) { test.repository.lagreMigrering(migrering) }
                 verify(exactly = 0) {
-                    test.arenaMigreringRepository.hentSakTilMigrering(any())
+                    test.arenaMigreringRepository.hentSakTilMigrering(any(), any())
                     test.repository.lagreOpplysninger(any(), any())
                 }
                 rapid.inspektør.size shouldBe 0
@@ -57,7 +57,7 @@ class StartMigreringMottakSpec :
                 rapid.inspektør.message(0)["migreringId"].asString() shouldBe migrering.migreringId.toString()
                 verifyOrder {
                     test.repository.lagreMigrering(migrering)
-                    test.arenaMigreringRepository.hentSakTilMigrering(migrering.sakId)
+                    test.arenaMigreringRepository.hentSakTilMigrering(migrering.sakId, migrering.migreringTidspunkt.atStartOfDay())
                     test.repository.lagreOpplysninger(migrering.migreringId, any())
                     rapid.publish(any<String>())
                 }
@@ -90,7 +90,7 @@ class StartMigreringMottakSpec :
                 testScheduler.runCurrent()
 
                 verify(exactly = 0) {
-                    test.arenaMigreringRepository.hentSakTilMigrering(any())
+                    test.arenaMigreringRepository.hentSakTilMigrering(any(), any())
                     test.repository.lagreOpplysninger(any(), any())
                 }
                 test.rapid.inspektør.size shouldBe 0
@@ -102,7 +102,7 @@ class StartMigreringMottakSpec :
                 val migreringsScope =
                     CoroutineScope(backgroundScope.coroutineContext + SupervisorJob(backgroundScope.coroutineContext[Job]))
                 val test = StartMigreringTest(migreringsScope = migreringsScope)
-                every { test.arenaMigreringRepository.hentSakTilMigrering(any()) } throws
+                every { test.arenaMigreringRepository.hentSakTilMigrering(any(), any()) } throws
                     IllegalStateException("Kunne ikke hente opplysninger")
 
                 test.startMigrering()
@@ -112,7 +112,7 @@ class StartMigreringMottakSpec :
                 verify(exactly = 0) { test.repository.lagreOpplysninger(any(), any()) }
                 test.rapid.inspektør.size shouldBe 0
 
-                every { test.arenaMigreringRepository.hentSakTilMigrering(any()) } returns test.sak
+                every { test.arenaMigreringRepository.hentSakTilMigrering(any(), any()) } returns test.sak
                 val migrering = test.startMigrering()
                 testScheduler.runCurrent()
 
@@ -148,7 +148,7 @@ class StartMigreringMottakSpec :
                 testScheduler.runCurrent()
 
                 verify(exactly = 0) {
-                    test.arenaMigreringRepository.hentSakTilMigrering(any())
+                    test.arenaMigreringRepository.hentSakTilMigrering(any(), any())
                     test.repository.lagreOpplysninger(any(), any())
                 }
                 test.rapid.inspektør.size shouldBe 0
@@ -205,12 +205,15 @@ private class StartMigreringTest(
             gjenstaendeTeller = emptyList(),
             initiellTeller = emptyList(),
             aktfase = emptyList(),
+            sisteVedtakfakta = emptyList(),
+            sisteVilkaarVurdering = emptyList(),
+            grunnbelop = emptyList(),
         )
 
     init {
         every { arenaMigreringRepository.hentIdentForSak(12345) } returns "testident"
 
-        every { arenaMigreringRepository.hentSakTilMigrering(12345) } returns sak
+        every { arenaMigreringRepository.hentSakTilMigrering(12345, any()) } returns sak
         every { repository.lagreMigrering(any()) } just Runs
         every { repository.lagreOpplysninger(any(), any()) } just Runs
         every { repository.lagreMigreringHendelse(any(), any(), any(), any(), any(), any(), any()) } just Runs

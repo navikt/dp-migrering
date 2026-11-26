@@ -1,11 +1,13 @@
 package no.nav.dagpenger.migrering.arena.migrering.opplysninger
 
+import java.util.UUID
+
 // Arena: vedtakfakta TARBTID
 class KravTilProsentvisTapAvArbeidstid : OpplysningProdusent<Double> {
     override val rolle = OpplysningProdusent.Rolle.Fakta
     override val aktiv: Boolean = true
-    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
-    override val opplysningsId: java.util.UUID = java.util.UUID.fromString("0194881f-9435-72a8-b1ce-9575cbc2a762")
+    override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Verifisert
+    override val opplysningsId: UUID = UUID.fromString("0194881f-9435-72a8-b1ce-9575cbc2a762")
     override val opplysningsNavn: String = "Krav til prosentvis tap av arbeidstid"
 
     override suspend fun produser(kontekst: no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst): Opplysning<Double> {
