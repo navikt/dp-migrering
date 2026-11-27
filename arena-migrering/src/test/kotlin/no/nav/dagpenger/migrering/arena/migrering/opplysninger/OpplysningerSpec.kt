@@ -4,7 +4,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import io.prometheus.metrics.model.snapshots.CounterSnapshot
 import no.nav.dagpenger.behandling.api.models.BoolskVerdiDTO
@@ -15,7 +14,6 @@ import no.nav.dagpenger.behandling.api.models.HeltallVerdiDTO
 import no.nav.dagpenger.behandling.api.models.OpplysningsverdiDTO
 import no.nav.dagpenger.behandling.api.models.PengeVerdiDTO
 import no.nav.dagpenger.behandling.api.models.TekstVerdiDTO
-import no.nav.dagpenger.migrering.arena.migrering.MigreringsKontekst
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.full.allSuperclasses
@@ -48,20 +46,6 @@ class OpplysningerSpec :
 
             antallManglendeOpplysninger(dagsats) shouldBe dagsatsFor + 2.0
             antallManglendeOpplysninger(dagpengegrunnlag) shouldBe dagpengegrunnlagFor + 1.0
-        }
-
-        "varsler om manglende grunnbelop for grunnlag" {
-            val produsent = GrunnbelopForGrunnlag()
-            val antallFor = antallManglendeOpplysninger(produsent)
-            val kontekst =
-                MigreringsKontekst(
-                    sakTilMigrering = mockk(),
-                    initiertAv = "testbruker",
-                    opprettetTidspunkt = LocalDate.of(2026, 11, 1).atStartOfDay(),
-                )
-
-            produsent.produser(kontekst).verdi shouldBe null
-            antallManglendeOpplysninger(produsent) shouldBe antallFor + 1.0
         }
 
         "har ikke duplikate UUIDer" {

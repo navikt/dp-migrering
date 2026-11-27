@@ -12,12 +12,11 @@ class GrunnbelopForGrunnlag : PengeOpplysningProdusent {
     override val opplysningsNavn: String = "Grunnbeløp for grunnlag"
 
     override suspend fun produser(kontekst: MigreringsKontekst): Opplysning<BigDecimal> {
-        vedManglendeOpplysning()
-        val verdi: BigDecimal? = null
+        val grunnbelop = kontekst.sakTilMigrering.grunnbelop.firstOrNull { grunnbelop -> grunnbelop.kode == "GRUNNBELOP" }
         return Opplysning(
             navn = opplysningsNavn,
-            verdi = verdi,
-            gyldigFraOgMed = kontekst.opprettetTidspunkt.toLocalDate(),
+            verdi = grunnbelop?.verdi?.toBigDecimal(),
+            gyldigFraOgMed = grunnbelop?.gyldigFra,
             uuid = opplysningsId,
         )
     }
