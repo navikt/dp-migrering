@@ -7,7 +7,7 @@ import java.util.UUID
 // Arena: ? vedtakfakta BERREGEL
 class BruktBeregningsregel : TekstOpplysningProdusent {
     override val rolle = OpplysningProdusent.Rolle.Resultat
-    override val aktiv: Boolean = true
+    override val aktiv: Boolean = false
     override val status: OpplysningProdusent.Status = OpplysningProdusent.Status.Alfa
 
     companion object {
